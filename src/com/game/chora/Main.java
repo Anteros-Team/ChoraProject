@@ -54,19 +54,16 @@ public class Main extends SimpleApplication {
     public void simpleInitApp() {
         rootNode.attachChild(SkyFactory.createSky(getAssetManager(), "Textures/Sky/BrightSky.dds", false ));
         //stateManager.attach(new BaseLevel(this));
-        flyCam.setMoveSpeed(20);
-        flyCam.setRotationSpeed(6);
         flyCam.setDragToRotate(true);
-        flyCam.setZoomSpeed(5);
         
         
         ChaseCamera chaseCam = new ChaseCamera(cam, rootNode, inputManager);
-        chaseCam.setMinDistance(20);
+        chaseCam.setMinDistance(500);
         
         shootables = new Node("Shootables");
         rootNode.attachChild(shootables);
         
-        
+        cam.setFrustumFar(100000f);
                 
         Spatial scene = assetManager.loadModel("Scenes/map.j3o");
         scene.setShadowMode(ShadowMode.CastAndReceive);
@@ -173,7 +170,6 @@ public class Main extends SimpleApplication {
         //viewPort.addProcessor(fpp);  
         
         
-        
         SimpleWaterProcessor waterProcessor = new SimpleWaterProcessor(assetManager);
         waterProcessor.setReflectionScene(rootNode);
         waterProcessor.setDebug(false);
@@ -196,20 +192,17 @@ public class Main extends SimpleApplication {
         water.setShadowMode(ShadowMode.Receive);
         water.setLocalRotation(new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X));
         water.setMaterial(waterProcessor.getMaterial());
-        water.setLocalTranslation(-200, -20, 250);
-        
-        fpp = new FilterPostProcessor(assetManager);
-        WaterFilter waterPP = new WaterFilter(rootNode, lightPos); // LightDir
-        waterPP.setWaterHeight(-40);
-        fpp.addFilter(waterPP);
-        viewPort.addProcessor(fpp);
-
+        water.scale(0.5f);
+        water.setLocalTranslation(150, -10, 300);
+       
         rootNode.attachChild(water);
 
         viewPort.addProcessor(waterProcessor);
         
-       
         
+        WaterFilter waterPP = new WaterFilter(rootNode, lightPos); // LightDir
+        waterPP.setWaterHeight(-40);
+        fpp.addFilter(waterPP);
         
         
         // add action listener for mouse click 
