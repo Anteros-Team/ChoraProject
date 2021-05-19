@@ -238,7 +238,7 @@ public class Main extends SimpleApplication {
      
      
     public void addSprout(Vector3f coordinate){
-        Spatial newmodel = assetManager.loadModel("Models/mill/mill.j3o");
+        Spatial newmodel = assetManager.loadModel("Models/hoe/hoe.j3o");
         newmodel.setShadowMode(ShadowMode.CastAndReceive);
         newmodel.scale(50f);
         //model.setMaterial(mat);
