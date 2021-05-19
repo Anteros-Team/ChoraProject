@@ -2,6 +2,7 @@ package com.game.chora;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.collision.CollisionResults;
+import com.jme3.input.ChaseCamera;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.MouseButtonTrigger;
@@ -53,9 +54,14 @@ public class Main extends SimpleApplication {
     public void simpleInitApp() {
         rootNode.attachChild(SkyFactory.createSky(getAssetManager(), "Textures/Sky/BrightSky.dds", false ));
         //stateManager.attach(new BaseLevel(this));
-        flyCam.setMoveSpeed(10);
-        flyCam.setRotationSpeed(3);
+        flyCam.setMoveSpeed(20);
+        flyCam.setRotationSpeed(6);
         flyCam.setDragToRotate(true);
+        flyCam.setZoomSpeed(5);
+        
+        
+        ChaseCamera chaseCam = new ChaseCamera(cam, rootNode, inputManager);
+        chaseCam.setMinDistance(20);
         
         shootables = new Node("Shootables");
         rootNode.attachChild(shootables);
