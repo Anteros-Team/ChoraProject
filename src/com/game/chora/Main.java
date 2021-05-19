@@ -10,7 +10,11 @@ import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
+import com.jme3.math.Plane;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.ssao.SSAOFilter;
@@ -20,6 +24,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.Node;
+import com.jme3.scene.shape.Quad;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.shadow.DirectionalLightShadowFilter;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
@@ -27,6 +32,8 @@ import com.jme3.shadow.EdgeFilteringMode;
 import com.jme3.texture.Texture;
 import com.jme3.util.SkyFactory;
 import com.jme3.util.TangentBinormalGenerator;
+import com.jme3.water.SimpleWaterProcessor;
+import com.jme3.water.WaterFilter;
 
 /**
  * This is the Main Class of your Game. You should only do initialization here.
@@ -44,7 +51,7 @@ public class Main extends SimpleApplication {
     
     @Override
     public void simpleInitApp() {
-        rootNode.attachChild(SkyFactory.createSky(getAssetManager(), "Textures/Sky/Skysphere.jpg", SkyFactory.EnvMapType.EquirectMap));
+        rootNode.attachChild(SkyFactory.createSky(getAssetManager(), "Textures/Sky/BrightSky.dds", false ));
         //stateManager.attach(new BaseLevel(this));
         flyCam.setMoveSpeed(10);
         flyCam.setRotationSpeed(3);
@@ -120,7 +127,8 @@ public class Main extends SimpleApplication {
         
         DirectionalLight sun = new DirectionalLight();
         sun.setColor(ColorRGBA.White.mult(2f));
-        sun.setDirection(new Vector3f(-1,-1,-1).normalizeLocal());
+        Vector3f lightPos = new Vector3f(-1,-1,-1).normalizeLocal();
+        sun.setDirection(lightPos);
         rootNode.addLight(sun);
         
         final int SHADOWMAP_SIZE=2048;
@@ -156,7 +164,46 @@ public class Main extends SimpleApplication {
         //FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         //SSAOFilter ssaoFilter = new SSAOFilter(12.94f, 43.92f, 0.33f, 0.61f);
         //fpp.addFilter(ssaoFilter);
-        //viewPort.addProcessor(fpp);     
+        //viewPort.addProcessor(fpp);  
+        
+        
+        
+        SimpleWaterProcessor waterProcessor = new SimpleWaterProcessor(assetManager);
+        waterProcessor.setReflectionScene(rootNode);
+        waterProcessor.setDebug(false);
+        waterProcessor.setLightPosition(lightPos);
+        waterProcessor.setRefractionClippingOffset(1.0f);
+
+
+        //setting the water plane
+        Vector3f waterLocation=new Vector3f(0,-20,0);
+        waterProcessor.setPlane(new Plane(Vector3f.UNIT_Y, waterLocation.dot(Vector3f.UNIT_Y)));       
+        waterProcessor.setWaterColor(ColorRGBA.Brown);
+        waterProcessor.setDebug(false);
+        
+        Quad quad = new Quad(400,400);
+
+        //the texture coordinates define the general size of the waves
+        quad.scaleTextureCoordinates(new Vector2f(6f,6f));
+
+        Geometry water=new Geometry("water", quad);
+        water.setShadowMode(ShadowMode.Receive);
+        water.setLocalRotation(new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X));
+        water.setMaterial(waterProcessor.getMaterial());
+        water.setLocalTranslation(-200, -20, 250);
+        
+        fpp = new FilterPostProcessor(assetManager);
+        WaterFilter waterPP = new WaterFilter(rootNode, lightPos); // LightDir
+        waterPP.setWaterHeight(-40);
+        fpp.addFilter(waterPP);
+        viewPort.addProcessor(fpp);
+
+        rootNode.attachChild(water);
+
+        viewPort.addProcessor(waterProcessor);
+        
+       
+        
         
         
         // add action listener for mouse click 
