@@ -27,6 +27,7 @@ import com.jme3.scene.shape.Box;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Quad;
 import com.jme3.scene.shape.Sphere;
+import com.jme3.shadow.BasicShadowRenderer;
 import com.jme3.shadow.DirectionalLightShadowFilter;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.shadow.EdgeFilteringMode;
@@ -42,17 +43,23 @@ import com.jme3.water.WaterFilter;
  * @author normenhansen
  */
 public class Main extends SimpleApplication {
-
+    
+    DynamicSky sky = null;
+    BasicShadowRenderer bsr = null;
+    private Node shootables;
+    
     public static void main(String[] args){
         Main app = new Main();
         app.start(); // start the game
     }
-
-    private Node shootables;
     
     @Override
     public void simpleInitApp() {
-        rootNode.attachChild(SkyFactory.createSky(getAssetManager(), "Textures/Sky/BrightSky.dds", false ));
+        
+        sky = new DynamicSky(assetManager, viewPort, rootNode);
+        rootNode.attachChild(sky);
+        
+        //rootNode.attachChild(SkyFactory.createSky(getAssetManager(), "Textures/SkyOld/BrightSky.dds", false ));
         //stateManager.attach(new BaseLevel(this));
         flyCam.setDragToRotate(true);
         
@@ -79,11 +86,21 @@ public class Main extends SimpleApplication {
         rootNode.attachChild(SkyFactory.createSky(getAssetManager(), west, east, north, south, up, down));
         */
         
+        Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        mat.setFloat("Shininess", 12);
+        mat.setBoolean("UseMaterialColors", true);
+        mat.setColor("Ambient",  new ColorRGBA(42, 117, 33, 1));
+        mat.setColor("Diffuse",  new ColorRGBA(17, 83, 158, 1));
+        mat.setColor("Specular",  new ColorRGBA(42, 117, 33, 1));
+        
+        
         Spatial floor = rootNode.getChild("terrain-map");
         shootables.attachChild(floor);
+        floor.setMaterial(mat);
+        
         
         Material matTrunk = new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
-        matTrunk.setColor("Color", new ColorRGBA(.67f, .41f, .10f, 1.0f));
+        matTrunk.setColor("Color", new ColorRGBA(.67f, .41f, .10f, 1.0f));        
         
         Material matLeaves = new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
         matLeaves.setColor("Color", new ColorRGBA(.25f, .72f, .18f, 1.0f));   
@@ -95,10 +112,11 @@ public class Main extends SimpleApplication {
         rootNode.attachChild(model);
         
         Spatial trunk = rootNode.getChild("Tree_2_1");
-        trunk.setMaterial(matTrunk);
+        trunk.setMaterial(mat);
         
         Spatial leaves = rootNode.getChild("Tree_2_0");
-        leaves.setMaterial(matLeaves);
+        leaves.setMaterial(mat);
+        
         
         Spatial albelello = assetManager.loadModel("Models/small_tree/small_tree.j3o");
         albelello.setShadowMode(ShadowMode.CastAndReceive);
@@ -128,25 +146,28 @@ public class Main extends SimpleApplication {
         model_1.setLocalTranslation(10,10,10);*/
         
         
+        /*
         DirectionalLight sun = new DirectionalLight();
         sun.setColor(ColorRGBA.White.mult(2f));
         Vector3f lightPos = new Vector3f(-1,-1,-1).normalizeLocal();
         sun.setDirection(lightPos);
         rootNode.addLight(sun);
+        */
         
         final int SHADOWMAP_SIZE=2048;
         
                
        
-        /*
+        
         DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 3);
-        dlsr.setLight(sun);
+        
         dlsr.setLambda(0.55f);
         dlsr.setShadowIntensity(0.8f);
         dlsr.setEdgeFilteringMode(EdgeFilteringMode.Nearest);
         viewPort.addProcessor(dlsr);
-        */
         
+        
+        /*
         DirectionalLightShadowFilter dlsf = new DirectionalLightShadowFilter(assetManager, SHADOWMAP_SIZE, 3);
         dlsf.setLight(sun);
         dlsf.setLambda(0.55f);
@@ -163,8 +184,8 @@ public class Main extends SimpleApplication {
         AmbientLight al = new AmbientLight();
         al.setColor(ColorRGBA.White.mult(.1f));
         rootNode.addLight(al);
-        
-        //FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+        */
+        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         //SSAOFilter ssaoFilter = new SSAOFilter(12.94f, 43.92f, 0.33f, 0.61f);
         //fpp.addFilter(ssaoFilter);
         //viewPort.addProcessor(fpp);  
@@ -173,7 +194,7 @@ public class Main extends SimpleApplication {
         SimpleWaterProcessor waterProcessor = new SimpleWaterProcessor(assetManager);
         waterProcessor.setReflectionScene(rootNode);
         waterProcessor.setDebug(false);
-        waterProcessor.setLightPosition(lightPos);
+        waterProcessor.setLightPosition(sky.getSunDirection());
         waterProcessor.setRefractionClippingOffset(1.0f);
 
 
@@ -200,9 +221,10 @@ public class Main extends SimpleApplication {
         viewPort.addProcessor(waterProcessor);
         
         
-        WaterFilter waterPP = new WaterFilter(rootNode, lightPos); // LightDir
+        WaterFilter waterPP = new WaterFilter(rootNode, sky.getSunDirection()); // LightDir
         waterPP.setWaterHeight(-40);
         fpp.addFilter(waterPP);
+        viewPort.addProcessor(fpp);
         
         
         // add action listener for mouse click 
@@ -226,11 +248,18 @@ public class Main extends SimpleApplication {
                 }
             }
         }, "mouseClick");
+        
+        rootNode.setShadowMode(ShadowMode.Off);
+        bsr = new BasicShadowRenderer(assetManager, 1024);
+        bsr.setDirection(new Vector3f(-1, -1, -1).normalizeLocal());
+        viewPort.addProcessor(bsr);
        
     }
     
     @Override
      public void simpleUpdate(float tpf){
+        sky.updateTime();
+        bsr.setDirection(sky.getSunDirection().normalize().mult(-1));
         Vector3f origin = cam.getWorldCoordinates(inputManager.getCursorPosition(), 0.0f);
         System.out.println(origin);
      }
