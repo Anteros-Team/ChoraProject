@@ -36,6 +36,7 @@ import com.jme3.util.SkyFactory;
 import com.jme3.util.TangentBinormalGenerator;
 import com.jme3.water.SimpleWaterProcessor;
 import com.jme3.water.WaterFilter;
+import com.jme3.texture.Texture.WrapMode;
 
 /**
  * This is the Main Class of your Game. You should only do initialization here.
@@ -94,14 +95,17 @@ public class Main extends SimpleApplication {
         mat.setColor("Specular",  new ColorRGBA(42, 117, 33, 1));*/
         
                
-        Material mat = new Material(assetManager, "Common/MatDefs/Terrain/Terrain.j3md");
+        Material mat_terrain = new Material(assetManager, "Common/MatDefs/Terrain/Terrain.j3md");
+        
+        Texture grass = assetManager.loadTexture("Textures/Terrain/grass.jpg");
+        grass.setWrap(Texture.WrapMode.Repeat);
+        mat_terrain.setTexture("Tex1", grass);
+        mat_terrain.setFloat("Tex1Scale", 64f);
         
         
         Spatial floor = rootNode.getChild("terrain-map");
         shootables.attachChild(floor);
-        //floor.setMaterial(mat);
-        //floor.setShadowMode(ShadowMode.CastAndReceive);
-        
+        floor.setMaterial(mat_terrain);               
         
         
         Material matTrunk = new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
