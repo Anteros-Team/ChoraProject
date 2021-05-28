@@ -86,17 +86,22 @@ public class Main extends SimpleApplication {
         rootNode.attachChild(SkyFactory.createSky(getAssetManager(), west, east, north, south, up, down));
         */
         
-        Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        /*Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         mat.setFloat("Shininess", 12);
         mat.setBoolean("UseMaterialColors", true);
         mat.setColor("Ambient",  new ColorRGBA(42, 117, 33, 1));
         mat.setColor("Diffuse",  new ColorRGBA(17, 83, 158, 1));
-        mat.setColor("Specular",  new ColorRGBA(42, 117, 33, 1));
+        mat.setColor("Specular",  new ColorRGBA(42, 117, 33, 1));*/
+        
+               
+        Material mat = new Material(assetManager, "Common/MatDefs/Terrain/Terrain.j3md");
         
         
         Spatial floor = rootNode.getChild("terrain-map");
         shootables.attachChild(floor);
-        floor.setMaterial(mat);
+        //floor.setMaterial(mat);
+        //floor.setShadowMode(ShadowMode.CastAndReceive);
+        
         
         
         Material matTrunk = new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
@@ -112,10 +117,10 @@ public class Main extends SimpleApplication {
         rootNode.attachChild(model);
         
         Spatial trunk = rootNode.getChild("Tree_2_1");
-        trunk.setMaterial(mat);
+        //trunk.setMaterial(mat);
         
         Spatial leaves = rootNode.getChild("Tree_2_0");
-        leaves.setMaterial(mat);
+       //leaves.setMaterial(mat);
         
         
         Spatial albelello = assetManager.loadModel("Models/small_tree/small_tree.j3o");

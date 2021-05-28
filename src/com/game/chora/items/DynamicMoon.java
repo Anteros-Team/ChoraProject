@@ -30,7 +30,7 @@ public class DynamicMoon extends Node {
     private Vector3f lightDir = moonSystem.getPosition();
     private Vector3f lightPosition = new Vector3f();
     
-    private float scaling = 900;
+    private float scaling = 1200;
     
     public DynamicMoon(AssetManager assetManager, ViewPort viewPort, Node rootNode, Float scaling) {
         this.assetManager = assetManager;
@@ -66,7 +66,7 @@ public class DynamicMoon extends Node {
     protected DirectionalLight getSunLight(){
         DirectionalLight dl = new DirectionalLight();
         dl.setDirection(lightDir);
-        dl.setColor(ColorRGBA.White.mult(0.3f));
+        dl.setColor(ColorRGBA.White.mult(0.5f));
         return dl;
     }
         
@@ -79,7 +79,7 @@ public class DynamicMoon extends Node {
         return moonSystem.getPosition();
     }
 
-    public void updateTime() {
+    public void updateTime(Vector3f moonDir) {
         // make everything follow the camera
         setLocalTranslation(viewPort.getCamera().getLocation());
         
@@ -87,7 +87,14 @@ public class DynamicMoon extends Node {
         updateLightPosition();
         
         moonLight.setDirection(lightDir);
-        moon.setLocalTranslation(lightPosition.mult(0.55f));
+        moon.setLocalTranslation(lightPosition.mult(0.95f));
+        
+        if(moonDir.y > 0.15 && moonDir.y < 0.9){
+            moonLight.setColor(ColorRGBA.White.mult(0f));
+        }
+        else{
+             moonLight.setColor(ColorRGBA.White.mult((-moonDir.y + 0.2f) * 0.35f));
+        }
     }
 }
 

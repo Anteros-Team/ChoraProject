@@ -74,14 +74,23 @@ public class DynamicSun extends Node {
         return sunSystem.getPosition();
     }
 
-    public void updateTime() {
+    public void updateTime(Vector3f sunDir) {
         // make everything follow the camera
         setLocalTranslation(viewPort.getCamera().getLocation());
         
         sunSystem.updateSunPosition(); // increment by 30 seconds
         updateLightPosition();
         
+               
         sunLight.setDirection(lightDir);
-        sun.setLocalTranslation(lightPosition.mult(0.95f));
+        sun.setLocalTranslation(lightPosition.mult(0.9f));
+        
+        System.out.println("sunDir: " + sunDir);
+        if(sunDir.y > 0.15 && sunDir.y < 0.95){
+            sunLight.setColor(ColorRGBA.White.mult(0f));
+        }
+        else{
+             sunLight.setColor(ColorRGBA.White.mult((-sunDir.y + 0.2f) * 0.9f));
+        }
     }
 }

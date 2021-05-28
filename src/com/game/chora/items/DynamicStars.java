@@ -49,7 +49,11 @@ public class DynamicStars extends Node{
     }
     
     public void update(Vector3f sunDir){
-        mat.setColor("Color", new ColorRGBA(1f,1f,1f, (sunDir.y + 0.2f) * 0.5f));
+        //mat.setColor("Color", new ColorRGBA(1f,1f,1f, (sunDir.y + 0.2f) * 0.5f));
+        mat.setColor("Color", new ColorRGBA(1f,1f,1f, 0));
+        if(sunDir.y > 0 && sunDir.y < 1){
+            mat.setColor("Color", new ColorRGBA(1f,1f,1f, 0.9f));
+        }
     }
     
     protected Vector3f getRandomVector(){

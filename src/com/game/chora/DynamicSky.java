@@ -48,10 +48,10 @@ public class DynamicSky extends Node {
     }
         
     public void updateTime(){
-        dynamicSun.updateTime();
-        dynamicMoon.updateTime();
+        dynamicSun.updateTime(dynamicSun.getSunSystem().getDirection());
+        dynamicMoon.updateTime(dynamicMoon.getSunSystem().getDirection());
         dynamicBackground.updateLightPosition(dynamicSun.getSunSystem().getPosition());
-        dynamicStars.update(dynamicSun.getSunSystem().getDirection());
+        dynamicStars.update(dynamicSun.getSunSystem().getDirection());        
         dynamicStars.lookAt(dynamicSun.getSunSystem().getPosition(), Vector3f.ZERO);
     }
     
