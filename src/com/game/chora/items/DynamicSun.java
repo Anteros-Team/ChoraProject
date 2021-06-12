@@ -48,6 +48,7 @@ public class DynamicSun extends Node {
         
         sun = new SkyBillboardItem("sun", 170f);
         sun.setMaterial(mat);
+        sun.setShadowMode(shadowMode.Off);
         attachChild(sun);
         
         setQueueBucket(Bucket.Sky);
@@ -58,7 +59,7 @@ public class DynamicSun extends Node {
         return sunSystem;
     }
     
-    protected DirectionalLight getSunLight(){
+    public DirectionalLight getSunLight(){
         DirectionalLight dl = new DirectionalLight();
         dl.setDirection(lightDir);
         dl.setColor(ColorRGBA.White);

@@ -1,9 +1,10 @@
-package com.game.chora.items;
+ package com.game.chora.items;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.ViewPort;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -32,6 +33,7 @@ public class DynamicSkyBackground {
         Geometry geom = new Geometry("Sky", sphereMesh);
         geom.setQueueBucket(Bucket.Sky);
         geom.setCullHint(Spatial.CullHint.Never);
+        geom.setShadowMode(RenderQueue.ShadowMode.Off);
         
         skyMaterial = getDynamicSkyMaterial();
         geom.setMaterial(skyMaterial);

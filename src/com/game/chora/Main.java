@@ -10,6 +10,8 @@ import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
+import com.jme3.material.RenderState.FaceCullMode;
+import com.jme3.material.TechniqueDef;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Plane;
@@ -48,6 +50,7 @@ public class Main extends SimpleApplication {
     DynamicSky sky = null;
     BasicShadowRenderer bsr = null;
     private Node shootables;
+    DirectionalLightShadowFilter dlsf;
     
     public static void main(String[] args){
         Main app = new Main();
@@ -74,7 +77,7 @@ public class Main extends SimpleApplication {
         cam.setFrustumFar(100000f);
                 
         Spatial scene = assetManager.loadModel("Scenes/map.j3o");
-        scene.setShadowMode(ShadowMode.CastAndReceive);
+//        scene.setShadowMode(ShadowMode.CastAndReceive);
         rootNode.attachChild(scene);
         
         /*
@@ -105,26 +108,32 @@ public class Main extends SimpleApplication {
         
         Spatial floor = rootNode.getChild("terrain-map");
         shootables.attachChild(floor);
-        floor.setMaterial(mat_terrain);               
+        floor.setShadowMode(ShadowMode.Receive);
+        //floor.setMaterial(mat_terrain);  
         
         
         Material matTrunk = new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
-        matTrunk.setColor("Color", new ColorRGBA(.67f, .41f, .10f, 1.0f));        
+        //matTrunk.setColor("Color", new ColorRGBA(.67f, .41f, .10f, 1.0f));        
         
         Material matLeaves = new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
         matLeaves.setColor("Color", new ColorRGBA(.25f, .72f, .18f, 1.0f));   
         
+        
         Spatial model = assetManager.loadModel("Models/cartoon_lowpoly_trees_blend/cartoon_lowpoly_trees_blend.j3o");
-        model.setShadowMode(ShadowMode.CastAndReceive);
-        //model.setMaterial(mat);
+        model.setShadowMode(ShadowMode.CastAndReceive);        
+        renderManager.setPreferredLightMode(TechniqueDef.LightMode.SinglePass);
+        
+        matLeaves.selectTechnique(INPUT_MAPPING_EXIT, renderManager);
+       
+       // model.setMaterial(mat_t);
   
         rootNode.attachChild(model);
         
         Spatial trunk = rootNode.getChild("Tree_2_1");
-        //trunk.setMaterial(mat);
+        //trunk.setMaterial(matTrunk);
         
         Spatial leaves = rootNode.getChild("Tree_2_0");
-       //leaves.setMaterial(mat);
+        //leaves.setMaterial(matLeaves);
         
         
         Spatial albelello = assetManager.loadModel("Models/small_tree/small_tree.j3o");
@@ -149,6 +158,7 @@ public class Main extends SimpleApplication {
         germoglio.scale(0.2f);
         rootNode.attachChild(germoglio);
         
+               
         /*Spatial model_1 = assetManager.loadModel("Models/cartoon_lowpoly_trees_blend/Tree_2_0.cartoon_lowpoly_trees_blend.j3o");
         model_1.setShadowMode(ShadowMode.CastAndReceive);
         model_1.setMaterial(mat);
@@ -163,38 +173,39 @@ public class Main extends SimpleApplication {
         rootNode.addLight(sun);
         */
         
-        final int SHADOWMAP_SIZE=2048;
-        
-               
+        final int SHADOWMAP_SIZE=512;   
        
         
-        DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 3);
+        /*DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 3);
         
         dlsr.setLambda(0.55f);
         dlsr.setShadowIntensity(0.8f);
         dlsr.setEdgeFilteringMode(EdgeFilteringMode.Nearest);
-        viewPort.addProcessor(dlsr);
+        viewPort.addProcessor(dlsr);    */    
         
         
-        /*
-        DirectionalLightShadowFilter dlsf = new DirectionalLightShadowFilter(assetManager, SHADOWMAP_SIZE, 3);
-        dlsf.setLight(sun);
+        dlsf = new DirectionalLightShadowFilter(assetManager, SHADOWMAP_SIZE, 3);
+        //dlsf.setLight(sky.getSunLight());
         dlsf.setLambda(0.55f);
-        dlsf.setShadowIntensity(0.8f);
+        dlsf.setShadowIntensity(0.5f);
         dlsf.setRenderBackFacesShadows(true);
         dlsf.setEnabledStabilization(true);
-        dlsf.setEdgeFilteringMode(EdgeFilteringMode.PCF8);
+        //dlsf.setEdgeFilteringMode(EdgeFilteringMode.PCF8);
+        dlsf.setEdgeFilteringMode(EdgeFilteringMode.Bilinear);
         
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         fpp.addFilter(dlsf);
         
-        viewPort.addProcessor(fpp);
+        //viewPort.addProcessor(fpp);
         
         AmbientLight al = new AmbientLight();
-        al.setColor(ColorRGBA.White.mult(.1f));
+        al.setColor(ColorRGBA.White.mult(.3f));        
         rootNode.addLight(al);
-        */
-        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+        
+       
+        
+        
+        //FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         //SSAOFilter ssaoFilter = new SSAOFilter(12.94f, 43.92f, 0.33f, 0.61f);
         //fpp.addFilter(ssaoFilter);
         //viewPort.addProcessor(fpp);  
@@ -267,6 +278,13 @@ public class Main extends SimpleApplication {
     
     @Override
      public void simpleUpdate(float tpf){
+        dlsf.setLight(sky.getSunLight());
+        System.out.println("SKY_LIGHT: "+sky.getSunLight());
+        if(sky.getSunLight().getDirection().y < 0.05){
+            dlsf.setLight(sky.getSunLight());
+        }
+        else
+            dlsf.setLight(sky.getMoonLight());
         sky.updateTime();
         bsr.setDirection(sky.getSunDirection().normalize().mult(-1));
         Vector3f origin = cam.getWorldCoordinates(inputManager.getCursorPosition(), 0.0f);
@@ -283,5 +301,9 @@ public class Main extends SimpleApplication {
         newmodel.setLocalTranslation(coordinate);
         
         rootNode.attachChild(newmodel);
+    }
+
+    private Object getAdditionalRenderState() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -31,10 +31,11 @@ public class DynamicStars extends Node{
         mat.setColor("Color", new ColorRGBA(1f,1f,1f, 0.4f));
         //mat.getAdditionalRenderState().setBlendMode(BlendMode.Additive);
         mat.getAdditionalRenderState().setBlendMode(BlendMode.AlphaAdditive);
-        stars = new SkyBillboardItem[stars_count];
+        stars = new SkyBillboardItem[stars_count];                
         for(int i = 0; i < stars_count; i++){
             SkyBillboardItem item = new SkyBillboardItem("star_" + i, 80f + ((float) Math.random() * 140f));
             stars[i] = item;
+            item.setShadowMode(shadowMode.Off);
             
             item.setMaterial(mat);
             item.setLocalTranslation(getPointOnSphere().mult(scaling - 30f));

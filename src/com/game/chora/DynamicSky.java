@@ -5,6 +5,7 @@ import com.game.chora.items.DynamicSkyBackground;
 import com.game.chora.items.DynamicStars;
 import com.game.chora.items.DynamicSun;
 import com.jme3.asset.AssetManager;
+import com.jme3.light.DirectionalLight;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.ViewPort;
@@ -43,8 +44,16 @@ public class DynamicSky extends Node {
         return dynamicSun.getSunDirection();
     }
     
+    public DirectionalLight getSunLight(){
+        return dynamicSun.getSunLight();
+    }
+    
     public Vector3f getMoonDirection() {
         return dynamicMoon.getSunDirection();
+    }
+    
+    public DirectionalLight getMoonLight(){
+        return dynamicMoon.getSunLight();
     }
         
     public void updateTime(){

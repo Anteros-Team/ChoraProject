@@ -51,6 +51,7 @@ public class DynamicMoon extends Node {
         mat.getAdditionalRenderState().setDepthWrite(false);
                 
         moon = new SkyBillboardItem("moon", 120f);
+        moon.setShadowMode(shadowMode.Off);
         moon.setMaterial(mat);
         attachChild(moon);
         
@@ -63,7 +64,7 @@ public class DynamicMoon extends Node {
         return moonSystem;
     }
     
-    protected DirectionalLight getSunLight(){
+    public DirectionalLight getSunLight(){
         DirectionalLight dl = new DirectionalLight();
         dl.setDirection(lightDir);
         dl.setColor(ColorRGBA.White.mult(0.5f));
