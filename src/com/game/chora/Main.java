@@ -50,7 +50,8 @@ public class Main extends SimpleApplication {
     DynamicSky sky = null;
     BasicShadowRenderer bsr = null;
     private Node shootables;
-    DirectionalLightShadowFilter dlsf;
+    DirectionalLightShadowFilter dlsfSun;
+    DirectionalLightShadowFilter dlsfMoon;
     
     public static void main(String[] args){
         Main app = new Main();
@@ -120,10 +121,7 @@ public class Main extends SimpleApplication {
         
         
         Spatial model = assetManager.loadModel("Models/cartoon_lowpoly_trees_blend/cartoon_lowpoly_trees_blend.j3o");
-        model.setShadowMode(ShadowMode.CastAndReceive);        
-        renderManager.setPreferredLightMode(TechniqueDef.LightMode.SinglePass);
-        
-        matLeaves.selectTechnique(INPUT_MAPPING_EXIT, renderManager);
+        model.setShadowMode(ShadowMode.CastAndReceive);   
        
        // model.setMaterial(mat_t);
   
@@ -183,18 +181,35 @@ public class Main extends SimpleApplication {
         dlsr.setEdgeFilteringMode(EdgeFilteringMode.Nearest);
         viewPort.addProcessor(dlsr);    */    
         
-        
-        dlsf = new DirectionalLightShadowFilter(assetManager, SHADOWMAP_SIZE, 3);
-        //dlsf.setLight(sky.getSunLight());
-        dlsf.setLambda(0.55f);
-        dlsf.setShadowIntensity(0.5f);
-        dlsf.setRenderBackFacesShadows(true);
-        dlsf.setEnabledStabilization(true);
-        //dlsf.setEdgeFilteringMode(EdgeFilteringMode.PCF8);
-        dlsf.setEdgeFilteringMode(EdgeFilteringMode.Bilinear);
-        
+        // shadowMoon
+        dlsfMoon = new DirectionalLightShadowFilter(assetManager, SHADOWMAP_SIZE, 3);
+        //dlsfm.setLight(sky.getMoonLight());
+        dlsfMoon.setLambda(0.2f);
+        dlsfMoon.setShadowIntensity(0.3f);
+        dlsfMoon.setRenderBackFacesShadows(true);
+        dlsfMoon.setEnabledStabilization(true);
+        dlsfMoon.setEdgeFilteringMode(EdgeFilteringMode.Bilinear);        
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
-        fpp.addFilter(dlsf);
+        //shadow distance and fade
+        dlsfMoon.setShadowZExtend(650);
+        dlsfMoon.setShadowZFadeLength(150);
+        fpp.addFilter(dlsfMoon);
+        
+        // shadowSun
+        dlsfSun = new DirectionalLightShadowFilter(assetManager, SHADOWMAP_SIZE, 3);
+        //dlsf.setLight(sky.getSunLight());
+        dlsfSun.setLambda(0.2f);
+        dlsfSun.setShadowIntensity(0.5f);
+        dlsfSun.setRenderBackFacesShadows(true);
+        dlsfSun.setEnabledStabilization(true);
+        //dlsfSun.setEdgeFilteringMode(EdgeFilteringMode.PCF8);
+        dlsfSun.setEdgeFilteringMode(EdgeFilteringMode.Bilinear);
+        
+        //shadow distance and fade
+        dlsfSun.setShadowZExtend(650);
+        dlsfSun.setShadowZFadeLength(150);
+        fpp.addFilter(dlsfSun);        
+       
         
         //viewPort.addProcessor(fpp);
         
@@ -278,13 +293,14 @@ public class Main extends SimpleApplication {
     
     @Override
      public void simpleUpdate(float tpf){
-        dlsf.setLight(sky.getSunLight());
+        dlsfSun.setLight(sky.getSunLight());
+        dlsfMoon.setLight(sky.getMoonLight());
         System.out.println("SKY_LIGHT: "+sky.getSunLight());
-        if(sky.getSunLight().getDirection().y < 0.05){
+        /*if(sky.getSunLight().getDirection().y < 0.05){
             dlsf.setLight(sky.getSunLight());
         }
         else
-            dlsf.setLight(sky.getMoonLight());
+            dlsf.setLight(sky.getMoonLight());*/
         sky.updateTime();
         bsr.setDirection(sky.getSunDirection().normalize().mult(-1));
         Vector3f origin = cam.getWorldCoordinates(inputManager.getCursorPosition(), 0.0f);
