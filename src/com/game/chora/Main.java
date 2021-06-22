@@ -99,18 +99,21 @@ public class Main extends SimpleApplication {
         mat.setColor("Specular",  new ColorRGBA(42, 117, 33, 1));*/
         
                
-        Material mat_terrain = new Material(assetManager, "Common/MatDefs/Terrain/Terrain.j3md");
+        //Material mat_terrain = new Material(assetManager, "Common/MatDefs/Terrain/Terrain.j3md");        
+        Material mat_terrain = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+
         
-        Texture grass = assetManager.loadTexture("Textures/Terrain/grass.jpg");
+        //Texture grass = assetManager.loadTexture("Textures/Terrain/grass.jpg");
+        Texture grass = assetManager.loadTexture("Textures/Terrain/erba.jpg");
         grass.setWrap(Texture.WrapMode.Repeat);
-        mat_terrain.setTexture("Tex1", grass);
-        mat_terrain.setFloat("Tex1Scale", 64f);
+        mat_terrain.setTexture("ColorMap", grass);
+        //mat_terrain.setFloat("TexScale", 64f);
         
         
         Spatial floor = rootNode.getChild("terrain-map");
         shootables.attachChild(floor);
-        floor.setShadowMode(ShadowMode.Receive);
-        //floor.setMaterial(mat_terrain);  
+        floor.setShadowMode(ShadowMode.Receive);  
+        floor.setMaterial(mat_terrain);  
         
         
         Material matTrunk = new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");

@@ -30,7 +30,7 @@ public class DynamicMoon extends Node {
     private Vector3f lightDir = moonSystem.getPosition();
     private Vector3f lightPosition = new Vector3f();
     
-    private float scaling = 1200;
+    private float scaling = 1500;
     
     public DynamicMoon(AssetManager assetManager, ViewPort viewPort, Node rootNode, Float scaling) {
         this.assetManager = assetManager;
