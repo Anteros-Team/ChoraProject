@@ -1,6 +1,7 @@
 package com.game.chora;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.bounding.BoundingVolume;
 import com.jme3.input.ChaseCamera;
 import com.jme3.light.AmbientLight;
 import com.jme3.material.Material;
@@ -133,9 +134,25 @@ public class Main extends SimpleApplication{
         fpp.addFilter(waterPP);
         viewPort.addProcessor(fpp);
         
-        // Set shadow mode
-        
+        // Set shadow mode        
         scene.setShadowMode(RenderQueue.ShadowMode.Receive);
+        
+        BoundingVolume bvScene = scene.getWorldBound();
+        //System.out.println("BV Scene " + bvScene.)
+        
+        // Level 1
+        int x, z, i=0;
+        Spatial trash [] = new Spatial[256];
+        for(x=-512; x < 512; x+=64){
+            for(z=-521; z < 512; z+=64){
+                trash[i]= assetManager.loadModel("Models/trash/trash.j3o");
+                BoundingVolume bvTrash = trash[i].getWorldBound();
+                trash[i].setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
+                trash[i].scale(10f);           
+                trash[i].move(x, 0, z);
+                rootNode.attachChild(trash[i]);
+            }
+        }
     }
     
     @Override
