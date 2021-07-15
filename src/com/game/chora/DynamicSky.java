@@ -1,9 +1,9 @@
 package com.game.chora;
 
-import com.game.chora.items.DynamicMoon;
-import com.game.chora.items.DynamicSkyBackground;
-import com.game.chora.items.DynamicStars;
-import com.game.chora.items.DynamicSun;
+import com.game.chora.items.sky.DynamicMoon;
+import com.game.chora.items.sky.DynamicSkyBackground;
+import com.game.chora.items.sky.DynamicStars;
+import com.game.chora.items.sky.DynamicSun;
 import com.jme3.asset.AssetManager;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.Quaternion;

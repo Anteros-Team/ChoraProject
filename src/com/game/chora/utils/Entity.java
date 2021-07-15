@@ -7,6 +7,7 @@ import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
@@ -52,6 +53,7 @@ public class Entity {
     
     public void setModel(AssetManager assetManager, Node rootNode, String pathModel) {
         this.entity = assetManager.loadModel(pathModel);
+        this.entity.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         this.entity.move(this.position);
         this.entity.scale(this.scale);
         
@@ -76,6 +78,6 @@ public class Entity {
     }
     
     public void Spawn(Node rootNode) {
-        rootNode.attachChild(entity);
+        rootNode.attachChild(this.entity);
     }
 }

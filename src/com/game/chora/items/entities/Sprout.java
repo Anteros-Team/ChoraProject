@@ -1,4 +1,4 @@
-package com.game.chora.items;
+package com.game.chora.items.entities;
 
 import com.game.chora.utils.Entity;
 import com.jme3.math.Vector3f;

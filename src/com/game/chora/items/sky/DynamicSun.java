@@ -1,4 +1,4 @@
-package com.game.chora.items;
+package com.game.chora.items.sky;
 
 import com.game.chora.utils.SkyBillboardItem;
 import com.game.chora.utils.SunSystem;

@@ -1,5 +1,8 @@
 package com.game.chora;
 
+import com.game.chora.items.entities.*;
+import com.game.chora.water.Ocean;
+import com.game.chora.water.Pound;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bounding.BoundingVolume;
@@ -37,11 +40,11 @@ import java.util.HashSet;
 public class Main extends SimpleApplication{
     
     DynamicSky sky = null;
-    BasicShadowRenderer bsr = null;
-    DirectionalLightShadowFilter dlsfSun;
-    DirectionalLightShadowFilter dlsfMoon;
-    final int SHADOWMAP_SIZE = 512;
     private BulletAppState bulletAppState;
+    private Scene scene;
+    private View view;
+    private Pound pound;
+    private Ocean ocean;
     
     public static void main(String[] args) {
         Main app = new Main();
@@ -53,120 +56,39 @@ public class Main extends SimpleApplication{
         
         ChaseCamera chaseCam = new ChaseCamera(cam, rootNode, inputManager);
         chaseCam.setMinDistance(500);
-        
         cam.setFrustumFar(100000f);
         
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         //bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
         
+        
         // Create scene and terrain
         
-        Spatial scene = assetManager.loadModel("Scenes/map.j3o");
-        rootNode.attachChild(scene);
-        
-        Material matTerrain = new Material(assetManager, "Common/MatDefs/Terrain/Terrain.j3md");        
-        
-        Texture dirt = assetManager.loadTexture("Textures/Terrain/dirt.jpg");
-        dirt.setWrap(Texture.WrapMode.Repeat);
-        matTerrain.setTexture("Tex1", dirt);
-        
-        scene.setMaterial(matTerrain);
-        
-        /*Spatial floor = rootNode.getChild("terrain-map");
-        floor.addControl(new RigidBodyControl(0));
-        //bulletAppState.getPhysicsSpace().add(floor.getControl(RigidBodyControl.class));
-        bulletAppState.getPhysicsSpace().add(floor);*/
-        
-        Spatial floor = rootNode.getChild("terrain-map");
-        floor.addControl(new RigidBodyControl(0));
-        
-        bulletAppState.getPhysicsSpace().addAll(floor);
+        scene = new Scene(assetManager, rootNode, bulletAppState);
         
         
-        
-        // Create Sky, Sun and Moon
+        // Create Sky, Sun and Moon and Ambient Light
         
         sky = new DynamicSky(assetManager, viewPort, rootNode);
         rootNode.attachChild(sky);
         
-        dlsfMoon = new DirectionalLightShadowFilter(assetManager, SHADOWMAP_SIZE, 3);
-        //dlsfm.setLight(sky.getMoonLight());
-        dlsfMoon.setLambda(0.2f);
-        dlsfMoon.setShadowIntensity(0.3f);
-        dlsfMoon.setRenderBackFacesShadows(true);
-        dlsfMoon.setEnabledStabilization(true);
-        dlsfMoon.setEdgeFilteringMode(EdgeFilteringMode.Bilinear);        
-        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
-        //shadow distance and fade
-        dlsfMoon.setShadowZExtend(650);
-        dlsfMoon.setShadowZFadeLength(150);
-        fpp.addFilter(dlsfMoon);
-        
-        dlsfSun = new DirectionalLightShadowFilter(assetManager, SHADOWMAP_SIZE, 3);
-        //dlsf.setLight(sky.getSunLight());
-        dlsfSun.setLambda(0.2f);
-        dlsfSun.setShadowIntensity(0.5f);
-        dlsfSun.setRenderBackFacesShadows(true);
-        dlsfSun.setEnabledStabilization(true);
-        //dlsfSun.setEdgeFilteringMode(EdgeFilteringMode.PCF8);
-        dlsfSun.setEdgeFilteringMode(EdgeFilteringMode.Bilinear);
-        
-        //shadow distance and fade
-        dlsfSun.setShadowZExtend(650);
-        dlsfSun.setShadowZFadeLength(150);
-        fpp.addFilter(dlsfSun);
-        
-        
-        // Add ambient light
-        
-        AmbientLight al = new AmbientLight();
-        al.setColor(ColorRGBA.White.mult(.3f));        
-        rootNode.addLight(al);
+        view = new View(assetManager, rootNode);
         
         
         // Add water pound
         
-        SimpleWaterProcessor waterProcessor = new SimpleWaterProcessor(assetManager);
-        waterProcessor.setReflectionScene(rootNode);
-        waterProcessor.setDebug(false);
-        waterProcessor.setLightPosition(sky.getSunDirection());
-        waterProcessor.setRefractionClippingOffset(1.0f);
+        pound = new Pound(assetManager, rootNode, viewPort);
         
-        Vector3f waterLocation=new Vector3f(0,-20,0);
-        waterProcessor.setPlane(new Plane(Vector3f.UNIT_Y, waterLocation.dot(Vector3f.UNIT_Y)));       
-        waterProcessor.setWaterColor(ColorRGBA.Brown);
-        waterProcessor.setDebug(false);
-        
-        Quad quad = new Quad(400,400);
-        
-        quad.scaleTextureCoordinates(new Vector2f(6f,6f));
-
-        Geometry water=new Geometry("water", quad);
-        water.setShadowMode(RenderQueue.ShadowMode.Receive);
-        water.setLocalRotation(new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X));
-        water.setMaterial(waterProcessor.getMaterial());
-        water.scale(0.5f);
-        water.setLocalTranslation(150, -10, 300);
-       
-        rootNode.attachChild(water);
-
-        viewPort.addProcessor(waterProcessor);
         
         // Add ocean
         
-        WaterFilter waterPP = new WaterFilter(rootNode, sky.getSunDirection()); // LightDir
-        waterPP.setWaterHeight(-40);
-        fpp.addFilter(waterPP);
-        viewPort.addProcessor(fpp);
+        ocean = new Ocean(rootNode, viewPort, view.getFilterPostProcessor(), sky);
         
-        // Set shadow mode        
-        scene.setShadowMode(RenderQueue.ShadowMode.Receive);
         
-        //BoundingVolume bvScene = scene.getWorldBound();
+        // Initial setup
         
-        // Level 1
-        Spatial trash = assetManager.loadModel("Models/trash2/trash2.j3o");                
+        /*Spatial trash = assetManager.loadModel("Models/trash2/trash2.j3o");                
         trash.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         trash.scale(10f);
         trash.setLocalTranslation(100, 0, 50);
@@ -181,7 +103,7 @@ public class Main extends SimpleApplication{
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
         box.setMaterial(mat);
         rootNode.attachChild(box);
-        */        
+             
         RigidBodyControl rigidBodyControlt = new RigidBodyControl(shapect);
         trash.addControl(rigidBodyControlt);
         
@@ -203,14 +125,18 @@ public class Main extends SimpleApplication{
         bulletAppState.getPhysicsSpace().add(rigidBodyControlts);
         
         rootNode.attachChild(sprout);
-        rootNode.attachChild(trash);
+        rootNode.attachChild(trash);*/
+        
+        Trash t = new Trash(new Vector3f(0, 0, 0), 10, new Vector3f(25, 10, 25));
+        t.setModel(assetManager, rootNode, "Models/trash2/trash2.j3o");
+        t.setPhysics(bulletAppState);
+        t.Spawn(rootNode);
+        
     }
     
     @Override
     public void simpleUpdate(float tpf) {
-        dlsfSun.setLight(sky.getSunLight());
-        dlsfMoon.setLight(sky.getMoonLight());
-        
+        view.updateLight(sky);
         sky.updateTime();
     }
 }

@@ -1,4 +1,4 @@
- package com.game.chora.items;
+ package com.game.chora.items.sky;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
