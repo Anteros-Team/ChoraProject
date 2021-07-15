@@ -1,7 +1,15 @@
 package com.game.chora;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.bounding.BoundingBox;
 import com.jme3.bounding.BoundingVolume;
+import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.shapes.BoxCollisionShape;
+import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
+import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
+import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.input.ChaseCamera;
 import com.jme3.light.AmbientLight;
 import com.jme3.material.Material;
@@ -15,6 +23,7 @@ import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Quad;
 import com.jme3.shadow.BasicShadowRenderer;
 import com.jme3.shadow.DirectionalLightShadowFilter;
@@ -22,6 +31,7 @@ import com.jme3.shadow.EdgeFilteringMode;
 import com.jme3.texture.Texture;
 import com.jme3.water.SimpleWaterProcessor;
 import com.jme3.water.WaterFilter;
+import java.util.HashSet;
 
 
 public class Main extends SimpleApplication{
@@ -31,6 +41,7 @@ public class Main extends SimpleApplication{
     DirectionalLightShadowFilter dlsfSun;
     DirectionalLightShadowFilter dlsfMoon;
     final int SHADOWMAP_SIZE = 512;
+    private BulletAppState bulletAppState;
     
     public static void main(String[] args) {
         Main app = new Main();
@@ -45,6 +56,10 @@ public class Main extends SimpleApplication{
         
         cam.setFrustumFar(100000f);
         
+        bulletAppState = new BulletAppState();
+        stateManager.attach(bulletAppState);
+        //bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
+        
         // Create scene and terrain
         
         Spatial scene = assetManager.loadModel("Scenes/map.j3o");
@@ -57,6 +72,17 @@ public class Main extends SimpleApplication{
         matTerrain.setTexture("Tex1", dirt);
         
         scene.setMaterial(matTerrain);
+        
+        /*Spatial floor = rootNode.getChild("terrain-map");
+        floor.addControl(new RigidBodyControl(0));
+        //bulletAppState.getPhysicsSpace().add(floor.getControl(RigidBodyControl.class));
+        bulletAppState.getPhysicsSpace().add(floor);*/
+        
+        Spatial floor = rootNode.getChild("terrain-map");
+        floor.addControl(new RigidBodyControl(0));
+        
+        bulletAppState.getPhysicsSpace().addAll(floor);
+        
         
         
         // Create Sky, Sun and Moon
@@ -137,22 +163,47 @@ public class Main extends SimpleApplication{
         // Set shadow mode        
         scene.setShadowMode(RenderQueue.ShadowMode.Receive);
         
-        BoundingVolume bvScene = scene.getWorldBound();
-        //System.out.println("BV Scene " + bvScene.)
+        //BoundingVolume bvScene = scene.getWorldBound();
         
         // Level 1
-        int x, z, i=0;
-        Spatial trash [] = new Spatial[256];
-        for(x=-512; x < 512; x+=64){
-            for(z=-521; z < 512; z+=64){
-                trash[i]= assetManager.loadModel("Models/trash/trash.j3o");
-                BoundingVolume bvTrash = trash[i].getWorldBound();
-                trash[i].setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
-                trash[i].scale(10f);           
-                trash[i].move(x, 0, z);
-                rootNode.attachChild(trash[i]);
-            }
-        }
+        Spatial trash = assetManager.loadModel("Models/trash2/trash2.j3o");                
+        trash.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
+        trash.scale(10f);
+        trash.setLocalTranslation(100, 0, 50);
+                
+        //CollisionShape shapet = CollisionShapeFactory.createBoxShape(trash); 
+        BoxCollisionShape shapet = new BoxCollisionShape(new Vector3f(25,10,25));
+        CompoundCollisionShape shapect = new CompoundCollisionShape();
+        shapect.addChildShape(shapet, new Vector3f(shapet.getScale().x, shapet.getHalfExtents().y, shapet.getScale().z));
+        /*
+        Box cube = new Box(shape.getScale().x, shape.getScale().y, shape.getScale().z);
+        Geometry box = new Geometry("trash", cube);
+        Material mat = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
+        box.setMaterial(mat);
+        rootNode.attachChild(box);
+        */        
+        RigidBodyControl rigidBodyControlt = new RigidBodyControl(shapect);
+        trash.addControl(rigidBodyControlt);
+        
+        bulletAppState.getPhysicsSpace().add(trash);
+        
+        bulletAppState.getPhysicsSpace().add(rigidBodyControlt);
+        //bulletAppState.setDebugEnabled(true);
+        
+        Spatial sprout = assetManager.loadModel("Models/sprout/sprout.j3o");
+        sprout.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
+        //sprout.addControl(new RigidBodyControl(1));
+        //bulletAppState.getPhysicsSpace().add(sprout);        
+        BoxCollisionShape shapes = new BoxCollisionShape(new Vector3f(10, 10 ,10));
+        CompoundCollisionShape shapecs = new CompoundCollisionShape();
+        shapecs.addChildShape(shapes, new Vector3f(shapes.getScale().x, shapes.getHalfExtents().y, shapes.getScale().z));
+        RigidBodyControl rigidBodyControlts = new RigidBodyControl(shapecs);
+        sprout.addControl(rigidBodyControlts);        
+        bulletAppState.getPhysicsSpace().add(sprout);
+        bulletAppState.getPhysicsSpace().add(rigidBodyControlts);
+        
+        rootNode.attachChild(sprout);
+        rootNode.attachChild(trash);
     }
     
     @Override
