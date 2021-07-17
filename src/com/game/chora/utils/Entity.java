@@ -48,8 +48,12 @@ public class Entity {
         return this.hitboxSize;
     }
     
-    public Spatial getModel() {
+    public Spatial getEntity() {
         return this.entity;
+    }
+    
+    public Geometry getPickBox() {
+        return this.pickbox;
     }
     
     public void setModel(AssetManager assetManager, Node rootNode, String pathModel, Node shootables) {

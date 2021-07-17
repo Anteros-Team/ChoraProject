@@ -57,7 +57,8 @@ public class Main extends SimpleApplication{
     private Pound pound;
     private Ocean ocean;
     private Node shootables;
-    private Geometry mark;    
+    private Geometry mark;  
+    Trash t[];
     
     public static void main(String[] args) {
         Main app = new Main();
@@ -104,16 +105,16 @@ public class Main extends SimpleApplication{
         
         
         // Initial setup
+        t = new Trash[2];
+        t[0] = new Trash(new Vector3f(0, 0, 0), 10, new Vector3f(25, 25, 25));
+        t[0].setModel(assetManager, rootNode, "Models/trash2/trash2.j3o", shootables);
+        t[0].setPhysics(bulletAppState);
+        t[0].Spawn(rootNode);
         
-        Trash t = new Trash(new Vector3f(0, 0, 0), 10, new Vector3f(25, 25, 25));
-        t.setModel(assetManager, rootNode, "Models/trash2/trash2.j3o", shootables);
-        t.setPhysics(bulletAppState);
-        t.Spawn(rootNode);
-        
-        Trash t1 = new Trash(new Vector3f(50, 0, 50), 10, new Vector3f(25, 25, 25));
-        t1.setModel(assetManager, rootNode, "Models/trash2/trash2.j3o", shootables);
-        t1.setPhysics(bulletAppState);
-        t1.Spawn(rootNode);
+        t[1] = new Trash(new Vector3f(50, 0, 50), 10, new Vector3f(25, 25, 25));
+        t[1].setModel(assetManager, rootNode, "Models/trash2/trash2.j3o", shootables);
+        t[1].setPhysics(bulletAppState);
+        t[1].Spawn(rootNode);
         
         
         
@@ -162,14 +163,17 @@ public class Main extends SimpleApplication{
                 CollisionResult closest = results.getClosestCollision();
 
                 Spatial c = rootNode.getChild(hit);
-                /*
-                Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-                material.setColor("Color", ColorRGBA.Red);
-                c.setMaterial(material);
-                */
+                for (int i = 0; i < 2; i++) {
+                    if (t[i] != null) {
+                        if (t[i].getPickBox().getName().equals(hit)) {
+                        rootNode.detachChild(t[i].getEntity());
+                        t[i] = null;
+                        }
+                    }
+                }
                 
             } else {
-                // no hits
+                // no hit
             }
           }
         }
