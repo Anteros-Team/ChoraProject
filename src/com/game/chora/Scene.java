@@ -4,9 +4,13 @@ import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
+import com.jme3.math.Vector2f;
 import com.jme3.renderer.queue.RenderQueue;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.shader.VarType;
+import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.texture.Texture;
 
 
@@ -39,7 +43,22 @@ public class Scene {
         this.floor.addControl(new RigidBodyControl(0));
         this.floor.setMaterial(this.matTerrain);
         
+        this.setTextureScale(floor, new Vector2f(16, 16));
+        
+       
         bulletAppState.getPhysicsSpace().addAll(this.floor);
     }
     
+    private void setTextureScale(Spatial spatial, Vector2f vector) {
+        if (spatial instanceof Node) {
+            Node findingnode = (Node) spatial;
+
+            for (int i = 0; i < findingnode.getQuantity(); i++) {
+                Spatial child = findingnode.getChild(i);
+                setTextureScale(child, vector);
+            }
+        } else if (spatial instanceof Geometry) {
+            ((Geometry) spatial).getMesh().scaleTextureCoordinates(vector);
+        }
+    } 
 }

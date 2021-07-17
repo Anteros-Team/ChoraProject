@@ -8,7 +8,7 @@ import com.jme3.scene.control.BillboardControl;
 import com.jme3.scene.shape.Quad;
 
 public class SkyBillboardItem extends Geometry{
-    private BillboardControl billBoadControl = new BillboardControl();
+    private BillboardControl billBoardControl = new BillboardControl();
     private Quad quad;
     
     public SkyBillboardItem(String name, Float scale){
@@ -21,7 +21,7 @@ public class SkyBillboardItem extends Geometry{
         
         setMesh(quad);
         
-        addControl(billBoadControl);
+        addControl(billBoardControl);
     }
     
     public void setRotation(Float rotation){
@@ -30,14 +30,14 @@ public class SkyBillboardItem extends Geometry{
     }
     
     public void removeBillboardController(){
-        removeControl(billBoadControl);
+        removeControl(billBoardControl);
     }
     
     protected void setRotationEnabled(){
-        billBoadControl.setAlignment(BillboardControl.Alignment.AxialZ);
+        billBoardControl.setAlignment(BillboardControl.Alignment.AxialZ);
     }
     
     protected void setRotationDisabled(){
-        billBoadControl.setAlignment(BillboardControl.Alignment.Screen);
+        billBoardControl.setAlignment(BillboardControl.Alignment.Screen);
     }
 }
