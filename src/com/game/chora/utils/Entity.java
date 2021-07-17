@@ -6,15 +6,18 @@ import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Box;
 
 
 public class Entity {
     
-    static int id = 1000;
     protected Vector3f position;
     protected float scale;
     protected Vector3f hitboxSize;
@@ -23,16 +26,14 @@ public class Entity {
     protected BoxCollisionShape shape;
     protected CompoundCollisionShape hitbox;
     protected RigidBodyControl rbc;
+    protected Box cube;
+    protected Geometry pickbox;
+    protected Material matPickBox;
     
     public Entity(Vector3f position, float scale, Vector3f hitboxSize) {
-        this.id = id++;
         this.position = position;
         this.scale = scale;
         this.hitboxSize = hitboxSize;
-    }
-    
-    public int getID() {
-        return this.id;
     }
     
     public Vector3f getPosition() {
@@ -51,7 +52,7 @@ public class Entity {
         return this.entity;
     }
     
-    public void setModel(AssetManager assetManager, Node rootNode, String pathModel) {
+    public void setModel(AssetManager assetManager, Node rootNode, String pathModel, Node shootables) {
         this.entity = assetManager.loadModel(pathModel);
         this.entity.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         this.entity.move(this.position);
@@ -60,6 +61,18 @@ public class Entity {
         this.shape = new BoxCollisionShape(this.hitboxSize);
         this.hitbox = new CompoundCollisionShape();
         this.hitbox.addChildShape(shape, new Vector3f(shape.getScale().x, shape.getHalfExtents().y, shape.getScale().z));
+        
+        this.cube = new Box(this.hitboxSize.x, this.hitboxSize.y, this.hitboxSize.z);
+        this.pickbox = new Geometry("PickBox" + this.hashCode(), cube);
+        this.pickbox.setShadowMode(RenderQueue.ShadowMode.Off);
+        this.pickbox.setLocalTranslation(this.position);
+        this.pickbox.setCullHint(Spatial.CullHint.Always);
+        
+        this.matPickBox = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        this.matPickBox.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+        this.pickbox.setQueueBucket(RenderQueue.Bucket.Transparent);
+        pickbox.setMaterial(matPickBox);
+        shootables.attachChild(pickbox);
     }
     
     /*
@@ -70,7 +83,7 @@ public class Entity {
     */
     
     public void setPhysics(BulletAppState bulletAppState) {
-        this.rbc = new RigidBodyControl(this.hitbox);
+        this.rbc = new RigidBodyControl(this.hitbox, 0);
         this.entity.addControl(rbc);
         
         bulletAppState.getPhysicsSpace().add(this.entity);
