@@ -59,6 +59,7 @@ public class Main extends SimpleApplication{
     private Node shootables;
     private Geometry mark;  
     Trash t[];
+    Sprout s[];
     
     public static void main(String[] args) {
         Main app = new Main();
@@ -116,7 +117,11 @@ public class Main extends SimpleApplication{
         t[1].setPhysics(bulletAppState);
         t[1].Spawn(rootNode);
         
-        
+        s = new Sprout[2];
+        s[0] = new Sprout(new Vector3f(90, 0, 90), 0.5f, new Vector3f(5, 15, 5));
+        s[0].setModel(assetManager, rootNode, "Models/sprout/sprout.j3o", shootables);
+        s[0].setPhysics(bulletAppState);
+        s[0].Spawn(rootNode);
         
         initKeys();       // load custom key mappings
 
