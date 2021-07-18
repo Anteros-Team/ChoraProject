@@ -1,6 +1,7 @@
 package com.game.chora;
 
 import com.game.chora.items.entities.*;
+import com.game.chora.utils.Entity;
 import com.game.chora.water.Ocean;
 import com.game.chora.water.Pound;
 import com.jme3.app.SimpleApplication;
@@ -45,12 +46,14 @@ import com.jme3.shadow.EdgeFilteringMode;
 import com.jme3.texture.Texture;
 import com.jme3.water.SimpleWaterProcessor;
 import com.jme3.water.WaterFilter;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 
 public class Main extends SimpleApplication{
     
-    DynamicSky sky = null;
+    private Player p;
+    private DynamicSky sky = null;
     private BulletAppState bulletAppState;
     private Scene scene;
     private View view;
@@ -58,8 +61,7 @@ public class Main extends SimpleApplication{
     private Ocean ocean;
     private Node shootables;
     private Geometry mark;  
-    Trash t[];
-    Sprout s[];
+    private ArrayList<Entity> entities;
     
     public static void main(String[] args) {
         Main app = new Main();
@@ -69,8 +71,10 @@ public class Main extends SimpleApplication{
     @Override
     public void simpleInitApp() {
         
-        ChaseCamera chaseCam = new ChaseCamera(cam, rootNode, inputManager);
-        chaseCam.setMinDistance(500);
+        //ChaseCamera chaseCam = new ChaseCamera(cam, rootNode, inputManager);
+        //chaseCam.setMinDistance(500);
+        flyCam.setMoveSpeed(500);
+        flyCam.setDragToRotate(true);
         cam.setFrustumFar(100000f);
         
         bulletAppState = new BulletAppState();
@@ -80,6 +84,11 @@ public class Main extends SimpleApplication{
         shootables = new Node("Shootables");
         rootNode.attachChild(shootables);
         inputManager.setCursorVisible(true);
+        
+        
+        // Create player
+        
+        p = new Player("Chicco");
         
         
         // Create scene and terrain
@@ -97,7 +106,7 @@ public class Main extends SimpleApplication{
         
         // Add water pound
         
-        pound = new Pound(assetManager, rootNode, viewPort);
+        pound = new Pound(assetManager, rootNode, viewPort, shootables, new Vector3f(60, 5, 40));
         
         
         // Add ocean
@@ -106,22 +115,26 @@ public class Main extends SimpleApplication{
         
         
         // Initial setup
-        t = new Trash[2];
-        t[0] = new Trash(new Vector3f(0, 0, 0), 10, new Vector3f(25, 25, 25));
-        t[0].setModel(assetManager, rootNode, "Models/trash2/trash2.j3o", shootables);
-        t[0].setPhysics(bulletAppState);
-        t[0].Spawn(rootNode);
         
-        t[1] = new Trash(new Vector3f(50, 0, 50), 10, new Vector3f(25, 25, 25));
-        t[1].setModel(assetManager, rootNode, "Models/trash2/trash2.j3o", shootables);
-        t[1].setPhysics(bulletAppState);
-        t[1].Spawn(rootNode);
+        entities = new ArrayList();
         
-        s = new Sprout[2];
-        s[0] = new Sprout(new Vector3f(90, 0, 90), 0.5f, new Vector3f(5, 15, 5));
-        s[0].setModel(assetManager, rootNode, "Models/sprout/sprout.j3o", shootables);
-        s[0].setPhysics(bulletAppState);
-        s[0].Spawn(rootNode);
+        Entity e = new Trash(new Vector3f(0, 0, 0), 10, new Vector3f(25, 25, 25));
+        e.setModel(assetManager, rootNode, "Models/trash2/trash2.j3o", shootables);
+        e.setPhysics(bulletAppState);
+        e.spawn(rootNode, shootables);
+        entities.add(e);
+        
+        e = new Trash(new Vector3f(50, 0, 50), 10, new Vector3f(25, 25, 25));
+        e.setModel(assetManager, rootNode, "Models/trash2/trash2.j3o", shootables);
+        e.setPhysics(bulletAppState);
+        e.spawn(rootNode, shootables);
+        entities.add(e);
+        
+        e = new Sprout(new Vector3f(90, 0, 90), 0.5f, new Vector3f(5, 15, 5));
+        e.setModel(assetManager, rootNode, "Models/sprout/sprout.j3o", shootables);
+        e.setPhysics(bulletAppState);
+        e.spawn(rootNode, shootables);
+        entities.add(e);
         
         initKeys();       // load custom key mappings
 
@@ -131,6 +144,20 @@ public class Main extends SimpleApplication{
     public void simpleUpdate(float tpf) {
         view.updateLight(sky);
         sky.updateTime();
+        for (int i = 0; i < entities.size(); i++) {
+            if (entities.get(i) instanceof Tree) {
+                ((Tree) entities.get(i)).increaseTime(tpf);
+                if (((Tree) entities.get(i)).getTime() >= 10) {
+                    ((Tree) entities.get(i)).resetTime();
+                    
+                    Apple a = new Apple(entities.get(i).getPosition(), 10, new Vector3f(5, 5, 5));
+                    a.setModel(assetManager, rootNode, "Models/apple01/apple01.j3o", shootables);
+                    a.setPhysics(bulletAppState);
+                    a.spawn(rootNode, shootables);
+                    ((Tree) entities.get(i)).newApple(a);
+                }
+            }
+        }
     }
 
     
@@ -155,28 +182,58 @@ public class Main extends SimpleApplication{
             
             shootables.collideWith(ray, results);
             
-            String hit = "";
+            String closest;
             for (int i = 0; i < results.size(); i++) {
                 float dist = results.getCollision(i).getDistance();
                 Vector3f pt = results.getCollision(i).getContactPoint();
-                hit = results.getCollision(i).getGeometry().getName();
+                String hit = results.getCollision(i).getGeometry().getName();
                 System.out.println("* Collision #" + i);
                 System.out.println("  You shot " + hit + " at " + pt + ", " + dist + " wu away.");
             }
             
             if (results.size() > 0) {
-                CollisionResult closest = results.getClosestCollision();
-
-                Spatial c = rootNode.getChild(hit);
-                for (int i = 0; i < 2; i++) {
-                    if (t[i] != null) {
-                        if (t[i].getPickBox().getName().equals(hit)) {
-                        rootNode.detachChild(t[i].getEntity());
-                        t[i] = null;
+                closest = results.getClosestCollision().getGeometry().getName();
+                
+                Spatial c = rootNode.getChild(closest);
+                
+                // Pound clicked
+                if (pound.getPickBox().getName().equals(closest)) {
+                    pound.takeWater();
+                    p.setWaterBucket(p.getWaterBucket() + 1);
+                    if (pound.getWaterLocation().y <= -15) {
+                        pound.despawn(rootNode, shootables);
+                    }
+                } else {
+                    for (int i = 0; i < entities.size(); i++) {
+                    if (entities.get(i) != null) {
+                        if (entities.get(i).getPickBox().getName().equals(closest)) {
+                            entities.get(i).onAction(rootNode, shootables);
+                            
+                            // Entity clicked is SmallTree
+                            if (entities.get(i) instanceof SmallTree) {
+                                Entity e = new Tree(entities.get(i).getPosition(), 5, new Vector3f(20, 20, 20));
+                                e.setModel(assetManager, rootNode, "Models/tree/tree.j3o", shootables);
+                                e.setPhysics(bulletAppState);
+                                e.spawn(rootNode, shootables);
+                                entities.add(e);
+                                entities.get(i).onAction(rootNode, shootables);
+                                entities.remove(i);
+                            }
+                            
+                            // Entity clicked is Sprout
+                            if (entities.get(i) instanceof Sprout) {
+                                Entity e = new SmallTree(entities.get(i).getPosition(), 5, new Vector3f(20, 20, 20));
+                                e.setModel(assetManager, rootNode, "Models/small_tree/small_tree.j3o", shootables);
+                                e.setPhysics(bulletAppState);
+                                e.spawn(rootNode, shootables);
+                                entities.add(e);
+                                entities.get(i).onAction(rootNode, shootables);
+                                entities.remove(i);
+                            }
                         }
                     }
                 }
-                
+                }
             } else {
                 // no hit
             }

@@ -28,6 +28,7 @@ public class DynamicSun extends Node {
     private Vector3f lightPosition = new Vector3f();
     
     private float scaling = 900;
+    private boolean DEBUG = false;
     
     public DynamicSun(AssetManager assetManager, ViewPort viewPort, Node rootNode, Float scaling) {
         this.assetManager = assetManager;
@@ -86,7 +87,9 @@ public class DynamicSun extends Node {
         sunLight.setDirection(lightDir);
         sun.setLocalTranslation(lightPosition.mult(0.9f));
         
-        System.out.println("sunDir: " + sunDir);
+        if (this.DEBUG == true) {
+            System.out.println("sunDir: " + sunDir);
+        }
         if(sunDir.y > 0.15 && sunDir.y < 0.95){
             sunLight.setColor(ColorRGBA.White.mult(0f));
         }

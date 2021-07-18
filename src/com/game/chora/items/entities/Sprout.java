@@ -2,6 +2,7 @@ package com.game.chora.items.entities;
 
 import com.game.chora.utils.Entity;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 
 
 public class Sprout extends Entity {
@@ -10,4 +11,8 @@ public class Sprout extends Entity {
         super(position, scale, hitboxSize);
     }
 
+    @Override
+    public void onAction(Node rootNode, Node shootables) {
+        this.despawn(rootNode, shootables);
+    }
 }

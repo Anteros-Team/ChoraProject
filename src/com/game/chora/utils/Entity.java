@@ -76,7 +76,6 @@ public class Entity {
         this.matPickBox.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         this.pickbox.setQueueBucket(RenderQueue.Bucket.Transparent);
         pickbox.setMaterial(matPickBox);
-        shootables.attachChild(pickbox);
     }
     
     /*
@@ -94,7 +93,17 @@ public class Entity {
         bulletAppState.getPhysicsSpace().add(this.rbc);
     }
     
-    public void Spawn(Node rootNode) {
+    public void onAction(Node rootNode, Node shootables) {
+        
+    }
+    
+    public void spawn(Node rootNode, Node shootables) {
         rootNode.attachChild(this.entity);
+        shootables.attachChild(this.pickbox);
+    }
+    
+    public void despawn(Node rootNode, Node shootables) {
+        rootNode.detachChild(this.entity);
+        shootables.detachChild(this.pickbox);
     }
 }

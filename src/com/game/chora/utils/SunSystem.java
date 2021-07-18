@@ -158,7 +158,10 @@ public class SunSystem {
 
         // Scale distance
         sunPosition.multLocal(distScaleFactor);
-        System.out.println(sunPosition);       
+        
+        if (debug) {
+            System.out.println(sunPosition);       
+        }   
         
         return sunPosition;
     }

@@ -158,13 +158,10 @@ public class LunarSystem {
 
         // Scale distance
         moonPosition.multLocal(distScaleFactor);
-        System.out.println(moonPosition);
 
-       /* if (debug) {
-            logger.info("SUN SYSTEM > " + DD + "/" + MM + "/" + YY
-                            + " - " + HOUR + ":" + MN);
-            logger.info("             > POS " + sunPosition);
-        }*/
+       if (debug) {
+            System.out.println(moonPosition);
+        }
         
         return moonPosition;
     }
