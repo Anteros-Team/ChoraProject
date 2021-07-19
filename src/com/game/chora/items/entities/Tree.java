@@ -6,12 +6,13 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 
 
 public class Tree extends Entity {
     
-    protected ArrayList<Apple> apples;
+    protected List<Apple> apples;
     protected float time;
     
     public Tree(Vector3f position, float scale, Vector3f hitboxSize) {

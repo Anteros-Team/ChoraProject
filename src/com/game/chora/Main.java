@@ -48,6 +48,7 @@ import com.jme3.water.SimpleWaterProcessor;
 import com.jme3.water.WaterFilter;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 
 public class Main extends SimpleApplication{
@@ -61,7 +62,7 @@ public class Main extends SimpleApplication{
     private Ocean ocean;
     private Node shootables;
     private Geometry mark;  
-    private ArrayList<Entity> entities;
+    private List<Entity> entities;
     
     public static void main(String[] args) {
         Main app = new Main();
@@ -116,7 +117,7 @@ public class Main extends SimpleApplication{
         
         // Initial setup
         
-        entities = new ArrayList();
+        entities = new ArrayList<>();
         
         Entity e = new Trash(new Vector3f(0, 0, 0), 10, new Vector3f(25, 25, 25));
         e.setModel(assetManager, rootNode, "Models/trash2/trash2.j3o", shootables);
@@ -144,17 +145,17 @@ public class Main extends SimpleApplication{
     public void simpleUpdate(float tpf) {
         view.updateLight(sky);
         sky.updateTime();
-        for (int i = 0; i < entities.size(); i++) {
-            if (entities.get(i) instanceof Tree) {
-                ((Tree) entities.get(i)).increaseTime(tpf);
-                if (((Tree) entities.get(i)).getTime() >= 10) {
-                    ((Tree) entities.get(i)).resetTime();
+        for (Entity e: entities) {
+            if (e instanceof Tree) {
+                ((Tree) e).increaseTime(tpf);
+                if (((Tree) e).getTime() >= 10) {
+                    ((Tree) e).resetTime();
                     
-                    Apple a = new Apple(entities.get(i).getPosition(), 10, new Vector3f(5, 5, 5));
+                    Apple a = new Apple(e.getPosition(), 10, new Vector3f(5, 5, 5));
                     a.setModel(assetManager, rootNode, "Models/apple01/apple01.j3o", shootables);
                     a.setPhysics(bulletAppState);
                     a.spawn(rootNode, shootables);
-                    ((Tree) entities.get(i)).newApple(a);
+                    ((Tree) e).newApple(a);
                 }
             }
         }
@@ -204,31 +205,31 @@ public class Main extends SimpleApplication{
                         pound.despawn(rootNode, shootables);
                     }
                 } else {
-                    for (int i = 0; i < entities.size(); i++) {
-                    if (entities.get(i) != null) {
-                        if (entities.get(i).getPickBox().getName().equals(closest)) {
-                            entities.get(i).onAction(rootNode, shootables);
+                    for (Entity e: entities) {
+                    if (e != null) {
+                        if (e.getPickBox().getName().equals(closest)) {
+                            e.onAction(rootNode, shootables);
                             
                             // Entity clicked is SmallTree
-                            if (entities.get(i) instanceof SmallTree) {
-                                Entity e = new Tree(entities.get(i).getPosition(), 5, new Vector3f(20, 20, 20));
-                                e.setModel(assetManager, rootNode, "Models/tree/tree.j3o", shootables);
-                                e.setPhysics(bulletAppState);
-                                e.spawn(rootNode, shootables);
-                                entities.add(e);
-                                entities.get(i).onAction(rootNode, shootables);
-                                entities.remove(i);
+                            if (e instanceof SmallTree) {
+                                Entity t = new Tree(e.getPosition(), 5, new Vector3f(20, 20, 20));
+                                t.setModel(assetManager, rootNode, "Models/tree/tree.j3o", shootables);
+                                t.setPhysics(bulletAppState);
+                                t.spawn(rootNode, shootables);
+                                entities.add(t);
+                                e.onAction(rootNode, shootables);
+                                entities.remove(e);
                             }
                             
                             // Entity clicked is Sprout
-                            if (entities.get(i) instanceof Sprout) {
-                                Entity e = new SmallTree(entities.get(i).getPosition(), 5, new Vector3f(20, 20, 20));
-                                e.setModel(assetManager, rootNode, "Models/small_tree/small_tree.j3o", shootables);
-                                e.setPhysics(bulletAppState);
-                                e.spawn(rootNode, shootables);
-                                entities.add(e);
-                                entities.get(i).onAction(rootNode, shootables);
-                                entities.remove(i);
+                            if (e instanceof Sprout) {
+                                Entity st = new SmallTree(e.getPosition(), 5, new Vector3f(20, 20, 20));
+                                st.setModel(assetManager, rootNode, "Models/small_tree/small_tree.j3o", shootables);
+                                st.setPhysics(bulletAppState);
+                                st.spawn(rootNode, shootables);
+                                entities.add(st);
+                                e.onAction(rootNode, shootables);
+                                entities.remove(e);
                             }
                         }
                     }
