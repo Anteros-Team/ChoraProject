@@ -21,9 +21,9 @@ public class Scene {
     protected Material matTerrain;
     protected Texture texTerrain;
     
-    public Scene(AssetManager assetManager, Node rootNode, BulletAppState bulletAppState) {
+    public Scene(AssetManager assetManager, Node rootNode) {
         setScene(assetManager, rootNode);
-        setFloor(assetManager, rootNode, bulletAppState);
+        setFloor(assetManager, rootNode);
     }
     
     private void setScene(AssetManager assetManager, Node rootNode) {
@@ -32,7 +32,7 @@ public class Scene {
         rootNode.attachChild(this.scene);
     }
     
-    private void setFloor(AssetManager assetManager, Node rootNode, BulletAppState bulletAppState) {
+    private void setFloor(AssetManager assetManager, Node rootNode) {
         this.matTerrain = new Material(assetManager, "Common/MatDefs/Terrain/Terrain.j3md");
         
         this.texTerrain = assetManager.loadTexture("Textures/Terrain/dirt.jpg");
@@ -46,7 +46,7 @@ public class Scene {
         this.setTextureScale(floor, new Vector2f(16, 16));
         
        
-        bulletAppState.getPhysicsSpace().addAll(this.floor);
+        //bulletAppState.getPhysicsSpace().addAll(this.floor);
     }
     
     private void setTextureScale(Spatial spatial, Vector2f vector) {

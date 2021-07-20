@@ -14,26 +14,25 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Entity {
     
     protected Vector3f position;
     protected float scale;
-    protected Vector3f hitboxSize;
+    protected Vector3f pickboxSize;
     protected Spatial entity;
     //protected Material mat;
-    protected BoxCollisionShape shape;
-    protected CompoundCollisionShape hitbox;
-    protected RigidBodyControl rbc;
-    protected Box cube;
-    protected Geometry pickbox;
+    protected List<Box> cube;
+    protected List<Geometry> pickbox;
     protected Material matPickBox;
     
     public Entity(Vector3f position, float scale, Vector3f hitboxSize) {
         this.position = position;
         this.scale = scale;
-        this.hitboxSize = hitboxSize;
+        this.pickboxSize = hitboxSize;
     }
     
     public Vector3f getPosition() {
@@ -44,16 +43,22 @@ public class Entity {
         return this.scale;
     }
     
-    public Vector3f getHitboxSize() {
-        return this.hitboxSize;
+    public Vector3f getPickboxSize() {
+        return this.pickboxSize;
     }
     
     public Spatial getEntity() {
         return this.entity;
     }
     
-    public Geometry getPickBox() {
+    public List<Geometry> getPickBox() {
         return this.pickbox;
+    }
+    
+    public void setPosition(Vector3f position) {
+        this.position = position;
+        this.entity.setLocalTranslation(this.position);
+        this.pickbox.get(0).setLocalTranslation(position.add(new Vector3f(0, this.pickboxSize.y, 0)));
     }
     
     public void setModel(AssetManager assetManager, Node rootNode, String pathModel, Node shootables) {
@@ -62,20 +67,19 @@ public class Entity {
         this.entity.move(this.position);
         this.entity.scale(this.scale);
         
-        this.shape = new BoxCollisionShape(this.hitboxSize);
-        this.hitbox = new CompoundCollisionShape();
-        this.hitbox.addChildShape(shape, new Vector3f(shape.getScale().x, shape.getHalfExtents().y, shape.getScale().z));
-        
-        this.cube = new Box(this.hitboxSize.x, this.hitboxSize.y, this.hitboxSize.z);
-        this.pickbox = new Geometry("PickBox" + this.hashCode(), cube);
-        this.pickbox.setShadowMode(RenderQueue.ShadowMode.Off);
-        this.pickbox.setLocalTranslation(this.position);
-        this.pickbox.setCullHint(Spatial.CullHint.Always);
+        this.cube = new ArrayList<>();
+        this.cube.add(new Box(this.pickboxSize.x, this.pickboxSize.y, this.pickboxSize.z));
+        this.pickbox = new ArrayList<>();
+        this.pickbox.add(new Geometry("PickBox" + this.hashCode(), cube.get(0)));
+        this.pickbox.get(0).setShadowMode(RenderQueue.ShadowMode.Off);
+        this.pickbox.get(0).setLocalTranslation(this.position.add(new Vector3f(0, this.pickboxSize.y, 0)));
+        //this.pickbox.get(0).setCullHint(Spatial.CullHint.Always);
         
         this.matPickBox = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         this.matPickBox.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
-        this.pickbox.setQueueBucket(RenderQueue.Bucket.Transparent);
-        pickbox.setMaterial(matPickBox);
+        this.pickbox.get(0).setQueueBucket(RenderQueue.Bucket.Transparent);
+        this.matPickBox.setColor("Color", new ColorRGBA(0, 1, 0, 0.2f));  
+        pickbox.get(0).setMaterial(matPickBox);
     }
     
     /*
@@ -85,25 +89,17 @@ public class Entity {
     }
     */
     
-    public void setPhysics(BulletAppState bulletAppState) {
-        this.rbc = new RigidBodyControl(this.hitbox, 0);
-        this.entity.addControl(rbc);
-        
-        bulletAppState.getPhysicsSpace().add(this.entity);
-        bulletAppState.getPhysicsSpace().add(this.rbc);
-    }
-    
     public void onAction(Node rootNode, Node shootables) {
         
     }
     
     public void spawn(Node rootNode, Node shootables) {
         rootNode.attachChild(this.entity);
-        shootables.attachChild(this.pickbox);
+        shootables.attachChild(this.pickbox.get(0));
     }
     
     public void despawn(Node rootNode, Node shootables) {
         rootNode.detachChild(this.entity);
-        shootables.detachChild(this.pickbox);
+        shootables.detachChild(this.pickbox.get(0));
     }
 }
