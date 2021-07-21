@@ -70,7 +70,7 @@ public class Pound {
     }
     
     private void setWater(AssetManager assetManager, Node rootNode, Node shootables) {
-        Quad quad = new Quad(400,400);
+        Quad quad = new Quad(200, 200);
         
         quad.scaleTextureCoordinates(new Vector2f(6f,6f));
 
@@ -79,12 +79,12 @@ public class Pound {
         this.water.setLocalRotation(new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X));
         this.water.setMaterial(waterProcessor.getMaterial());
         this.water.scale(0.5f);
-        this.setWaterLocation(new Vector3f(150, -10, 300));
+        this.setWaterLocation(new Vector3f(150, -1, 350));
         
         this.cube = new Box(this.hitboxSize.x, this.hitboxSize.y, this.hitboxSize.z);
         this.pickbox = new Geometry("PickBox" + this.hashCode(), cube);
         this.pickbox.setShadowMode(RenderQueue.ShadowMode.Off);
-        this.pickbox.setLocalTranslation(230, -8, 235);
+        this.pickbox.setLocalTranslation(210, -1, 300);
         
         this.matPickBox = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         this.matPickBox.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
@@ -101,7 +101,7 @@ public class Pound {
     }
     
     public void takeWater() {
-        Vector3f tmp = new Vector3f(this.getWaterLocation().x, this.getWaterLocation().y - 1, this.getWaterLocation().z);
+        Vector3f tmp = new Vector3f(this.getWaterLocation().x, this.getWaterLocation().y - 0.5f, this.getWaterLocation().z);
         this.setWaterLocation(tmp);
     }
     

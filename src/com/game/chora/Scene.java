@@ -50,24 +50,24 @@ public class Scene {
         this.matTerrain = new Material(assetManager, "Common/MatDefs/Terrain/TerrainLighting.j3md");
         this.matTerrain.setBoolean("useTriPlanarMapping", false);
         this.matTerrain.setBoolean("WardIso", true);
-        this.matTerrain.setFloat("Shininess", 0);
+        this.matTerrain.setFloat("Shininess", 10);
         
         this.AlphaTexture = assetManager.loadTexture("Textures/Terrain/alphamap.png");
         this.matTerrain.setTexture("AlphaMap", this.AlphaTexture);
         
-        Texture sand = assetManager.loadTexture("Textures/Terrain/aa.jpg");
-        sand.setWrap(Texture.WrapMode.Repeat);
-        this.matTerrain.setTexture("DiffuseMap", sand);
+        Texture dirt = assetManager.loadTexture("Textures/Terrain/dirt.png");
+        dirt.setWrap(Texture.WrapMode.Repeat);
+        this.matTerrain.setTexture("DiffuseMap", dirt);
         this.matTerrain.setFloat("DiffuseMap_0_scale", 16);
         
-        Texture grass = assetManager.loadTexture("Textures/Terrain/erba.jpg");
+        Texture grass = assetManager.loadTexture("Textures/Terrain/grass.jpg");
         grass.setWrap(Texture.WrapMode.Repeat);
         this.matTerrain.setTexture("DiffuseMap_1", grass);
         this.matTerrain.setFloat("DiffuseMap_1_scale", 16);
         
-        Texture dirt = assetManager.loadTexture("Textures/Terrain/dirt.jpg");
-        dirt.setWrap(Texture.WrapMode.Repeat);
-        this.matTerrain.setTexture("DiffuseMap_2", dirt);
+        Texture sand = assetManager.loadTexture("Textures/Terrain/sand.jpg");
+        sand.setWrap(Texture.WrapMode.Repeat);
+        this.matTerrain.setTexture("DiffuseMap_2", sand);
         this.matTerrain.setFloat("DiffuseMap_2_scale", 16);
         
         Texture heightMapImage = assetManager.loadTexture("Textures/Terrain/heightmap.png");
@@ -87,7 +87,7 @@ public class Scene {
         //control.setLodCalculator( new DistanceLodCalculator(65, 2.7f) ); // patch size, and a multiplier
         //terrain.addControl(control);
         terrain.setMaterial(matTerrain);
-        terrain.setLocalTranslation(0, -63, 0);
+        terrain.setLocalTranslation(0, -23, 0);
         terrain.setLocalScale(2f, 0.5f, 2f);
         rootNode.attachChild(terrain);
 

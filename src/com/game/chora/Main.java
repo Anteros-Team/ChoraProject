@@ -149,7 +149,7 @@ public class Main extends SimpleApplication{
         
         // Add water pound
         
-        pound = new Pound(assetManager, rootNode, viewPort, shootables, new Vector3f(60, 5, 40));
+        pound = new Pound(assetManager, rootNode, viewPort, shootables, new Vector3f(60, 5, 60));
         
         
         // Add ocean
@@ -194,7 +194,6 @@ public class Main extends SimpleApplication{
         e.setModel(assetManager, rootNode, "Models/well/well.j3o", shootables);
         e.spawn(rootNode, shootables);
         entities.add(e);
-        
         
         initKeys();       // load custom key mappings
         
@@ -324,7 +323,7 @@ public class Main extends SimpleApplication{
                 if (pound.getPickBox().getName().equals(closest)) {
                     pound.takeWater();
                     p.setWaterBucket(p.getWaterBucket() + 1);
-                    if (pound.getWaterLocation().y <= -15) {
+                    if (pound.getWaterLocation().y <= -3.5f) {
                         pound.despawn(rootNode, shootables);
                     }
                 } else {
