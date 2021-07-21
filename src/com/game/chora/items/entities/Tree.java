@@ -8,6 +8,7 @@ import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
@@ -51,10 +52,11 @@ public class Tree extends Entity {
         
         this.pickbox.get(0).setShadowMode(RenderQueue.ShadowMode.Off);
         this.pickbox.get(0).setLocalTranslation(this.position.add(new Vector3f(-10, this.pickboxSize.y, -10)));
-        //this.pickbox.get(0).setCullHint(Spatial.CullHint.Always);
+        this.pickbox.get(0).setCullHint(Spatial.CullHint.Always);
         
         this.pickbox.get(1).setShadowMode(RenderQueue.ShadowMode.Off);
         this.pickbox.get(1).setLocalTranslation(this.position.add(new Vector3f(0, this.pickboxSize.y * 2f, 0)));
+        this.pickbox.get(1).setCullHint(Spatial.CullHint.Always);
         
         this.matPickBox = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         this.matPickBox.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
@@ -99,8 +101,19 @@ public class Tree extends Entity {
         Vector3f reset = new Vector3f(-this.getPickboxSize().x, 0, -this.getPickboxSize().z);
         a.setPosition(a.getPosition().add(reset));
         
-        float x = (float) Math.random();
-        float z = (float) Math.random();
+        Vector2f truckMin = new Vector2f(), truckMax = new Vector2f();
+        truckMin.x = this.getPosition().x - this.pickboxSize.x / 8;
+        truckMin.y = this.getPosition().z - this.pickboxSize.z / 8;
+        truckMax.x = this.getPosition().x + this.pickboxSize.x / 8;
+        truckMax.y = this.getPosition().z + this.pickboxSize.z / 8;
+        
+        float x, z;
+        
+        do {
+            x = (float) Math.random();
+            z = (float) Math.random();
+        } while (x > truckMin.x - 5 && x < truckMax.x + 5 && z > truckMin.y - 5 && z < truckMax.y + 5);
+        
         
         
         Vector3f offset = new Vector3f(x * this.getPickboxSize().x * 2, this.getPickboxSize().y / 1.2f, z * this.getPickboxSize().z * 2);

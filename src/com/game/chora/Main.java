@@ -178,6 +178,17 @@ public class Main extends SimpleApplication{
         e.spawn(rootNode, shootables);
         entities.add(e);
         
+        e = new Sprout(new Vector3f(200, 0, 0), 0.6f, new Vector3f(10, 8, 10));
+        e.setModel(assetManager, rootNode, "Models/sprout/sprout.j3o", shootables);
+        //e.setPhysics(bulletAppState);
+        e.spawn(rootNode, shootables);
+        entities.add(e);
+        
+        e = new Mill(new Vector3f(-100, 0, -100), 200, new Vector3f(40, 80, 40));
+        e.setModel(assetManager, rootNode, "Models/mill/mill.j3o", shootables);
+        e.spawn(rootNode, shootables);
+        entities.add(e);
+        
         
         
         initKeys();       // load custom key mappings
@@ -240,6 +251,9 @@ public class Main extends SimpleApplication{
                         a.setPosition(position);
                     }
                 }
+            }
+            if (e instanceof Mill) {
+                ((Mill) e).rotateMill(rootNode, tpf);
             }
         }
     }
@@ -317,6 +331,7 @@ public class Main extends SimpleApplication{
                                     if (a.getPickBox().get(0).getName().equals(closest)) {
                                         a.onAction(rootNode, shootables);
                                         p.setApple(p.getApple() + 1);
+                                        break;
                                     }
                                 }
                             }
@@ -326,6 +341,7 @@ public class Main extends SimpleApplication{
                                 // Entity clicked is Trash
                                 if (e instanceof Trash) {
                                     e.onAction(rootNode, shootables);
+                                    break;
                                 }
 
                                 // Entity clicked is SmallTree
@@ -337,6 +353,7 @@ public class Main extends SimpleApplication{
                                     entities.add(t);
                                     entities.remove(e);
                                     p.setWaterBucket(p.getWaterBucket() - 1);
+                                    break;
                                 }
 
                                 // Entity clicked is Sprout
@@ -348,6 +365,7 @@ public class Main extends SimpleApplication{
                                     entities.add(st);
                                     entities.remove(e);
                                     p.setWaterBucket(p.getWaterBucket() - 1);
+                                    break;
                                 }
                             }
                         }

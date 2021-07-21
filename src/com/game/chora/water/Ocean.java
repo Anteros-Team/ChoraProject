@@ -20,7 +20,7 @@ public class Ocean {
     
     private void setOcean(Node rootNode, ViewPort viewPort, FilterPostProcessor fpp, DynamicSky sky) {
         water = new WaterFilter(rootNode, sky.getSunDirection());
-        water.setWaterHeight(-40);
+        water.setWaterHeight(-50);
         fpp.addFilter(water);
         viewPort.addProcessor(fpp);
     }
