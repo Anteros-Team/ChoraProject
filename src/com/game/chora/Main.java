@@ -51,6 +51,7 @@ import com.jme3.terrain.geomipmap.lodcalc.DistanceLodCalculator;
 import com.jme3.terrain.heightmap.AbstractHeightMap;
 import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
+import com.jme3.texture.image.ImageRaster;
 import com.jme3.water.SimpleWaterProcessor;
 import com.jme3.water.WaterFilter;
 import java.util.ArrayList;
@@ -353,6 +354,23 @@ public class Main extends SimpleApplication{
                                     entities.add(t);
                                     entities.remove(e);
                                     p.setWaterBucket(p.getWaterBucket() - 1);
+                                    
+                                    ImageRaster imageRaster = ImageRaster.create(scene.getAlphaTexture().getImage());
+                                    
+                                    System.out.println(t.getPosition().x - t.getPickboxSize().x);
+                                    System.out.println(t.getPosition().x + t.getPickboxSize().x);
+
+                                    /*for (float i = 512 + t.getPosition().x - t.getPickboxSize().x; i < 512 + t.getPosition().x + t.getPickboxSize().x; i++) {
+                                        for (float j = 512 - t.getPosition().z - t.getPickboxSize().z; j < 512 - t.getPosition().z + t.getPickboxSize().z; j++) {
+                                            imageRaster.setPixel((int) i, (int) j, ColorRGBA.Green);
+                                        }
+                                    }*/
+                                    for (float i = 512 + t.getPosition().x - 55; i < 512 + t.getPosition().x + 65; i++) {
+                                        for (float j = 512 - t.getPosition().z - 65 ; j < + 512 - t.getPosition().z + 75; j++) {
+                                            imageRaster.setPixel((int) i, (int) j, ColorRGBA.Green);
+                                        }
+                                    }
+                                    scene.getTerrain().updateModelBound();
                                     break;
                                 }
 
@@ -372,9 +390,9 @@ public class Main extends SimpleApplication{
                     }
                 }
             } else {
-                // no hit
+                // no hit                
             }
-          }
+            }
         }
   };
 }

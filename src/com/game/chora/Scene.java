@@ -21,14 +21,23 @@ import com.jme3.texture.Texture;
 public class Scene {
     
     protected Spatial scene;
-    protected Spatial floor;
+    //protected Spatial floor;
     protected Material matTerrain;
-    protected Texture texTerrain;
+    //protected Texture texTerrain;
     protected TerrainQuad terrain;
+    protected Texture AlphaTexture;
     
     public Scene(AssetManager assetManager, Node rootNode) {
         setScene(assetManager, rootNode);
         setFloor(assetManager, rootNode);
+    }
+    
+    public TerrainQuad getTerrain() {
+        return this.terrain;
+    }
+    
+    public Texture getAlphaTexture() {
+        return this.AlphaTexture;
     }
     
     private void setScene(AssetManager assetManager, Node rootNode) {
@@ -43,21 +52,22 @@ public class Scene {
         this.matTerrain.setBoolean("WardIso", true);
         this.matTerrain.setFloat("Shininess", 0);
         
-        this.matTerrain.setTexture("AlphaMap", assetManager.loadTexture("Textures/Terrain/alphamap.png"));
+        this.AlphaTexture = assetManager.loadTexture("Textures/Terrain/alphamap.png");
+        this.matTerrain.setTexture("AlphaMap", this.AlphaTexture);
         
         Texture sand = assetManager.loadTexture("Textures/Terrain/aa.jpg");
         sand.setWrap(Texture.WrapMode.Repeat);
         this.matTerrain.setTexture("DiffuseMap", sand);
         this.matTerrain.setFloat("DiffuseMap_0_scale", 16);
         
-        Texture dirt = assetManager.loadTexture("Textures/Terrain/dirt.jpg");
-        dirt.setWrap(Texture.WrapMode.Repeat);
-        this.matTerrain.setTexture("DiffuseMap_1", dirt);
-        this.matTerrain.setFloat("DiffuseMap_1_scale", 16);
-        
         Texture grass = assetManager.loadTexture("Textures/Terrain/erba.jpg");
         grass.setWrap(Texture.WrapMode.Repeat);
-        this.matTerrain.setTexture("DiffuseMap_2", grass);
+        this.matTerrain.setTexture("DiffuseMap_1", grass);
+        this.matTerrain.setFloat("DiffuseMap_1_scale", 16);
+        
+        Texture dirt = assetManager.loadTexture("Textures/Terrain/dirt.jpg");
+        dirt.setWrap(Texture.WrapMode.Repeat);
+        this.matTerrain.setTexture("DiffuseMap_2", dirt);
         this.matTerrain.setFloat("DiffuseMap_2_scale", 16);
         
         Texture heightMapImage = assetManager.loadTexture("Textures/Terrain/heightmap.png");
@@ -78,8 +88,9 @@ public class Scene {
         //terrain.addControl(control);
         terrain.setMaterial(matTerrain);
         terrain.setLocalTranslation(0, -63, 0);
-        terrain.setLocalScale(2.5f, 0.5f, 2.5f);
+        terrain.setLocalScale(2f, 0.5f, 2f);
         rootNode.attachChild(terrain);
+
         
         //this.floor = rootNode.getChild("terrain-map");
         //this.floor.addControl(new RigidBodyControl(0));

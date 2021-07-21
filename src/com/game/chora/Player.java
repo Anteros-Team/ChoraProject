@@ -8,7 +8,7 @@ public class Player {
     
     public Player(String name){
         this.name = name;
-        this.waterBucket = 0;
+        this.waterBucket = 2;
         this.apple = 0;
     }
     
