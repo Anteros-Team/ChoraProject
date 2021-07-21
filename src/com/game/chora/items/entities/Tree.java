@@ -52,11 +52,11 @@ public class Tree extends Entity {
         
         this.pickbox.get(0).setShadowMode(RenderQueue.ShadowMode.Off);
         this.pickbox.get(0).setLocalTranslation(this.position.add(new Vector3f(-10, this.pickboxSize.y, -10)));
-        //wdthis.pickbox.get(0).setCullHint(Spatial.CullHint.Always);
+        this.pickbox.get(0).setCullHint(Spatial.CullHint.Always);
         
         this.pickbox.get(1).setShadowMode(RenderQueue.ShadowMode.Off);
         this.pickbox.get(1).setLocalTranslation(this.position.add(new Vector3f(0, this.pickboxSize.y * 2f, 0)));
-        //this.pickbox.get(1).setCullHint(Spatial.CullHint.Always);
+        this.pickbox.get(1).setCullHint(Spatial.CullHint.Always);
         
         this.matPickBox = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         this.matPickBox.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);

@@ -190,6 +190,10 @@ public class Main extends SimpleApplication{
         e.spawn(rootNode, shootables);
         entities.add(e);
         
+        e = new Well(new Vector3f(-100, 0 , 100), 15, new Vector3f(20, 20, 20));
+        e.setModel(assetManager, rootNode, "Models/well/well.j3o", shootables);
+        e.spawn(rootNode, shootables);
+        entities.add(e);
         
         
         initKeys();       // load custom key mappings
