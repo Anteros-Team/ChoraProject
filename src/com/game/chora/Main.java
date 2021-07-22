@@ -161,25 +161,25 @@ public class Main extends SimpleApplication{
         
         entities = new ArrayList<>();
         
-        Entity e = new Trash(new Vector3f(0, 0, 0), 8, new Vector3f(20, 10, 20));
-        e.setModel(assetManager, rootNode, "Models/trash2/trash2.j3o", shootables);
+        Entity e = new Trash(new Vector3f(0, 0, 0), 8, new Vector3f(25, 10, 25));
+        e.setModel(assetManager, rootNode, "Models/trash/trash.j3o", shootables);
         //e.setPhysics(bulletAppState);
         e.spawn(rootNode, shootables);
         entities.add(e);
         
-        e = new Trash(new Vector3f(50, 0, 50), 8, new Vector3f(20, 10, 20));
-        e.setModel(assetManager, rootNode, "Models/trash2/trash2.j3o", shootables);
+        e = new Trash(new Vector3f(50, 0, 50), 8, new Vector3f(25, 10, 25));
+        e.setModel(assetManager, rootNode, "Models/trash/trash.j3o", shootables);
         //e.setPhysics(bulletAppState);
         e.spawn(rootNode, shootables);
         entities.add(e);
         
-        e = new Sprout(new Vector3f(90, 0, 90), 0.6f, new Vector3f(10, 8, 10));
+        e = new Sprout(new Vector3f(90, 0, 90), 0.6f, new Vector3f(10, 8, 5));
         e.setModel(assetManager, rootNode, "Models/sprout/sprout.j3o", shootables);
         //e.setPhysics(bulletAppState);
         e.spawn(rootNode, shootables);
         entities.add(e);
         
-        e = new Sprout(new Vector3f(200, 0, 0), 0.6f, new Vector3f(10, 8, 10));
+        e = new Sprout(new Vector3f(200, 0, 0), 0.6f, new Vector3f(10, 8, 5));
         e.setModel(assetManager, rootNode, "Models/sprout/sprout.j3o", shootables);
         //e.setPhysics(bulletAppState);
         e.spawn(rootNode, shootables);
