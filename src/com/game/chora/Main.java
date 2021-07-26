@@ -185,7 +185,7 @@ public class Main extends SimpleApplication{
         e.spawn(rootNode, shootables);
         entities.add(e);
         
-        e = new Mill(new Vector3f(-100, 0, -100), 200, new Vector3f(40, 80, 40));
+        e = new Mill(new Vector3f(-100, 0, -100), 200, new Vector3f(40, 77, 40));
         e.setModel(assetManager, rootNode, "Models/mill/mill.j3o", shootables);
         e.spawn(rootNode, shootables);
         entities.add(e);
@@ -379,7 +379,7 @@ public class Main extends SimpleApplication{
 
                                 // Entity clicked is Sprout
                                 if (e instanceof Sprout && p.getWaterBucket() > 0) {
-                                    Entity st = new SmallTree(e.getPosition(), 5, new Vector3f(35, 40, 35));
+                                    Entity st = new SmallTree(e.getPosition(), 3.5f, new Vector3f(30, 40, 21));
                                     st.setModel(assetManager, rootNode, "Models/small_tree/small_tree.j3o", shootables);
                                     e.onAction(rootNode, shootables);
                                     st.spawn(rootNode, shootables);
