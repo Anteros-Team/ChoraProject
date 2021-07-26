@@ -33,6 +33,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.BatchNode;
@@ -54,6 +55,9 @@ import com.jme3.texture.Texture;
 import com.jme3.texture.image.ImageRaster;
 import com.jme3.water.SimpleWaterProcessor;
 import com.jme3.water.WaterFilter;
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.builder.ScreenBuilder;
+import de.lessvoid.nifty.screen.ScreenController;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -82,11 +86,28 @@ public class Main extends SimpleApplication{
     @Override
     public void simpleInitApp() {
         
+        //NiftyJmeDisplay niftyDisplay = NiftyJmeDisplay.newNiftyJmeDisplay(assetManager, inputManager, audioRenderer, guiViewPort);
+        /** Create a new NiftyGUI object */
+        //Nifty nifty = niftyDisplay.getNifty();
+        /** Read your XML and initialize your custom ScreenController */
+        //nifty.fromXml("Interface/screen.xml", "start");
+        // nifty.fromXml("Interface/helloworld.xml", "start", new MySettingsScreen(data));
+        // attach the Nifty display to the gui view port as a processor
+        //guiViewPort.addProcessor(niftyDisplay);
+        // disable the fly cam
+        
         //ChaseCamera chaseCam = new ChaseCamera(cam, rootNode, inputManager);
         //chaseCam.setMinDistance(500);
         flyCam.setMoveSpeed(500);
         flyCam.setDragToRotate(true);
         cam.setFrustumFar(100000f);
+        
+        //nifty.fromXml("Interface/sceen.xml", "start", new MySettingsSceen());
+        
+        MyStartScreen mss = new MyStartScreen();
+        mss.setEnabled(true);
+        //nifty.addScreen("start", new ScreenBuilder("start") {{ controller(new MyStartScreen()); }}.build(nifty));
+        
         
         //bulletAppState = new BulletAppState();
         //stateManager.attach(bulletAppState);
