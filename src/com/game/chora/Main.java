@@ -57,6 +57,7 @@ import com.jme3.water.WaterFilter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import jme3tools.optimize.GeometryBatchFactory;
 
 
@@ -327,8 +328,10 @@ public class Main extends SimpleApplication{
                         pound.despawn(rootNode, shootables);
                     }
                 } else {
-                    for (Entity e: entities) {
-                        if (e != null) {
+                    for (ListIterator<Entity> li = entities.listIterator(); li.hasNext();) {
+                        Entity e = li.next();
+                        
+                        if (e != null) {                                
                             
                             if (e instanceof Tree) {
                                 for (Apple a: ((Tree) e).getApples()) {
