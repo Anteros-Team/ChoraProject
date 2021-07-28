@@ -10,7 +10,10 @@ import de.lessvoid.nifty.builder.LayerBuilder;
 import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
+import de.lessvoid.nifty.controls.dynamic.PanelCreator;
+import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.screen.DefaultScreenController;
+import de.lessvoid.nifty.screen.Screen;
 
 public class MyStartScreen extends BaseAppState {
     
@@ -24,7 +27,7 @@ public class MyStartScreen extends BaseAppState {
         //cleanup() for this is a matter of performance specifics for the
         //implementor.
         //TODO: initialize your AppState, e.g. attach spatials to rootNode
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     @Override
@@ -42,17 +45,33 @@ public class MyStartScreen extends BaseAppState {
                 getApplication().getAssetManager(),
                 getApplication().getInputManager(),
                 getApplication().getAudioRenderer(),
-                getApplication().getGuiViewPort());
+                getApplication().getGuiViewPort());      
 
-        nifty = niftyDisplay.getNifty();
-        getApplication().getGuiViewPort().addProcessor(niftyDisplay);
-        ((SimpleApplication) getApplication()).getFlyByCamera().setDragToRotate(true);
+        //nifty = niftyDisplay.getNifty();
+        //getApplication().getGuiViewPort().addProcessor(niftyDisplay);
+        //((SimpleApplication) getApplication()).getFlyByCamera().setDragToRotate(true);
+        
+       
 
-        nifty.loadStyleFile("nifty-default-styles.xml");
+        /*nifty.loadStyleFile("nifty-default-styles.xml");
         nifty.loadControlFile("nifty-default-controls.xml");
+        
+        Screen screen = new ScreenBuilder("start") {
+        {
+        layer(new LayerBuilder("baseLayer") {{
+            childLayoutCenter();
+            panel(new PanelBuilder() {{
+                height("50px");
+                backgroundColor("#f00f");
+                }});
+            }});
+        }
+        }.build(nifty);*/
+        
+         
 
         // <screen>
-        nifty.addScreen("Screen_ID", new ScreenBuilder("Hello Nifty Screen"){{
+        /*nifty.addScreen("Screen_ID", new ScreenBuilder("Hello Nifty Screen"){{
             controller(new DefaultScreenController()); // Screen properties
 
             // <layer>
@@ -78,11 +97,26 @@ public class MyStartScreen extends BaseAppState {
               }});
             // </layer>
           }}.build(nifty));
-        // </screen>
+        // </screen>*/
 
-        nifty.gotoScreen("Screen_ID"); // start the screen
-        getApplication().getGuiViewPort().addProcessor(niftyDisplay);
+        //nifty.gotoScreen("Screen_ID"); // start the screen
+        //getApplication().getGuiViewPort().addProcessor(niftyDisplay);
     }
+    
+    private static Screen createIntroScreen(final Nifty nifty) {
+    Screen screen = new ScreenBuilder("start") {
+      {
+        layer(new LayerBuilder("baseLayer") {{
+            childLayoutCenter();
+            panel(new PanelBuilder() {{
+            height("8px");
+            backgroundColor("#f00f");
+            }});
+        }});
+      }
+    }.build(nifty);
+    return screen;
+  }
 
     @Override
     protected void onDisable() {

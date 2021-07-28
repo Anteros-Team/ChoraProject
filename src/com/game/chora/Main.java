@@ -56,7 +56,13 @@ import com.jme3.texture.image.ImageRaster;
 import com.jme3.water.SimpleWaterProcessor;
 import com.jme3.water.WaterFilter;
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.builder.LayerBuilder;
+import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.builder.ScreenBuilder;
+import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
+import de.lessvoid.nifty.elements.Element;
+import de.lessvoid.nifty.screen.DefaultScreenController;
+import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -77,6 +83,10 @@ public class Main extends SimpleApplication{
     private Node shootables;
     private Geometry mark;  
     private List<Entity> entities;
+    private Gui gui;
+    
+    protected NiftyJmeDisplay niftyDisplay;
+    protected Nifty nifty;
     
     public static void main(String[] args) {
         Main app = new Main();
@@ -102,12 +112,10 @@ public class Main extends SimpleApplication{
         flyCam.setDragToRotate(true);
         cam.setFrustumFar(100000f);
         
-        //nifty.fromXml("Interface/sceen.xml", "start", new MySettingsSceen());
+        gui = new Gui(assetManager, inputManager, audioRenderer, guiViewPort);
         
-        MyStartScreen mss = new MyStartScreen();
-        mss.setEnabled(true);
-        //nifty.addScreen("start", new ScreenBuilder("start") {{ controller(new MyStartScreen()); }}.build(nifty));
-        
+        /*nifty.loadStyleFile("nifty-default-styles.xml");
+        nifty.loadControlFile("nifty-default-controls.xml");*/
         
         //bulletAppState = new BulletAppState();
         //stateManager.attach(bulletAppState);
