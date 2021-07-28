@@ -1,10 +1,12 @@
 package com.game.chora;
 
+import com.game.chora.gui.Gui;
 import com.game.chora.items.entities.*;
 import com.game.chora.utils.Entity;
 import com.game.chora.water.Ocean;
 import com.game.chora.water.Pound;
 import com.jme3.app.SimpleApplication;
+import com.jme3.asset.plugins.FileLocator;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bounding.BoundingVolume;
 import com.jme3.bullet.BulletAppState;
@@ -17,6 +19,8 @@ import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
+import com.jme3.export.binary.BinaryExporter;
+import com.jme3.export.binary.BinaryImporter;
 import com.jme3.font.BitmapText;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.KeyInput;
@@ -64,10 +68,14 @@ import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.screen.DefaultScreenController;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jme3tools.optimize.GeometryBatchFactory;
 
 
@@ -96,31 +104,24 @@ public class Main extends SimpleApplication{
     @Override
     public void simpleInitApp() {
         
-        //NiftyJmeDisplay niftyDisplay = NiftyJmeDisplay.newNiftyJmeDisplay(assetManager, inputManager, audioRenderer, guiViewPort);
-        /** Create a new NiftyGUI object */
-        //Nifty nifty = niftyDisplay.getNifty();
-        /** Read your XML and initialize your custom ScreenController */
-        //nifty.fromXml("Interface/screen.xml", "start");
-        // nifty.fromXml("Interface/helloworld.xml", "start", new MySettingsScreen(data));
-        // attach the Nifty display to the gui view port as a processor
-        //guiViewPort.addProcessor(niftyDisplay);
-        // disable the fly cam
-        
         //ChaseCamera chaseCam = new ChaseCamera(cam, rootNode, inputManager);
         //chaseCam.setMinDistance(500);
         flyCam.setMoveSpeed(500);
         flyCam.setDragToRotate(true);
         cam.setFrustumFar(100000f);
         
+       //p = new Player();
+        String userHome = System.getProperty("user.home");
+        BinaryImporter importer = BinaryImporter.getInstance();
+        File player = new File(userHome + "/GameData/Player");
+        try {
+            p = (Player) importer.load(player);
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Error: Failed to save game!", ex);
+        }       
+        System.out.println("P Apple: " + p.getApple());
+        
         gui = new Gui(assetManager, inputManager, audioRenderer, guiViewPort);
-        
-        /*nifty.loadStyleFile("nifty-default-styles.xml");
-        nifty.loadControlFile("nifty-default-controls.xml");*/
-        
-        //bulletAppState = new BulletAppState();
-        //stateManager.attach(bulletAppState);
-        //bulletAppState.setDebugEnabled(true);
-        //bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
         
         shootables = new Node("Shootables");
         rootNode.attachChild(shootables);
@@ -129,45 +130,12 @@ public class Main extends SimpleApplication{
         
         // Create player
         
-        p = new Player("Chicco");
+        //p = new Player("Chicco");
         
         
         // Create scene and terrain
         
         scene = new Scene(assetManager, rootNode);
-        /*TerrainQuad terrain;
-        Material matRock;
-        
-        matRock = new Material(assetManager, "Common/MatDefs/Terrain/Terrain.j3md");
-        Texture heightMapImage = assetManager.loadTexture("Textures/Terrain/heightmap.png");
-        Texture dirt = assetManager.loadTexture("Textures/Terrain/dirt.jpg");
-        dirt.setWrap(Texture.WrapMode.Repeat);
-        matRock.setTexture("Tex1", dirt);
-        matRock.setFloat("Tex1Scale", 64f);
-        
-        AbstractHeightMap heightmap = null;
-        try {
-            heightmap = new ImageBasedHeightMap(heightMapImage.getImage(), 0.25f);
-            heightmap.load();
-
-        } catch (Exception e) {
-        }
-        
-        terrain = new TerrainQuad("terrain", 65, 513, heightmap.getHeightMap());
-        TerrainLodControl control = new TerrainLodControl(terrain, getCamera());
-        control.setLodCalculator( new DistanceLodCalculator(65, 2.7f) ); // patch size, and a multiplier
-        terrain.addControl(control);
-        terrain.setMaterial(matRock);
-        terrain.setLocalScale(new Vector3f(2, 2, 2));
-        terrain.setLocked(false); // unlock it so we can edit the height
-        rootNode.attachChild(terrain);
-
-        // if set to false, only the first collision is returned and collision is slightly faster.
-        terrain.setSupportMultipleCollisions(true);
-        
-        terrain.addControl(new RigidBodyControl(0));
-        bulletAppState.getPhysicsSpace().addAll(terrain);*/
-        
 
         // Create Sky, Sun and Moon and Ambient Light
         
@@ -226,37 +194,19 @@ public class Main extends SimpleApplication{
         entities.add(e);
         
         initKeys();       // load custom key mappings
-        
-        /*Material matWire = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        matWire.getAdditionalRenderState().setWireframe(true);
-        matWire.setColor("Color", ColorRGBA.Green);
-        
-        Geometry sphere = new Geometry("esempio", new Sphere(10, 10, 5));
-        sphere.setMaterial(matWire);
-        sphere.setLocalTranslation(0, 100, 0);
-        sphere.addControl(new RigidBodyControl(new SphereCollisionShape(5), 2));
-        rootNode.attachChild(sphere);
-        bulletAppState.getPhysicsSpace().add(sphere);*/
-        
-        
-        /*Box b = new Box(20, 50, 20);
-        Box b1 = new Box(50, 20, 50);
-        Geometry g = new Geometry("primo", b);
-        Geometry g1 = new Geometry("secondo", b1);   
-        Material m = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        g.setMaterial(m);
-        g1.setMaterial(m);
-        g.setShadowMode(RenderQueue.ShadowMode.Off);
-        g.setLocalTranslation(new Vector3f(100, 0, 80));
-        g1.setShadowMode(RenderQueue.ShadowMode.Off);
-        g1.setLocalTranslation(new Vector3f(100, 50, 80));
-        Node n = new Node("Pickbox");
-        n.attachChild(g);
-        n.attachChild(g1);
-        
-        //Spatial gg = GeometryBatchFactory.optimize(n);
-        rootNode.attachChild(n);
-        */
+    }
+    
+    @Override
+    public void stop() {
+        String userHome = System.getProperty("user.home");
+        BinaryExporter exporter = BinaryExporter.getInstance();
+        File player = new File(userHome + "/GameData/Player");
+        try {
+            exporter.save(p, player);
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Error: Failed to save game!", ex);
+        }
+        super.stop(); // continue quitting the game
     }
     
     @Override

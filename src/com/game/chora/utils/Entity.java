@@ -5,6 +5,11 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.export.InputCapsule;
+import com.jme3.export.JmeExporter;
+import com.jme3.export.JmeImporter;
+import com.jme3.export.OutputCapsule;
+import com.jme3.export.Savable;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
@@ -14,12 +19,12 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class Entity {
-    
+public class Entity implements Savable {
     protected Vector3f position;
     protected float scale;
     protected Vector3f pickboxSize;
@@ -101,5 +106,17 @@ public class Entity {
     public void despawn(Node rootNode, Node shootables) {
         rootNode.detachChild(this.entity);
         shootables.detachChild(this.pickbox.get(0));
+    }
+    
+    @Override
+    public void write(JmeExporter ex) throws IOException {
+        OutputCapsule capsule = ex.getCapsule(this);
+        capsule.write(entity, "Entity" + this.hashCode(), null);
+    }
+
+    @Override
+    public void read(JmeImporter im) throws IOException {
+        InputCapsule capsule = im.getCapsule(this);
+        this.entity = (Spatial) capsule.readSavable("Entity" + this.hashCode(), null);
     }
 }

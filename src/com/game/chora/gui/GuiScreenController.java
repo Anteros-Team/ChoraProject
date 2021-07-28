@@ -1,4 +1,4 @@
-package com.game.chora;
+package com.game.chora.gui;
 
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
@@ -30,5 +30,48 @@ public class GuiScreenController implements ScreenController {
         nifty.getCurrentScreen().findElementById("interactiveMenuLayer").setVisible(true);
     }
     
+    public void openShop() {
+        
+    }
+    
+    public void openCredits() {
+        
+    }
+    
+    public void openOptions() {
+        
+    }
+    
+    public void openExit() {
+        
+    }
+    
+    public void closeMenu() {
+        
+    }
+    
+    public void closeShop() {
+        
+    }
+    
+    public void closeCredits() {
+        
+    }
+    
+    public void closeOptions() {
+        
+    }
+    
+    public void exitGame() {
+        
+    }
+    
+    public void cancelExit() {
+        
+    }
+    
+    public void buyFromShop(String elementId) {
+        
+    }
 
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.game.chora;
+package com.game.chora.gui;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioRenderer;
