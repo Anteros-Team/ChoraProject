@@ -19,6 +19,7 @@ import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.builder.TextBuilder;
 import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
 import de.lessvoid.nifty.controls.label.builder.LabelBuilder;
+import de.lessvoid.nifty.controls.textfield.builder.TextFieldBuilder;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 
@@ -40,7 +41,7 @@ public class Gui {
         nifty.loadControlFile("nifty-default-controls.xml");
         
         // create a screen
-        Screen screen = new ScreenBuilder("start") {{
+        Screen gameScreen = new ScreenBuilder("game") {{
             controller(new GuiScreenController());
 
             // Style layer
@@ -53,7 +54,7 @@ public class Gui {
                     id("topLeftPanel");
                     childLayoutCenter();
                     height("15%");
-                    width("40%");
+                    width("45%");
                     alignLeft();
                     valignTop();
                     backgroundColor("#f60f");
@@ -152,7 +153,7 @@ public class Gui {
                 panel(new PanelBuilder() {{
                     childLayoutCenter();
                     height("15%");
-                    width("40%");
+                    width("45%");
                     alignLeft();
                     valignTop();
                     //backgroundColor("#f60f");
@@ -231,7 +232,7 @@ public class Gui {
                         height("50%");
                         visibleToMouse(true);
                         
-                        interactOnClick("");
+                        interactOnClick("openShop()");
                     }});
                 }});
                 
@@ -344,7 +345,7 @@ public class Gui {
                             marginTop("6%");
                             visibleToMouse(true);                            
                         
-                            interactOnClick("");
+                            interactOnClick("closeMenu()");
                         }});
                         
                         // credits Button
@@ -411,15 +412,259 @@ public class Gui {
                 }});
             }});
             
+            // Shop Layer
+            layer(new LayerBuilder("shopLayer") {{
+                childLayoutCenter();
+                
+                // Modal panel
+                panel(new PanelBuilder() {{
+                    id("ShopModalPanel");
+                    childLayoutCenter();
+                    backgroundColor("#f60f");
+                    height("70%");
+                    width("70%");
+                    alignCenter();
+                    valignCenter();
+                    visibleToMouse(true);
+                    
+                    image(new ImageBuilder() {{
+                       id("MenuImage");
+                       filename("Interface/gui/ShopModal.png");
+                       width("100%");
+                       height("100%");
+                    }});
+                
+                    // Content Modal panel
+                    panel(new PanelBuilder() {{
+                        id("ShopContentPanel");
+                        childLayoutCenter();
+                        width("100%");
+                        height("100%");
+                        visibleToMouse(true);
+                        
+                        image(new ImageBuilder() {{
+                            id("MenuImage");
+                            filename("Interface/gui/CloseModalButton.png");
+                            width("8%");
+                            height("10%");
+                            alignRight();
+                            valignTop();
+                            marginRight("4%");
+                            marginTop("6%");
+                        }});
+                        
+                        image(new ImageBuilder() {{
+                            id("MenuImage");
+                            filename("Interface/gui/ShopItemModal.png");
+                            width("20%");
+                            height("35%");
+                            alignLeft();
+                            valignTop();                            
+                            marginLeft("15%");
+                            marginTop("20%");
+                        }});
+                        
+                        image(new ImageBuilder() {{
+                            id("MenuImage");
+                            filename("Interface/gui/ShopItemModal.png");
+                            width("20%");
+                            height("35%");
+                            alignLeft();
+                            valignTop();
+                            marginLeft("40%");
+                            marginTop("20%");
+                        }});
+                        
+                        image(new ImageBuilder() {{
+                            id("MenuImage");
+                            filename("Interface/gui/ShopItemModal.png");
+                            width("20%");
+                            height("35%");
+                            alignLeft();
+                            valignTop();
+                            marginLeft("65%");
+                            marginTop("20%");
+                        }});
+                        
+                    }});
+                }});
+            }});
+            
+            // interactive Shop Layer
+            layer(new LayerBuilder("interactiveShopLayer") {{
+                childLayoutCenter();
+                
+                // Modal panel
+                panel(new PanelBuilder() {{
+                    id("MenuModalPanel");
+                    childLayoutCenter();
+                    height("70%");
+                    width("70%");
+                    alignCenter();
+                    valignCenter();
+                    visibleToMouse(true);
+                    
+                    // Content Modal panel
+                    panel(new PanelBuilder() {{
+                        id("ShopContentPanel");
+                        childLayoutCenter();
+                        width("100%");
+                        height("100%");
+                        visibleToMouse(true);
+                        
+                        // close Button
+                        control(new ControlBuilder("closeButton", "") {{
+                            width("8%");
+                            height("10%");
+                            alignRight();
+                            valignTop();
+                            marginRight("4%");
+                            marginTop("6%");
+                            visibleToMouse(true);                            
+                        
+                            interactOnClick("closeShop()");
+                        }});
+                        
+                        // item 1 Button
+                        control(new ControlBuilder("Item1_Button", "") {{
+                            width("20%");
+                            height("17%");
+                            alignLeft();
+                            valignTop();   
+                            marginTop("44%");
+                            visibleToMouse(true);   
+                            marginLeft("15%");
+                        
+                            interactOnClick("");
+                            
+                            text(new TextBuilder() {{
+                                text("30 Apples");
+                                font("Interface/Fonts/Default.fnt");
+                                color("#000");
+                                height("100%");
+                                width("100%");
+                            }});
+                        }});
+                        
+                        // item 2 Button
+                        control(new ControlBuilder("Item2_Button", "") {{
+                            width("20%");
+                            height("17%");
+                            alignLeft();
+                            valignTop();
+                            marginTop("44%");
+                            marginLeft("40%");
+                            visibleToMouse(true);                            
+                        
+                            interactOnClick("");
+                            
+                            text(new TextBuilder() {{
+                                text("20 Apple");
+                                font("Interface/Fonts/Default.fnt");
+                                color("#000");
+                                height("100%");
+                                width("100%");
+                            }});
+                        }});
+                        
+                        // item 3 Button
+                        control(new ControlBuilder("Item3_Button", "") {{
+                            width("20%");
+                            height("17%");
+                            alignLeft();
+                            valignTop();
+                            marginTop("44%");
+                            marginLeft("65%");
+                            visibleToMouse(true);                            
+                        
+                            interactOnClick("");
+                            
+                            text(new TextBuilder() {{
+                                text("50 Apple");
+                                font("Interface/Fonts/Default.fnt");
+                                color("#000");
+                                height("100%");
+                                width("100%");
+                            }});
+                        }});
+                        
+                    }});
+                }});
+            }});
+            
+            
         }}.build(nifty);
 
-        nifty.addScreen("start", screen);
-        nifty.gotoScreen("start");
+        Screen startScreen = new ScreenBuilder("start") {{
+            controller(new GuiScreenController());
+            
+            layer(new LayerBuilder("baseLayer") {{
+            backgroundColor("#003f");
+            childLayoutCenter();
+            
+                panel(new PanelBuilder() {{
+                    width("100%");
+                    height("100%");
+                    childLayoutCenter();
+                    
+                    image(new ImageBuilder() {{
+                        filename("Interface/gui/ChoraLoadingScreen.jpg");
+                        width("100%");
+                        height("100%");
+                    }});
+                }});
+            }});
+        }}.build(nifty);
         
-        String tmp = nifty.getCurrentScreen().findElementById("Apple").getRenderer(TextRenderer.class).getWrappedText();
+        Screen startMenuScreen = new ScreenBuilder("startMenu") {{
+            controller(new GuiScreenController());
+            
+            layer(new LayerBuilder("baseLayer") {{
+                backgroundColor("#003f");
+                childLayoutCenter();
+            
+                panel(new PanelBuilder() {{
+                    width("100%");
+                    height("100%");
+                    childLayoutCenter();
+                    
+                    image(new ImageBuilder() {{
+                        filename("Interface/gui/StartingMenu.png");
+                        width("100%");
+                        height("100%");
+                    }});
+                }});
+            }});
+            
+            layer(new LayerBuilder("interactiveBaseLayer") {{
+                childLayoutCenter();
+                
+                panel(new PanelBuilder() {{
+                    width("100%");
+                    height("100%");
+                    childLayoutCenter();
+                    
+                    control(new TextFieldBuilder("Name input", "Write your name here") {{
+                        width("20%");
+                    }});
+                }});
+            }});
+        }}.build(nifty);
+        
+        
+        nifty.addScreen("start", startScreen);
+        nifty.addScreen("startMenu", startMenuScreen);
+        nifty.addScreen("game", gameScreen);
+        //nifty.gotoScreen("startMenu");
+        
+       
+        /*String tmp = nifty.getCurrentScreen().findElementById("Apple").getRenderer(TextRenderer.class).getWrappedText();
         nifty.getCurrentScreen().findElementById("Apple").getRenderer(TextRenderer.class).setText(tmp);
         
         nifty.getCurrentScreen().findElementById("menuLayer").setVisible(false);
         nifty.getCurrentScreen().findElementById("interactiveMenuLayer").setVisible(false);
+        
+        nifty.getCurrentScreen().findElementById("shopLayer").setVisible(false);
+        nifty.getCurrentScreen().findElementById("interactiveShopLayer").setVisible(false);*/
     }
 }

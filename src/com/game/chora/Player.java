@@ -6,15 +6,16 @@ import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
 import com.jme3.export.Savable;
 import java.io.IOException;
+import java.io.Serializable;
 
-public class Player implements Savable {
-   
+public class Player {
+    
     protected String name;
     protected int waterBucket;
     protected int apple;
     
     public Player(){
-        this.name = "";
+        this.name = "ciao";
         this.waterBucket = 2;
         this.apple = 0;
     }
@@ -41,21 +42,5 @@ public class Player implements Savable {
     
     public void setApple(int apple) {
         this.apple = apple;
-    }
-    
-    @Override
-    public void write(JmeExporter ex) throws IOException {
-        OutputCapsule capsule = ex.getCapsule(this);
-        capsule.write(this.getName(), "PlayerName", "");
-        capsule.write(this.getApple(), "PlayerApples", 0);
-        capsule.write(this.getWaterBucket(), "PlayerWaterBuckets", 0);
-    }
-
-    @Override
-    public void read(JmeImporter im) throws IOException {
-        InputCapsule capsule = im.getCapsule(this);
-        this.setName(capsule.readString("PlayerName", ""));
-        this.setApple(capsule.readInt("PlayerApples", 0));
-        this.setWaterBucket(capsule.readInt("PlayerWaterBuckets", 0));
     }
 }

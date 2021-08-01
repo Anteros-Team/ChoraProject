@@ -31,7 +31,8 @@ public class GuiScreenController implements ScreenController {
     }
     
     public void openShop() {
-        
+        nifty.getCurrentScreen().findElementById("shopLayer").setVisible(true);
+        nifty.getCurrentScreen().findElementById("interactiveShopLayer").setVisible(true);
     }
     
     public void openCredits() {
@@ -47,11 +48,13 @@ public class GuiScreenController implements ScreenController {
     }
     
     public void closeMenu() {
-        
+        nifty.getCurrentScreen().findElementById("menuLayer").setVisible(false);
+        nifty.getCurrentScreen().findElementById("interactiveMenuLayer").setVisible(false);
     }
     
     public void closeShop() {
-        
+        nifty.getCurrentScreen().findElementById("shopLayer").setVisible(false);
+        nifty.getCurrentScreen().findElementById("interactiveShopLayer").setVisible(false);
     }
     
     public void closeCredits() {

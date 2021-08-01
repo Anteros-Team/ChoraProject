@@ -15,12 +15,13 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
 
-public class Tree extends Entity {
+public class Tree extends Entity implements Serializable {
     
     protected List<Apple> apples;
     protected float time;
@@ -99,7 +100,7 @@ public class Tree extends Entity {
         a.setModel(assetManager, rootNode, "Models/apple01/apple01.j3o", shootables);
 
         Vector3f reset = new Vector3f(-this.getPickboxSize().x, 0, -this.getPickboxSize().z);
-        a.setPosition(a.getPosition().add(reset));
+        a.modifyPosition(a.getPosition().add(reset));
         
         Vector2f truckMin = new Vector2f(), truckMax = new Vector2f();
         truckMin.x = this.getPosition().x - this.pickboxSize.x / 8;
@@ -118,9 +119,14 @@ public class Tree extends Entity {
         
         Vector3f offset = new Vector3f(x * this.getPickboxSize().x * 2, this.getPickboxSize().y / 1.2f, z * this.getPickboxSize().z * 2);
         
-        a.setPosition(a.getPosition().add(offset));
+        a.modifyPosition(a.getPosition().add(offset));
         a.spawn(rootNode, shootables);
         this.apples.add(a);
+    }
+    
+    @Override 
+    public String toString() {
+        return new StringBuffer(" Position: ").append(this.getPosition().toString()).append(" Scale: ").append(this.getScale()).append(" PickBoxSize: ").append(this.getPickboxSize().toString()).append(" Model: Models/tree/tree.j3o").toString();
     }
     
 }

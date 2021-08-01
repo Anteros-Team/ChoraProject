@@ -3,10 +3,11 @@ package com.game.chora.items.entities;
 import com.game.chora.utils.Entity;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class Apple extends Entity {
+public class Apple extends Entity implements Serializable {
     
     public Apple(Vector3f position, float scale, Vector3f hitboxSize) {
         super(position, scale, hitboxSize);
@@ -17,4 +18,8 @@ public class Apple extends Entity {
         this.despawn(rootNode, shootables);
     }
     
+    @Override 
+    public String toString() {
+        return new StringBuffer(" Position: ").append(this.getPosition().toString()).append(" Scale: ").append(this.getScale()).append(" PickBoxSize: ").append(this.getPickboxSize().toString()).append(" Model: Models/apple01/apple01.j3o").toString();
+    }
 }
