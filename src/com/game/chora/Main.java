@@ -153,7 +153,10 @@ public class Main extends SimpleApplication{
         entities = new ArrayList<>();
         es = new ArrayList<>();
         
-        if (db.isPlayerEmpty()) {
+        if (db.isPlayerEmpty() == false) {
+            System.out.println("No player found. Creating player...");
+            db.insertPlayer(p.getName(), p.getApple(), p.getWaterBucket());
+            
             Entity e = new Trash(new Vector3f(0, 0, 0), 8, new Vector3f(25, 10, 25));
             e.setModel(assetManager, rootNode, "Models/trash/trash.j3o", shootables);
             //e.setPhysics(bulletAppState);
@@ -415,7 +418,7 @@ public class Main extends SimpleApplication{
         }
         
         System.out.println(p.getWaterBucket());*/
-        db.dropTables();
+        db.dropTables();     
         db.createTables();
         db.insertPlayer(p.getName(), p.getApple(), p.getWaterBucket());
         for(Entity e: entities) {
