@@ -2,7 +2,9 @@ package com.game.chora.items.entities;
 
 import com.game.chora.utils.Entity;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import java.io.Serializable;
 
 public class Mill extends Entity {
@@ -28,6 +30,12 @@ public class Mill extends Entity {
     }
     
     public void rotateMill(Node rootNode, float tpf) {
-        rootNode.getChild("wheel").rotate(0, this.speed *tpf, 0);
+        for(Spatial s : rootNode.getChildren()) {
+            System.out.println(s.getName());
+            if ( ((Node)s).getChild("wheel") instanceof Node ) {
+                ((Node)s).getChild("wheel").rotate(0, this.speed * tpf, 0);
+            }
+        }
     }
+
 }

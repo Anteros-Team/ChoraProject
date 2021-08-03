@@ -4,6 +4,8 @@ import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
+import com.jme3.math.Matrix3f;
 import com.jme3.math.Vector2f;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
@@ -16,20 +18,23 @@ import com.jme3.terrain.geomipmap.lodcalc.DistanceLodCalculator;
 import com.jme3.terrain.heightmap.AbstractHeightMap;
 import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
+import com.jme3.texture.image.ImageRaster;
 
 
 public class Scene {
     
     protected Spatial scene;
-    //protected Spatial floor;
     protected Material matTerrain;
-    //protected Texture texTerrain;
     protected TerrainQuad terrain;
     protected Texture AlphaTexture;
+    protected ImageRaster imageRaster;
+    protected boolean[][] placeableArea;
+    protected boolean[][] coveredArea;
     
-    public Scene(AssetManager assetManager, Node rootNode) {
-        setScene(assetManager, rootNode);
-        setFloor(assetManager, rootNode);
+    public Scene(AssetManager assetManager, Node rootNode, Node shootables) {
+        this.placeableArea = new boolean[1024][1024];
+        this.coveredArea = new boolean[1024][1024];
+        setFloor(assetManager, rootNode, shootables);
     }
     
     public TerrainQuad getTerrain() {
@@ -40,13 +45,15 @@ public class Scene {
         return this.AlphaTexture;
     }
     
-    private void setScene(AssetManager assetManager, Node rootNode) {
-        //this.scene = assetManager.loadModel("Scenes/map.j3o");
-        //this.scene.setShadowMode(RenderQueue.ShadowMode.Receive);
-        //rootNode.attachChild(this.scene);
+    public boolean[][] getPlaceableArea() {
+        return this.placeableArea;
     }
     
-    private void setFloor(AssetManager assetManager, Node rootNode) {
+    public boolean[][] getCoveredArea() {
+        return this.coveredArea;
+    }
+    
+    private void setFloor(AssetManager assetManager, Node rootNode, Node shootables) {
         this.matTerrain = new Material(assetManager, "Common/MatDefs/Terrain/TerrainLighting.j3md");
         this.matTerrain.setBoolean("useTriPlanarMapping", false);
         this.matTerrain.setBoolean("WardIso", true);
@@ -80,28 +87,27 @@ public class Scene {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
-        // CREATE THE TERRAIN
+
         terrain = new TerrainQuad("terrain", 65, 513, heightmap.getHeightMap());
-        //TerrainLodControl control = new TerrainLodControl(terrain, getCamera());
-        //control.setLodCalculator( new DistanceLodCalculator(65, 2.7f) ); // patch size, and a multiplier
-        //terrain.addControl(control);
         terrain.setMaterial(matTerrain);
         terrain.setLocalTranslation(0, -23, 0);
         terrain.setLocalScale(2f, 0.5f, 2f);
         rootNode.attachChild(terrain);
-
+        shootables.attachChild(terrain);
         
-        //this.floor = rootNode.getChild("terrain-map");
-        //this.floor.addControl(new RigidBodyControl(0));
-        //this.floor.setMaterial(this.matTerrain);
+        this.imageRaster = ImageRaster.create(this.getAlphaTexture().getImage());
+        for(int i = 0; i < 1024; i++) {
+            for (int j = 0; j < 1024; j++) {
+                this.coveredArea[i][j] = false;
+                if (this.imageRaster.getPixel(i, j).r > 0.7) {
+                    this.placeableArea[i][j] = true;
+                } else {
+                    this.placeableArea[i][j] = false;
+                }
+            }
+        }
         
         
-        
-        //this.setTextureScale(floor, new Vector2f(16, 16));
-        
-       
-        //bulletAppState.getPhysicsSpace().addAll(this.floor);
     }
     
     private void setTextureScale(Spatial spatial, Vector2f vector) {
@@ -115,5 +121,5 @@ public class Scene {
         } else if (spatial instanceof Geometry) {
             ((Geometry) spatial).getMesh().scaleTextureCoordinates(vector);
         }
-    } 
+    }
 }

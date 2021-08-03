@@ -5,12 +5,17 @@
  */
 package com.game.chora.gui;
 
+import com.game.chora.items.entities.Sprout;
+import com.game.chora.utils.Entity;
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioRenderer;
 import com.jme3.input.InputManager;
+import com.jme3.math.Vector3f;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.ViewPort;
+import com.jme3.scene.Node;
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.NiftyMethodInvoker;
 import de.lessvoid.nifty.builder.ControlBuilder;
 import de.lessvoid.nifty.builder.ImageBuilder;
 import de.lessvoid.nifty.builder.LayerBuilder;
@@ -18,10 +23,16 @@ import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.builder.TextBuilder;
 import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
+import de.lessvoid.nifty.controls.imageselect.builder.ImageSelectBuilder;
 import de.lessvoid.nifty.controls.label.builder.LabelBuilder;
 import de.lessvoid.nifty.controls.textfield.builder.TextFieldBuilder;
+import de.lessvoid.nifty.elements.render.ImageRenderer;
 import de.lessvoid.nifty.elements.render.TextRenderer;
+import de.lessvoid.nifty.render.NiftyImage;
 import de.lessvoid.nifty.screen.Screen;
+import de.lessvoid.nifty.tools.SizeValue;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -31,11 +42,26 @@ public class Gui {
     
     protected NiftyJmeDisplay niftyDisplay;
     protected Nifty nifty;
+    protected AssetManager assetManager;
+    protected Node rootNode;
+    protected Node shootables;
+    protected List<Entity> entities;
+    protected boolean placeEntity;
+    protected String selectedEntityFromShop;
+    protected boolean guiOpened;
     
-    public Gui (AssetManager assetManager, InputManager inputManager, AudioRenderer audioRenderer, ViewPort guiViewPort) {
+    public Gui (AssetManager assetManager, InputManager inputManager, AudioRenderer audioRenderer, ViewPort guiViewPort, Node rootNode, Node shootables, List<Entity> entities) {
         niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, guiViewPort);
         nifty = niftyDisplay.getNifty();
         guiViewPort.addProcessor(niftyDisplay);
+        
+        this.assetManager = assetManager;
+        this.rootNode = rootNode;
+        this.shootables = shootables;
+        this.entities = entities;
+        this.placeEntity = false;
+        this.selectedEntityFromShop = "";
+        this.guiOpened = false;
         
         nifty.loadStyleFile("nifty-default-styles.xml");
         nifty.loadControlFile("nifty-default-controls.xml");
@@ -182,7 +208,7 @@ public class Gui {
                         }});
                 
                         // Water bucket text
-                        control(new LabelBuilder("WaterBucket", "0") {{
+                        control(new LabelBuilder("WaterBucket", "2") {{
                             font("Interface/Fonts/Default.fnt");
                             width("30%");
                         }});
@@ -345,7 +371,7 @@ public class Gui {
                             marginTop("6%");
                             visibleToMouse(true);                            
                         
-                            interactOnClick("closeMenu()");
+                            interactOnRelease("closeMenu()");
                         }});
                         
                         // credits Button
@@ -522,7 +548,7 @@ public class Gui {
                             marginTop("6%");
                             visibleToMouse(true);                            
                         
-                            interactOnClick("closeShop()");
+                            interactOnRelease("closeShop()");
                         }});
                         
                         // item 1 Button
@@ -535,7 +561,7 @@ public class Gui {
                             visibleToMouse(true);   
                             marginLeft("15%");
                         
-                            interactOnClick("");
+                            //interactOnClick("buyFromShop(\"sprout\", " + assetManager + ", " + rootNode + ", " + shootables + ")");
                             
                             text(new TextBuilder() {{
                                 text("30 Apples");
@@ -645,7 +671,15 @@ public class Gui {
                     childLayoutCenter();
                     
                     control(new TextFieldBuilder("Name input", "Write your name here") {{
-                        width("20%");
+                        width("35%");
+                        height("6%");
+                        marginTop("0.6%");
+                    }});
+                    
+                    control(new ImageSelectBuilder("someImageSelect") {{
+                       width("5%");
+                       height("10%");
+                       //imageList("apple.png, waterBucket.png");
                     }});
                 }});
             }});
@@ -655,16 +689,82 @@ public class Gui {
         nifty.addScreen("start", startScreen);
         nifty.addScreen("startMenu", startMenuScreen);
         nifty.addScreen("game", gameScreen);
-        //nifty.gotoScreen("startMenu");
+        nifty.gotoScreen("game");
         
-       
-        /*String tmp = nifty.getCurrentScreen().findElementById("Apple").getRenderer(TextRenderer.class).getWrappedText();
+        /*ImageRenderer imageRenderer = nifty.getCurrentScreen().findElementById("someImageSelect").getRenderer(ImageRenderer.class);
+        List<NiftyImage> images = new ArrayList<>();
+        NiftyImage n = nifty.getRenderEngine().createImage(nifty.getCurrentScreen(), "Interface/gui/apple.png", false);
+        imageRenderer.setImage(n);
+        nifty.getCurrentScreen().findElementById("someImageSelect").setConstraintWidth(SizeValue.px(n.getWidth()));
+        nifty.getCurrentScreen().findElementById("someImageSelect").setConstraintHeight(SizeValue.px(n.getHeight()));
+        nifty.getCurrentScreen().findElementById("someImageSelect").layoutElements();
+        nifty.getCurrentScreen().findElementById("someImageSelect").show();*/
+        String tmp = nifty.getCurrentScreen().findElementById("Apple").getRenderer(TextRenderer.class).getWrappedText();
         nifty.getCurrentScreen().findElementById("Apple").getRenderer(TextRenderer.class).setText(tmp);
-        
+                
         nifty.getCurrentScreen().findElementById("menuLayer").setVisible(false);
         nifty.getCurrentScreen().findElementById("interactiveMenuLayer").setVisible(false);
         
         nifty.getCurrentScreen().findElementById("shopLayer").setVisible(false);
-        nifty.getCurrentScreen().findElementById("interactiveShopLayer").setVisible(false);*/
+        nifty.getCurrentScreen().findElementById("interactiveShopLayer").setVisible(false);
+        
+        nifty.getCurrentScreen().findElementById("Item1_Button").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "buyFromShop(sprout)", this));
+        nifty.getCurrentScreen().findElementById("Item2_Button").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "buyFromShop(well)", this));
+        nifty.getCurrentScreen().findElementById("Item3_Button").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "buyFromShop(mill)", this));
+    }
+    
+    public Nifty getNifty() {
+        return this.nifty;
+    }
+    
+    public void setApple(int apple) {
+        nifty.getCurrentScreen().findElementById("Apple").getRenderer(TextRenderer.class).setText(""+apple+"");
+    }
+    
+    public void setWaterBucket(int waterBucket) {
+        nifty.getCurrentScreen().findElementById("WaterBucket").getRenderer(TextRenderer.class).setText(""+waterBucket+"");
+    }
+    
+    public void buyFromShop(String selectedEntity) {
+        
+        // TODO: check if have sufficient apples, remove apples
+        
+        nifty.getCurrentScreen().findElementById("shopLayer").setVisible(false);
+        nifty.getCurrentScreen().findElementById("interactiveShopLayer").setVisible(false);
+       
+        this.setSelectedEntityFromShop(selectedEntity);
+        this.setPlaceEntity(true);
+        
+        
+        System.out.println("Selected " + selectedEntity + " from shop. " + this.getPlaceEntity());
+        
+        /*Entity e = new Sprout(new Vector3f(190, 0, 190), 0.6f, new Vector3f(10, 8, 5));
+        e.setModel(this.assetManager, this.rootNode, "Models/sprout/sprout.j3o", this.shootables);
+        e.spawn(this.rootNode, this.shootables);
+        entities.add(e);*/
+    }
+    
+    public String getSelectedEntityFromShop() {
+        return this.selectedEntityFromShop;
+    }
+    
+    public void setSelectedEntityFromShop(String selectedEntity) {
+        this.selectedEntityFromShop = selectedEntity;
+    }
+    
+    public boolean getPlaceEntity() {
+        return this.placeEntity;
+    }
+    
+    public void setPlaceEntity(boolean placeEntity) {
+        this.placeEntity = placeEntity;
+    }
+    
+    public boolean getGuiOpened() {
+        return this.guiOpened;
+    }
+    
+    public void setGuiOpened(boolean guiOpened) {
+        this.guiOpened = guiOpened;
     }
 }

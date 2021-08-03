@@ -7,90 +7,27 @@ import com.game.chora.utils.EntitySerialization;
 import com.game.chora.water.Ocean;
 import com.game.chora.water.Pound;
 import com.jme3.app.SimpleApplication;
-import com.jme3.asset.plugins.FileLocator;
-import com.jme3.bounding.BoundingBox;
-import com.jme3.bounding.BoundingVolume;
-import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.shapes.BoxCollisionShape;
-import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
-import com.jme3.bullet.collision.shapes.CollisionShape;
-import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
-import com.jme3.bullet.collision.shapes.SphereCollisionShape;
-import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.bullet.util.CollisionShapeFactory;
-import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
-import com.jme3.export.binary.BinaryExporter;
-import com.jme3.export.binary.BinaryImporter;
-import com.jme3.font.BitmapText;
-import com.jme3.input.ChaseCamera;
-import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
-import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
-import com.jme3.light.AmbientLight;
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
-import com.jme3.math.Plane;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
-import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.niftygui.NiftyJmeDisplay;
-import com.jme3.post.FilterPostProcessor;
-import com.jme3.renderer.queue.RenderQueue;
-import com.jme3.scene.BatchNode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.shape.Box;
-import com.jme3.scene.shape.Quad;
-import com.jme3.scene.shape.Sphere;
-import com.jme3.shadow.BasicShadowRenderer;
-import com.jme3.shadow.DirectionalLightShadowFilter;
-import com.jme3.shadow.EdgeFilteringMode;
-import com.jme3.terrain.geomipmap.TerrainLodControl;
-import com.jme3.terrain.geomipmap.TerrainQuad;
-import com.jme3.terrain.geomipmap.lodcalc.DistanceLodCalculator;
-import com.jme3.terrain.heightmap.AbstractHeightMap;
-import com.jme3.terrain.heightmap.ImageBasedHeightMap;
-import com.jme3.texture.Texture;
 import com.jme3.texture.image.ImageRaster;
-import com.jme3.water.SimpleWaterProcessor;
-import com.jme3.water.WaterFilter;
 import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.builder.LayerBuilder;
-import de.lessvoid.nifty.builder.PanelBuilder;
-import de.lessvoid.nifty.builder.ScreenBuilder;
-import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
-import de.lessvoid.nifty.elements.Element;
-import de.lessvoid.nifty.screen.DefaultScreenController;
-import de.lessvoid.nifty.screen.Screen;
-import de.lessvoid.nifty.screen.ScreenController;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import jme3tools.optimize.GeometryBatchFactory;
 
 
-public class Main extends SimpleApplication{
+public class Main extends SimpleApplication {
     
     private Player p;
     private DynamicSky sky = null;
@@ -276,11 +213,15 @@ public class Main extends SimpleApplication{
         
         
         
-        gui = new Gui(assetManager, inputManager, audioRenderer, guiViewPort);
+        gui = new Gui(assetManager, inputManager, audioRenderer, guiViewPort, rootNode, shootables, entities);
    
+        gui.setApple(p.getApple());
+        gui.setWaterBucket(p.getWaterBucket());
+        
+        
         // Create scene and terrain
         
-        scene = new Scene(assetManager, rootNode);
+        scene = new Scene(assetManager, rootNode, shootables);
 
         // Create Sky, Sun and Moon and Ambient Light
         
@@ -418,8 +359,10 @@ public class Main extends SimpleApplication{
         }
         
         System.out.println(p.getWaterBucket());*/
-        db.dropTables();     
+        db.clearTables();     
         db.createTables();
+        Player pp = db.queryPlayer();
+        System.out.println("Risposta: " + pp.getName() + "," + pp.getApple() + "," + pp.getWaterBucket());
         db.insertPlayer(p.getName(), p.getApple(), p.getWaterBucket());
         for(Entity e: entities) {
             EntitySerialization s = new EntitySerialization();
@@ -478,8 +421,14 @@ public class Main extends SimpleApplication{
                 }
             }
             if (e instanceof Mill) {
+                System.out.println(e);
                 ((Mill) e).rotateMill(rootNode, tpf);
             }
+        }
+        
+        if (gui.getPlaceEntity() == true) {
+            // show placing mode
+            System.out.println("Placing mode active.");
         }
     }
     
@@ -515,111 +464,223 @@ public class Main extends SimpleApplication{
 
         @Override
         public void onAction(String name, boolean keyPressed, float tpf) {
-          if (name.equals("Shoot") && !keyPressed) {
-            CollisionResults results = new CollisionResults();
             
-            Vector3f origin = cam.getWorldCoordinates(inputManager.getCursorPosition(), 0.0f);
-            Vector3f direction = cam.getWorldCoordinates(inputManager.getCursorPosition(), 0.3f);
-            direction.subtractLocal(origin).normalizeLocal();
-            
-            Ray ray = new Ray(origin, direction);
-            
-            shootables.collideWith(ray, results);
-            
-            String closest;
-            for (int i = 0; i < results.size(); i++) {
-                float dist = results.getCollision(i).getDistance();
-                Vector3f pt = results.getCollision(i).getContactPoint();
-                String hit = results.getCollision(i).getGeometry().getName();
-                System.out.println("* Collision #" + i);
-                System.out.println("  You shot " + hit + " at " + pt + ", " + dist + " wu away.");
-            }
-            
-            if (results.size() > 0) {
-                closest = results.getClosestCollision().getGeometry().getName();
-                
-                Spatial c = rootNode.getChild(closest);
-                
-                // Pound clicked
-                if (pound.getPickBox().getName().equals(closest)) {
-                    pound.takeWater();
-                    p.setWaterBucket(p.getWaterBucket() + 1);
-                    if (pound.getWaterLocation().y <= -3.5f) {
-                        pound.despawn(rootNode, shootables);
-                    }
-                } else {
-                    for (ListIterator<Entity> li = entities.listIterator(); li.hasNext();) {
-                        Entity e = li.next();
+            if (name.equals("Shoot") && !keyPressed && gui.getNifty().getCurrentScreen().getScreenId().equals("game")) {
+                if (gui.getNifty().getCurrentScreen().findElementById("menuLayer").isVisible() == false && gui.getNifty().getCurrentScreen().findElementById("shopLayer").isVisible() == false) {
+                    CollisionResults results = new CollisionResults();
+
+                    Vector3f origin = cam.getWorldCoordinates(inputManager.getCursorPosition(), 0.0f);
+                    Vector3f direction = cam.getWorldCoordinates(inputManager.getCursorPosition(), 0.3f);
+                    direction.subtractLocal(origin).normalizeLocal();
+
+                    Ray ray = new Ray(origin, direction);
+
+                    shootables.collideWith(ray, results);
+
+                    if (gui.getPlaceEntity() == true) {
+                        // placing mode
+                        System.out.println(results.size());
+                        if (results.size() > 0) {
+                            Vector3f pt = results.getClosestCollision().getContactPoint();
+                            addEntity(gui.getSelectedEntityFromShop(), pt);
+                        }
                         
-                        if (e != null) {                                
-                            
-                            if (e instanceof Tree) {
-                                for (Apple a: ((Tree) e).getApples()) {
-                                    if (a.getPickBox().get(0).getName().equals(closest)) {
-                                        a.onAction(rootNode, shootables);
-                                        p.setApple(p.getApple() + 1);
-                                        break;
-                                    }
-                                }
-                            }
-                            
-                            if (e.getPickBox().get(0).getName().equals(closest)) {
-                                
-                                // Entity clicked is Trash
-                                if (e instanceof Trash) {
-                                    e.onAction(rootNode, shootables);
-                                    entities.remove(e);
-                                    break;
-                                }
 
-                                // Entity clicked is SmallTree
-                                if (e instanceof SmallTree && p.getWaterBucket() > 0) {
-                                    Entity t = new Tree(e.getPosition(), 4, new Vector3f(65, 50, 75));
-                                    t.setModel(assetManager, rootNode, "Models/tree/tree.j3o", shootables);
-                                    e.onAction(rootNode, shootables);
-                                    t.spawn(rootNode, shootables);
-                                    entities.add(t);
-                                    entities.remove(e);
-                                    p.setWaterBucket(p.getWaterBucket() - 1);
-                                    
-                                    ImageRaster imageRaster = ImageRaster.create(scene.getAlphaTexture().getImage());
-                                    
-                                    System.out.println(t.getPosition().x - t.getPickboxSize().x);
-                                    System.out.println(t.getPosition().x + t.getPickboxSize().x);
+                    } else {
+                        // picking mode
 
-                                    /*for (float i = 512 + t.getPosition().x - t.getPickboxSize().x; i < 512 + t.getPosition().x + t.getPickboxSize().x; i++) {
-                                        for (float j = 512 - t.getPosition().z - t.getPickboxSize().z; j < 512 - t.getPosition().z + t.getPickboxSize().z; j++) {
-                                            imageRaster.setPixel((int) i, (int) j, ColorRGBA.Green);
+                        String closest;
+                        for (int i = 0; i < results.size(); i++) {
+                            float dist = results.getCollision(i).getDistance();
+                            Vector3f pt = results.getCollision(i).getContactPoint();
+                            String hit = results.getCollision(i).getGeometry().getName();
+                            System.out.println("* Collision #" + i);
+                            System.out.println("  You shot " + hit + " at " + pt + ", " + dist + " wu away.");
+                        }
+
+                        if (results.size() > 0) {
+                            closest = results.getClosestCollision().getGeometry().getName();
+
+                            Spatial c = rootNode.getChild(closest);
+
+                            // Pound clicked
+                            if (pound.getPickBox().getName().equals(closest)) {
+                                pound.takeWater();
+                                p.setWaterBucket(p.getWaterBucket() + 1);
+                                gui.setWaterBucket(p.getWaterBucket());
+                                if (pound.getWaterLocation().y <= -3.5f) {
+                                    pound.despawn(rootNode, shootables);
+                                }
+                            } else {
+                                for (ListIterator<Entity> li = entities.listIterator(); li.hasNext();) {
+                                    Entity e = li.next();
+
+                                    if (e != null) {                                
+
+                                        if (e instanceof Tree) {
+                                            for (Apple a: ((Tree) e).getApples()) {
+                                                if (a.getPickBox().get(0).getName().equals(closest)) {
+                                                    a.onAction(rootNode, shootables);
+                                                    p.setApple(p.getApple() + 1);
+                                                    gui.setApple(p.getApple());
+                                                    break;
+                                                }
+                                            }
                                         }
-                                    }*/
-                                    for (float i = 512 + t.getPosition().x - 55; i < 512 + t.getPosition().x + 65; i++) {
-                                        for (float j = 512 - t.getPosition().z - 65 ; j < + 512 - t.getPosition().z + 75; j++) {
-                                            imageRaster.setPixel((int) i, (int) j, ColorRGBA.Green);
+
+                                        if (e.getPickBox().get(0).getName().equals(closest)) {
+
+                                            // Entity clicked is Trash
+                                            if (e instanceof Trash) {
+                                                e.onAction(rootNode, shootables);
+                                                entities.remove(e);
+                                                break;
+                                            }
+
+                                            // Entity clicked is SmallTree
+                                            if (e instanceof SmallTree && p.getWaterBucket() > 0) {
+                                                Entity t = new Tree(e.getPosition(), 4, new Vector3f(65, 50, 75));
+                                                t.setModel(assetManager, rootNode, "Models/tree/tree.j3o", shootables);
+                                                e.onAction(rootNode, shootables);
+                                                t.spawn(rootNode, shootables);
+                                                entities.add(t);
+                                                entities.remove(e);
+                                                p.setWaterBucket(p.getWaterBucket() - 1);
+                                                gui.setWaterBucket(p.getWaterBucket());
+
+                                                ImageRaster imageRaster = ImageRaster.create(scene.getAlphaTexture().getImage());
+
+                                                System.out.println(t.getPosition().x - t.getPickboxSize().x);
+                                                System.out.println(t.getPosition().x + t.getPickboxSize().x);
+
+                                                for (float i = 512 + t.getPosition().x - 55; i < 512 + t.getPosition().x + 65; i++) {
+                                                    for (float j = 512 - t.getPosition().z - 65 ; j < + 512 - t.getPosition().z + 75; j++) {
+                                                        if (imageRaster.getPixel((int) i, (int) j).r > 0.7) {
+                                                            imageRaster.setPixel((int) i, (int) j, ColorRGBA.Green);
+                                                        }
+                                                        
+                                                    }
+                                                }
+                                                scene.getTerrain().updateModelBound();
+                                                break;
+                                            }
+
+                                            // Entity clicked is Sprout
+                                            if (e instanceof Sprout && p.getWaterBucket() > 0) {
+                                                Entity st = new SmallTree(e.getPosition(), 3.5f, new Vector3f(30, 40, 21));
+                                                st.setModel(assetManager, rootNode, "Models/small_tree/small_tree.j3o", shootables);
+                                                e.onAction(rootNode, shootables);
+                                                st.spawn(rootNode, shootables);
+                                                entities.add(st);
+                                                entities.remove(e);
+                                                p.setWaterBucket(p.getWaterBucket() - 1);
+                                                gui.setWaterBucket(p.getWaterBucket());
+                                                break;
+                                            }
                                         }
                                     }
-                                    scene.getTerrain().updateModelBound();
-                                    break;
-                                }
-
-                                // Entity clicked is Sprout
-                                if (e instanceof Sprout && p.getWaterBucket() > 0) {
-                                    Entity st = new SmallTree(e.getPosition(), 3.5f, new Vector3f(30, 40, 21));
-                                    st.setModel(assetManager, rootNode, "Models/small_tree/small_tree.j3o", shootables);
-                                    e.onAction(rootNode, shootables);
-                                    st.spawn(rootNode, shootables);
-                                    entities.add(st);
-                                    entities.remove(e);
-                                    p.setWaterBucket(p.getWaterBucket() - 1);
-                                    break;
                                 }
                             }
                         }
                     }
                 }
             } else {
-                // no hit                
-            }
+                // no hit
             }
         }
-  };
+    };
+    
+    public void addEntity(String selectedEntity, Vector3f position) {
+        System.out.println("Entity = " + selectedEntity);
+        System.out.println("Position = " + position);
+        
+        if ("sprout".equals(selectedEntity)) {
+            boolean notAllowedPlace = false;
+            for (float i = 512 + position.x - 55; i < 512 + position.x + 65; i++) {
+                for (float j = 512 - position.z - 65 ; j < 512 - position.z + 75; j++) {
+                    if (i >= 0 && i <= 1024 && j >= 0 && j <= 1024) {
+                        if (scene.getCoveredArea()[(int) i][(int) j] == true) {
+                            notAllowedPlace = true;
+                        }
+                    }
+                }
+            }
+            if (scene.getPlaceableArea()[512 + (int) position.x][512 - (int) position.z] == false) {
+                notAllowedPlace = true;
+            }
+                            
+            if (notAllowedPlace == false) {
+                System.out.println("Placing entity...");
+                System.out.println("Sprout spawning.");
+                Entity e = new Sprout(position, 0.6f, new Vector3f(10, 8, 5));
+                e.setModel(assetManager, rootNode, "Models/sprout/sprout.j3o", this.shootables);
+                e.spawn(this.rootNode, this.shootables);
+                entities.add(e);
+                gui.setPlaceEntity(false);
+            
+                for (float i = 512 + position.x - 55; i < 512 + position.x + 65; i++) {
+                    for (float j = 512 - position.z - 65 ; j < + 512 - position.z + 75; j++) {
+                        scene.getCoveredArea()[(int) i][(int) j] = true;
+                    }
+                }
+            }
+            
+        }
+        if ("mill".equals(selectedEntity)) {
+            boolean notAllowedPlace = false;
+            for (float i = 512 + position.x - 55; i < 512 + position.x + 65; i++) {
+                for (float j = 512 - position.z - 65 ; j < + 512 - position.z + 75; j++) {
+                    if (i >= 0 && i <= 1024 && j >= 0 && j <= 1024) {
+                        if (scene.getPlaceableArea()[(int) i][(int) j] == false || scene.getCoveredArea()[(int) i][(int) j] == true) {
+                            notAllowedPlace = true;
+                        }
+                    }
+                }
+            }
+            
+            if (notAllowedPlace == false) {
+                System.out.println("Placing entity...");
+                System.out.println("Mill spawning.");
+                Entity e = new Mill(position, 200, new Vector3f(40, 77, 40));
+                e.setModel(assetManager, rootNode, "Models/mill/mill.j3o", shootables);
+                e.spawn(rootNode, shootables);
+                entities.add(e);
+                gui.setPlaceEntity(false);
+                
+                for (float i = 512 + position.x - 55; i < 512 + position.x + 65; i++) {
+                    for (float j = 512 - position.z - 65 ; j < + 512 - position.z + 75; j++) {
+                        scene.getCoveredArea()[(int) i][(int) j] = true;
+                    }
+                }
+            }
+            
+        }
+        if ("well".equals(selectedEntity)) {
+            boolean notAllowedPlace = false;
+            for (float i = 512 + position.x - 55; i < 512 + position.x + 65; i++) {
+                for (float j = 512 - position.z - 65 ; j < + 512 - position.z + 75; j++) {
+                    if (i >= 0 && i <= 1024 && j >= 0 && j <= 1024) {
+                        if (scene.getPlaceableArea()[(int) i][(int) j] == false || scene.getCoveredArea()[(int) i][(int) j] == true) {
+                            notAllowedPlace = true;
+                        }
+                    }
+                }
+            }
+            
+            if (notAllowedPlace == false) {
+                Entity e = new Well(position, 15, new Vector3f(20, 20, 20));
+                e.setModel(assetManager, rootNode, "Models/well/well.j3o", shootables);
+                e.spawn(rootNode, shootables);
+                entities.add(e);
+                gui.setPlaceEntity(false);
+                
+                for (float i = 512 + position.x - 55; i < 512 + position.x + 65; i++) {
+                    for (float j = 512 - position.z - 65 ; j < + 512 - position.z + 75; j++) {
+                        scene.getCoveredArea()[(int) i][(int) j] = true;
+                    }
+                }
+            }
+            
+        } 
+    }
 }

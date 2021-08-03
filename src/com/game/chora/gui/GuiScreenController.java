@@ -1,5 +1,10 @@
 package com.game.chora.gui;
 
+import com.game.chora.items.entities.Sprout;
+import com.game.chora.utils.Entity;
+import com.jme3.asset.AssetManager;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
@@ -28,6 +33,7 @@ public class GuiScreenController implements ScreenController {
     public void openMenu() {
         nifty.getCurrentScreen().findElementById("menuLayer").setVisible(true);
         nifty.getCurrentScreen().findElementById("interactiveMenuLayer").setVisible(true);
+        
     }
     
     public void openShop() {
@@ -73,8 +79,15 @@ public class GuiScreenController implements ScreenController {
         
     }
     
-    public void buyFromShop(String elementId) {
+    public void buyFromShop(String elementId, AssetManager assetManager, Node rootNode, Node shootables) {
         
+        // TODO: check if have sufficient apples, remove apples
+        
+        this.closeShop();
+        Entity e = new Sprout(new Vector3f(190, 0, 190), 0.6f, new Vector3f(10, 8, 5));
+        e.setModel(assetManager, rootNode, "Models/sprout/sprout.j3o", shootables);
+        e.spawn(rootNode, shootables);
+        //entities.add(e);
     }
 
 }

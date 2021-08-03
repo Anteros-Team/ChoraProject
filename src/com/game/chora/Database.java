@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Database {
@@ -86,6 +88,29 @@ public class Database {
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+        
+    }
+    
+    public void clearTables() {
+        Connection conn = this.connect();
+        PreparedStatement ps = null;
+        
+        try {
+            
+            String sql = "DELETE FROM Player";
+            ps = conn.prepareStatement(sql);
+            ps.execute();
+            
+        } catch (Exception e) {
+            System.out.append(e.toString());
+        } finally {
+            try {
+                ps.close();
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
     }
@@ -183,7 +208,7 @@ public class Database {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql)) {
              
-            if (rs.next() == true) {
+            if (rs.next() == false) {
                 System.out.println("Select is empty.");
                 return false;
             }
