@@ -109,16 +109,18 @@ public class Gui {
                         image(new ImageBuilder() {{
                             id("AppleImage");
                             filename("Interface/gui/apple.png");
-                            width("30%");
-                            height("100%");
+                            width("20%");
+                            height("95%");
+                            marginLeft("5%");
                         }});
                 
                        // Water bucket image
                         image(new ImageBuilder() {{
                             id("WaterBucketImage");
                             filename("Interface/gui/waterBucket.png");
-                            width("30%");
-                            height("100%");
+                            width("18%");
+                            height("96%");
+                            marginLeft("10%");
                         }});
                     }});
                 }});
@@ -141,8 +143,8 @@ public class Gui {
                     image(new ImageBuilder() {{
                         id("MenuImage");
                         filename("Interface/gui/menu_icon.png");
-                        width("25%");
-                        height("50%");
+                        width("30%");
+                        height("55%");
                     }});
                 }});
             
@@ -164,8 +166,8 @@ public class Gui {
                     image(new ImageBuilder() {{
                        id("ShopImage");
                        filename("Interface/gui/shop_icon.png");
-                       width("25%");
-                       height("50%");
+                       width("30%");
+                       height("55%");
                     }});
                 }});
             }});
@@ -194,23 +196,28 @@ public class Gui {
                         alignCenter();
                         valignCenter();
                         width("100%");
-                
+                        
                         // Player info texts
                         control(new LabelBuilder("PlayerInfo", "") {{
-                            font("Interface/Fonts/Default.fnt");
+                            //font("Interface/Fonts/Default.fnt");
+                            font("Interface/Fonts/YuGothicUISemibold.fnt");
                             width("40%");
                         }});
                         
                         // Apples text
                         control(new LabelBuilder("Apple", "0") {{
-                            font("Interface/Fonts/Default.fnt");
-                            width("30%");
+                            //font("Interface/Fonts/Default.fnt");
+                            //font("aurulent-sans-16.fnt");
+                            font("Interface/Fonts/YuGothicUISemibold.fnt");
+                            //color("#f00f");
+                            width("25%");
                         }});
                 
                         // Water bucket text
                         control(new LabelBuilder("WaterBucket", "2") {{
-                            font("Interface/Fonts/Default.fnt");
-                            width("30%");
+                            //font("Interface/Fonts/Default.fnt");
+                            font("Interface/Fonts/YuGothicUISemibold.fnt");
+                            width("25%");
                         }});
                     }});
                     
@@ -231,8 +238,8 @@ public class Gui {
                 
                     // Menu button
                     control(new ControlBuilder("menuButton", "") {{
-                        width("25%");
-                        height("50%");
+                        width("30%");
+                        height("55%");
                         visibleToMouse(true);
                         
                         interactOnClick("openMenu()");
@@ -254,8 +261,8 @@ public class Gui {
                 
                     // Shop button
                     control(new ControlBuilder("shopButton", "") {{
-                        width("25%");
-                        height("50%");
+                        width("30%");
+                        height("55%");
                         visibleToMouse(true);
                         
                         interactOnClick("openShop()");
@@ -381,7 +388,8 @@ public class Gui {
                             alignCenter();
                             valignTop();
                             marginTop("25%");
-                            visibleToMouse(true);                            
+                            visibleToMouse(true);     
+                            font("Interface/Fonts/YuGothicUISemibold.fnt");                                                       
                         
                             interactOnClick("");
                             
@@ -701,7 +709,7 @@ public class Gui {
         nifty.getCurrentScreen().findElementById("someImageSelect").show();*/
         String tmp = nifty.getCurrentScreen().findElementById("Apple").getRenderer(TextRenderer.class).getWrappedText();
         nifty.getCurrentScreen().findElementById("Apple").getRenderer(TextRenderer.class).setText(tmp);
-                
+                    
         nifty.getCurrentScreen().findElementById("menuLayer").setVisible(false);
         nifty.getCurrentScreen().findElementById("interactiveMenuLayer").setVisible(false);
         
@@ -715,6 +723,10 @@ public class Gui {
     
     public Nifty getNifty() {
         return this.nifty;
+    }
+    
+    public void setPlayerName(String name) {
+        nifty.getCurrentScreen().findElementById("PlayerInfo").getRenderer(TextRenderer.class).setText(""+name+"");
     }
     
     public void setApple(int apple) {

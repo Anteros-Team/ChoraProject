@@ -210,13 +210,13 @@ public class Main extends SimpleApplication {
             }
             
         }*/
-        
-        
+
         
         gui = new Gui(assetManager, inputManager, audioRenderer, guiViewPort, rootNode, shootables, entities);
    
         gui.setApple(p.getApple());
         gui.setWaterBucket(p.getWaterBucket());
+        gui.setPlayerName(p.getName());
         
         
         // Create scene and terrain
