@@ -201,6 +201,7 @@ public class Gui {
                         control(new LabelBuilder("PlayerInfo", "") {{
                             //font("Interface/Fonts/Default.fnt");
                             font("Interface/Fonts/SegoeUIBlack.fnt");
+                            color("#000f");
                             width("40%");
                         }});
                         
@@ -269,6 +270,258 @@ public class Gui {
                     }});
                 }});
                 
+            }});
+            
+            // Shop Layer
+            layer(new LayerBuilder("shopLayer") {{
+                childLayoutCenter();
+                
+                // Items Modal panel
+                panel(new PanelBuilder() {{
+                    id("ShopModalPanel");
+                    childLayoutCenter();
+                    backgroundColor("#f60f");
+                    height("70%");
+                    width("70%");
+                    alignCenter();
+                    valignCenter();
+                    visibleToMouse(true);
+                    
+                    image(new ImageBuilder() {{
+                       id("MenuImage");
+                       filename("Interface/gui/ShopModal.png");
+                       width("100%");
+                       height("100%");
+                    }});
+                
+                    // Content Modal panel
+                    panel(new PanelBuilder() {{
+                        id("ShopContentPanel");
+                        childLayoutCenter();
+                        width("100%");
+                        height("100%");
+                        visibleToMouse(true);
+                        
+                        text(new TextBuilder() {{
+                            text("SHOP");
+                            font("Interface/Fonts/SegoeUIBlack.fnt");
+                            color("#000f");
+                            height("10%");
+                            width("100%");
+                            alignRight();
+                            valignTop();
+                            marginTop("8%");
+                        }});
+                        
+                        image(new ImageBuilder() {{
+                            id("MenuImage");
+                            filename("Interface/gui/CloseModalButton.png");
+                            width("6.5%");
+                            height("11%");
+                            alignRight();
+                            valignTop();
+                            marginRight("4%");
+                            marginTop("7%");
+                        }});
+                        
+                        image(new ImageBuilder() {{
+                            id("MenuImage");
+                            filename("Interface/gui/ShopItemModal.png");
+                            width("20%");
+                            height("40%");
+                            alignLeft();
+                            valignTop();                            
+                            marginLeft("15%");
+                            marginTop("20%");
+                            
+                        }});
+                        
+                        image(new ImageBuilder() {{
+                            id("MenuImage");
+                            filename("Interface/gui/ShopItemModal.png");
+                            width("20%");
+                            height("40%");
+                            alignLeft();
+                            valignTop();
+                            marginLeft("40%");
+                            marginTop("20%");
+                        }});
+                        
+                        image(new ImageBuilder() {{
+                            id("MenuImage");
+                            filename("Interface/gui/ShopItemModal.png");
+                            width("20%");
+                            height("40%");
+                            alignLeft();
+                            valignTop();
+                            marginLeft("65%");
+                            marginTop("20%");
+                        }});
+                        
+                    }});
+                }});
+            }});
+            
+            // interactive Shop Layer
+            layer(new LayerBuilder("interactiveShopLayer") {{
+                childLayoutCenter();
+                
+                // Modal panel
+                panel(new PanelBuilder() {{
+                    id("MenuModalPanel");
+                    childLayoutCenter();
+                    height("70%");
+                    width("70%");
+                    alignCenter();
+                    valignCenter();
+                    visibleToMouse(true);
+                    
+                    // Content Modal panel
+                    panel(new PanelBuilder() {{
+                        id("ShopContentPanel");
+                        childLayoutCenter();
+                        width("100%");
+                        height("100%");
+                        visibleToMouse(true);
+                        
+                        // close Button
+                        control(new ControlBuilder("closeButton", "") {{
+                            width("6.5%");
+                            height("11%");
+                            alignRight();
+                            valignTop();
+                            marginRight("4%");
+                            marginTop("7%");
+                            visibleToMouse(true);                            
+                        
+                            interactOnRelease("closeShop()");
+                        }});
+                        
+                        // Content Item 1 panel
+                        panel(new PanelBuilder() {{
+                            id("ItemShopContentPanel");
+                            childLayoutCenter();                            
+                            width("20%");
+                            height("40%");
+                            alignLeft();
+                            valignTop();                            
+                            marginLeft("15%");
+                            marginTop("20%");
+                            visibleToMouse(true);
+                       
+                            image(new ImageBuilder() {{
+                                filename("Interface/gui/sproutImage.png");
+                                width("95%");
+                                height("97%");
+                                alignCenter();
+                                valignTop();   
+                            }});  
+                            
+                            // item 1 Button
+                            control(new ControlBuilder("Item1_Button", "") {{
+                                width("20%");
+                                height("17%");
+                                alignCenter();
+                                valignTop();   
+                                marginTop("82%"); 
+                                visibleToMouse(true);
+
+                                //interactOnClick("buyFromShop(\"sprout\", " + assetManager + ", " + rootNode + ", " + shootables + ")");
+
+                                text(new TextBuilder("Price1_Text") {{
+                                    text("30 Apples");
+                                    font("Interface/Fonts/SegoeUIBlack.fnt");
+                                    color("#000");
+                                    height("100%");
+                                    width("100%");
+                                }});
+                            }});                        
+                        }});
+                        
+                        // Content Item 2 panel
+                        panel(new PanelBuilder() {{
+                            id("ItemShopContentPanel");
+                            childLayoutCenter();
+                            width("20%");
+                            height("40%");
+                            alignLeft();
+                            valignTop();
+                            marginLeft("40%");
+                            marginTop("20%");
+                            visibleToMouse(true);
+                            
+                            image(new ImageBuilder() {{
+                                filename("Interface/gui/wheelImage.png");
+                                width("95%");
+                                height("90%");
+                                alignCenter();
+                                valignTop();   
+                            }}); 
+                            
+                            // item 2 Button
+                            control(new ControlBuilder("Item2_Button", "") {{
+                                width("20%");
+                                height("17%");
+                                alignCenter();
+                                valignTop();   
+                                marginTop("82%"); 
+                                visibleToMouse(true);                           
+
+                                interactOnClick("");
+
+                                text(new TextBuilder() {{
+                                    text("20 Apple");
+                                    font("Interface/Fonts/SegoeUIBlack.fnt");
+                                    color("#000");
+                                    height("100%");
+                                    width("100%");
+                                }});
+                            }});
+                        }});
+                        
+                        // Content Item 3 panel
+                        panel(new PanelBuilder() {{
+                            id("ItemShopContentPanel");
+                            childLayoutCenter();
+                            width("20%");
+                            height("40%");
+                            alignLeft();
+                            valignTop();
+                            marginLeft("65%");
+                            marginTop("20%");
+                            visibleToMouse(true);
+                            
+                            image(new ImageBuilder() {{
+                                filename("Interface/gui/millImage.png");
+                                width("92%");
+                                height("80%");
+                                alignCenter();
+                                valignTop(); 
+                                marginTop("3%");
+                            }}); 
+                        
+                            // item 3 Button
+                            control(new ControlBuilder("Item3_Button", "") {{
+                                width("20%");
+                                height("17%");
+                                alignCenter();
+                                valignTop();   
+                                marginTop("82%"); 
+                                visibleToMouse(true);                            
+
+                                interactOnClick("");
+
+                                text(new TextBuilder() {{
+                                    text("50 Apple");
+                                    font("Interface/Fonts/SegoeUIBlack.fnt");
+                                    color("#000");
+                                    height("100%");
+                                    width("100%");
+                                }});
+                            }});
+                        }});                        
+                    }});
+                }});
             }});
             
             // Menu Layer
@@ -446,246 +699,7 @@ public class Gui {
                 }});
             }});
             
-            // Shop Layer
-            layer(new LayerBuilder("shopLayer") {{
-                childLayoutCenter();
-                
-                // Modal panel
-                panel(new PanelBuilder() {{
-                    id("ShopModalPanel");
-                    childLayoutCenter();
-                    backgroundColor("#f60f");
-                    height("70%");
-                    width("70%");
-                    alignCenter();
-                    valignCenter();
-                    visibleToMouse(true);
-                    
-                    image(new ImageBuilder() {{
-                       id("MenuImage");
-                       filename("Interface/gui/ShopModal.png");
-                       width("100%");
-                       height("100%");
-                    }});
-                
-                    // Content Modal panel
-                    panel(new PanelBuilder() {{
-                        id("ShopContentPanel");
-                        childLayoutCenter();
-                        width("100%");
-                        height("100%");
-                        visibleToMouse(true);
-                        
-                        image(new ImageBuilder() {{
-                            id("MenuImage");
-                            filename("Interface/gui/CloseModalButton.png");
-                            width("6.5%");
-                            height("11%");
-                            alignRight();
-                            valignTop();
-                            marginRight("4%");
-                            marginTop("7%");
-                        }});
-                        
-                        image(new ImageBuilder() {{
-                            id("MenuImage");
-                            filename("Interface/gui/ShopItemModal.png");
-                            width("20%");
-                            height("35%");
-                            alignLeft();
-                            valignTop();                            
-                            marginLeft("15%");
-                            marginTop("20%");
-                            
-                        }});
-                        
-                        image(new ImageBuilder() {{
-                            id("MenuImage");
-                            filename("Interface/gui/ShopItemModal.png");
-                            width("20%");
-                            height("35%");
-                            alignLeft();
-                            valignTop();
-                            marginLeft("40%");
-                            marginTop("20%");
-                        }});
-                        
-                        image(new ImageBuilder() {{
-                            id("MenuImage");
-                            filename("Interface/gui/ShopItemModal.png");
-                            width("20%");
-                            height("35%");
-                            alignLeft();
-                            valignTop();
-                            marginLeft("65%");
-                            marginTop("20%");
-                        }});
-                        
-                    }});
-                }});
-            }});
             
-            // interactive Shop Layer
-            layer(new LayerBuilder("interactiveShopLayer") {{
-                childLayoutCenter();
-                
-                // Modal panel
-                panel(new PanelBuilder() {{
-                    id("MenuModalPanel");
-                    childLayoutCenter();
-                    height("70%");
-                    width("70%");
-                    alignCenter();
-                    valignCenter();
-                    visibleToMouse(true);
-                    
-                    // Content Modal panel
-                    panel(new PanelBuilder() {{
-                        id("ShopContentPanel");
-                        childLayoutCenter();
-                        width("100%");
-                        height("100%");
-                        visibleToMouse(true);
-                        
-                        // close Button
-                        control(new ControlBuilder("closeButton", "") {{
-                            width("6.5%");
-                            height("11%");
-                            alignRight();
-                            valignTop();
-                            marginRight("4%");
-                            marginTop("7%");
-                            visibleToMouse(true);                            
-                        
-                            interactOnRelease("closeShop()");
-                        }});
-                        
-                        // Content Item 1 panel
-                        panel(new PanelBuilder() {{
-                            id("ItemShopContentPanel");
-                            childLayoutCenter();                            
-                            width("20%");
-                            height("35%");
-                            alignLeft();
-                            valignTop();                            
-                            marginLeft("15%");
-                            marginTop("20%");
-                            visibleToMouse(true);
-                       
-                            image(new ImageBuilder() {{
-                                filename("Interface/gui/sproutImage.png");
-                                width("95%");
-                                height("97%");
-                                alignCenter();
-                                valignTop();   
-                            }});  
-                            
-                            // item 1 Button
-                            control(new ControlBuilder("Item1_Button", "") {{
-                                width("20%");
-                                height("17%");
-                                alignCenter();
-                                valignTop();   
-                                marginTop("82%"); 
-                                visibleToMouse(true);
-
-                                //interactOnClick("buyFromShop(\"sprout\", " + assetManager + ", " + rootNode + ", " + shootables + ")");
-
-                                text(new TextBuilder("Price1_Text") {{
-                                    text("30 Apples");
-                                    font("Interface/Fonts/SegoeUIBlack.fnt");
-                                    color("#000");
-                                    height("100%");
-                                    width("100%");
-                                }});
-                            }});                        
-                        }});
-                        
-                        // Content Item 2 panel
-                        panel(new PanelBuilder() {{
-                            id("ItemShopContentPanel");
-                            childLayoutCenter();
-                            width("20%");
-                            height("35%");
-                            alignLeft();
-                            valignTop();
-                            marginLeft("40%");
-                            marginTop("20%");
-                            visibleToMouse(true);
-                            
-                            image(new ImageBuilder() {{
-                                filename("Interface/gui/wheelImage.png");
-                                width("95%");
-                                height("90%");
-                                alignCenter();
-                                valignTop();   
-                            }}); 
-                            
-                            // item 2 Button
-                            control(new ControlBuilder("Item2_Button", "") {{
-                                width("20%");
-                                height("17%");
-                                alignCenter();
-                                valignTop();   
-                                marginTop("82%"); 
-                                visibleToMouse(true);                           
-
-                                interactOnClick("");
-
-                                text(new TextBuilder() {{
-                                    text("20 Apple");
-                                    font("Interface/Fonts/SegoeUIBlack.fnt");
-                                    color("#000");
-                                    height("100%");
-                                    width("100%");
-                                }});
-                            }});
-                        }});
-                        
-                        // Content Item 3 panel
-                        panel(new PanelBuilder() {{
-                            id("ItemShopContentPanel");
-                            childLayoutCenter();
-                            width("20%");
-                            height("35%");
-                            alignLeft();
-                            valignTop();
-                            marginLeft("65%");
-                            marginTop("20%");
-                            visibleToMouse(true);
-                            
-                            image(new ImageBuilder() {{
-                                filename("Interface/gui/millImage.png");
-                                width("92%");
-                                height("80%");
-                                alignCenter();
-                                valignTop(); 
-                                marginTop("3%");
-                            }}); 
-                        
-                            // item 3 Button
-                            control(new ControlBuilder("Item3_Button", "") {{
-                                width("20%");
-                                height("17%");
-                                alignCenter();
-                                valignTop();   
-                                marginTop("82%"); 
-                                visibleToMouse(true);                            
-
-                                interactOnClick("");
-
-                                text(new TextBuilder() {{
-                                    text("50 Apple");
-                                    font("Interface/Fonts/SegoeUIBlack.fnt");
-                                    color("#000");
-                                    height("100%");
-                                    width("100%");
-                                }});
-                            }});
-                        }});                        
-                    }});
-                }});
-            }});
             
             
         }}.build(nifty);
