@@ -200,7 +200,7 @@ public class Gui {
                         // Player info texts
                         control(new LabelBuilder("PlayerInfo", "") {{
                             //font("Interface/Fonts/Default.fnt");
-                            font("Interface/Fonts/YuGothicUISemibold.fnt");
+                            font("Interface/Fonts/SegoeUIBlack.fnt");
                             width("40%");
                         }});
                         
@@ -208,7 +208,7 @@ public class Gui {
                         control(new LabelBuilder("Apple", "0") {{
                             //font("Interface/Fonts/Default.fnt");
                             //font("aurulent-sans-16.fnt");
-                            font("Interface/Fonts/YuGothicUISemibold.fnt");
+                            font("Interface/Fonts/SegoeUIBlack.fnt");
                             //color("#f00f");
                             width("25%");
                         }});
@@ -216,7 +216,7 @@ public class Gui {
                         // Water bucket text
                         control(new LabelBuilder("WaterBucket", "2") {{
                             //font("Interface/Fonts/Default.fnt");
-                            font("Interface/Fonts/YuGothicUISemibold.fnt");
+                            font("Interface/Fonts/SegoeUIBlack.fnt");
                             width("25%");
                         }});
                     }});
@@ -389,13 +389,13 @@ public class Gui {
                             valignTop();
                             marginTop("25%");
                             visibleToMouse(true);     
-                            font("Interface/Fonts/YuGothicUISemibold.fnt");                                                       
+                            font("Interface/Fonts/SegoeUIBlack.fnt");                                                       
                         
                             interactOnClick("");
                             
                             text(new TextBuilder() {{
                                 text("Credits");
-                                font("Interface/Fonts/Default.fnt");
+                                font("Interface/Fonts/SegoeUIBlack.fnt");
                                 color("#000");
                                 height("100%");
                                 width("100%");
@@ -415,7 +415,7 @@ public class Gui {
                             
                             text(new TextBuilder() {{
                                 text("Option");
-                                font("Interface/Fonts/Default.fnt");
+                                font("Interface/Fonts/SegoeUIBlack.fnt");
                                 color("#000");
                                 height("100%");
                                 width("100%");
@@ -435,7 +435,7 @@ public class Gui {
                             
                             text(new TextBuilder() {{
                                 text("Exit");
-                                font("Interface/Fonts/Default.fnt");
+                                font("Interface/Fonts/SegoeUIBlack.fnt");
                                 color("#000");
                                 height("100%");
                                 width("100%");
@@ -593,7 +593,7 @@ public class Gui {
 
                                 text(new TextBuilder("Price1_Text") {{
                                     text("30 Apples");
-                                    font("Interface/Fonts/Default.fnt");
+                                    font("Interface/Fonts/SegoeUIBlack.fnt");
                                     color("#000");
                                     height("100%");
                                     width("100%");
@@ -634,7 +634,7 @@ public class Gui {
 
                                 text(new TextBuilder() {{
                                     text("20 Apple");
-                                    font("Interface/Fonts/Default.fnt");
+                                    font("Interface/Fonts/SegoeUIBlack.fnt");
                                     color("#000");
                                     height("100%");
                                     width("100%");
@@ -676,7 +676,7 @@ public class Gui {
 
                                 text(new TextBuilder() {{
                                     text("50 Apple");
-                                    font("Interface/Fonts/Default.fnt");
+                                    font("Interface/Fonts/SegoeUIBlack.fnt");
                                     color("#000");
                                     height("100%");
                                     width("100%");
