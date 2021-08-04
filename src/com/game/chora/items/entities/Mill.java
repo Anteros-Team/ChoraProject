@@ -35,11 +35,7 @@ public class Mill extends Entity {
             if ("Mill".equals(s.getName())) {
                 ((Node) s).getChild("wheel").rotate(0, this.speed * tpf, 0);
             }
-            /*if ( ((Node)s).getChild("wheel") instanceof Node ) {
-                ((Node)s).getChild("wheel").rotate(0, this.speed * tpf, 0);
-            }*/
         }
-        //rootNode.getChild("wheel").rotate(0, this.speed * tpf, 0);
     }
 
 }

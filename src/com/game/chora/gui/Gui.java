@@ -304,12 +304,12 @@ public class Gui {
                         image(new ImageBuilder() {{
                             id("MenuImage");
                             filename("Interface/gui/CloseModalButton.png");
-                            width("15%");
-                            height("15%");
+                            width("13%");
+                            height("12.5%");
                             alignRight();
                             valignTop();
-                            marginRight("8%");
-                            marginTop("6%");
+                            marginRight("9%");
+                            marginTop("7%");
                         }});
                         
                         image(new ImageBuilder() {{
@@ -370,12 +370,12 @@ public class Gui {
                         
                         // close Button
                         control(new ControlBuilder("closeButton", "") {{
-                            width("15%");
-                            height("15%");
+                            width("13%");
+                            height("12.5%");
                             alignRight();
                             valignTop();
-                            marginRight("8%");
-                            marginTop("6%");
+                            marginRight("9%");
+                            marginTop("7%");
                             visibleToMouse(true);                            
                         
                             interactOnRelease("closeMenu()");
@@ -479,12 +479,12 @@ public class Gui {
                         image(new ImageBuilder() {{
                             id("MenuImage");
                             filename("Interface/gui/CloseModalButton.png");
-                            width("8%");
-                            height("10%");
+                            width("6.5%");
+                            height("11%");
                             alignRight();
                             valignTop();
                             marginRight("4%");
-                            marginTop("6%");
+                            marginTop("7%");
                         }});
                         
                         image(new ImageBuilder() {{
@@ -496,6 +496,7 @@ public class Gui {
                             valignTop();                            
                             marginLeft("15%");
                             marginTop("20%");
+                            
                         }});
                         
                         image(new ImageBuilder() {{
@@ -548,80 +549,140 @@ public class Gui {
                         
                         // close Button
                         control(new ControlBuilder("closeButton", "") {{
-                            width("8%");
-                            height("10%");
+                            width("6.5%");
+                            height("11%");
                             alignRight();
                             valignTop();
                             marginRight("4%");
-                            marginTop("6%");
+                            marginTop("7%");
                             visibleToMouse(true);                            
                         
                             interactOnRelease("closeShop()");
                         }});
                         
-                        // item 1 Button
-                        control(new ControlBuilder("Item1_Button", "") {{
+                        // Content Item 1 panel
+                        panel(new PanelBuilder() {{
+                            id("ItemShopContentPanel");
+                            childLayoutCenter();                            
                             width("20%");
-                            height("17%");
+                            height("35%");
                             alignLeft();
-                            valignTop();   
-                            marginTop("44%");
-                            visibleToMouse(true);   
+                            valignTop();                            
                             marginLeft("15%");
-                        
-                            //interactOnClick("buyFromShop(\"sprout\", " + assetManager + ", " + rootNode + ", " + shootables + ")");
+                            marginTop("20%");
+                            visibleToMouse(true);
+                       
+                            image(new ImageBuilder() {{
+                                filename("Interface/gui/sproutImage.png");
+                                width("95%");
+                                height("97%");
+                                alignCenter();
+                                valignTop();   
+                            }});  
                             
-                            text(new TextBuilder() {{
-                                text("30 Apples");
-                                font("Interface/Fonts/Default.fnt");
-                                color("#000");
-                                height("100%");
-                                width("100%");
-                            }});
+                            // item 1 Button
+                            control(new ControlBuilder("Item1_Button", "") {{
+                                width("20%");
+                                height("17%");
+                                alignCenter();
+                                valignTop();   
+                                marginTop("82%"); 
+                                visibleToMouse(true);
+
+                                //interactOnClick("buyFromShop(\"sprout\", " + assetManager + ", " + rootNode + ", " + shootables + ")");
+
+                                text(new TextBuilder("Price1_Text") {{
+                                    text("30 Apples");
+                                    font("Interface/Fonts/Default.fnt");
+                                    color("#000");
+                                    height("100%");
+                                    width("100%");
+                                }});
+                            }});                        
                         }});
                         
-                        // item 2 Button
-                        control(new ControlBuilder("Item2_Button", "") {{
+                        // Content Item 2 panel
+                        panel(new PanelBuilder() {{
+                            id("ItemShopContentPanel");
+                            childLayoutCenter();
                             width("20%");
-                            height("17%");
+                            height("35%");
                             alignLeft();
                             valignTop();
-                            marginTop("44%");
                             marginLeft("40%");
-                            visibleToMouse(true);                            
-                        
-                            interactOnClick("");
+                            marginTop("20%");
+                            visibleToMouse(true);
                             
-                            text(new TextBuilder() {{
-                                text("20 Apple");
-                                font("Interface/Fonts/Default.fnt");
-                                color("#000");
-                                height("100%");
-                                width("100%");
+                            image(new ImageBuilder() {{
+                                filename("Interface/gui/wheelImage.png");
+                                width("95%");
+                                height("90%");
+                                alignCenter();
+                                valignTop();   
+                            }}); 
+                            
+                            // item 2 Button
+                            control(new ControlBuilder("Item2_Button", "") {{
+                                width("20%");
+                                height("17%");
+                                alignCenter();
+                                valignTop();   
+                                marginTop("82%"); 
+                                visibleToMouse(true);                           
+
+                                interactOnClick("");
+
+                                text(new TextBuilder() {{
+                                    text("20 Apple");
+                                    font("Interface/Fonts/Default.fnt");
+                                    color("#000");
+                                    height("100%");
+                                    width("100%");
+                                }});
                             }});
                         }});
                         
-                        // item 3 Button
-                        control(new ControlBuilder("Item3_Button", "") {{
+                        // Content Item 3 panel
+                        panel(new PanelBuilder() {{
+                            id("ItemShopContentPanel");
+                            childLayoutCenter();
                             width("20%");
-                            height("17%");
+                            height("35%");
                             alignLeft();
                             valignTop();
-                            marginTop("44%");
                             marginLeft("65%");
-                            visibleToMouse(true);                            
-                        
-                            interactOnClick("");
+                            marginTop("20%");
+                            visibleToMouse(true);
                             
-                            text(new TextBuilder() {{
-                                text("50 Apple");
-                                font("Interface/Fonts/Default.fnt");
-                                color("#000");
-                                height("100%");
-                                width("100%");
-                            }});
-                        }});
+                            image(new ImageBuilder() {{
+                                filename("Interface/gui/millImage.png");
+                                width("92%");
+                                height("80%");
+                                alignCenter();
+                                valignTop(); 
+                                marginTop("3%");
+                            }}); 
                         
+                            // item 3 Button
+                            control(new ControlBuilder("Item3_Button", "") {{
+                                width("20%");
+                                height("17%");
+                                alignCenter();
+                                valignTop();   
+                                marginTop("82%"); 
+                                visibleToMouse(true);                            
+
+                                interactOnClick("");
+
+                                text(new TextBuilder() {{
+                                    text("50 Apple");
+                                    font("Interface/Fonts/Default.fnt");
+                                    color("#000");
+                                    height("100%");
+                                    width("100%");
+                                }});
+                            }});
+                        }});                        
                     }});
                 }});
             }});
@@ -740,6 +801,7 @@ public class Gui {
     public void buyFromShop(String selectedEntity) {
         
         // TODO: check if have sufficient apples, remove apples
+        
         
         nifty.getCurrentScreen().findElementById("shopLayer").setVisible(false);
         nifty.getCurrentScreen().findElementById("interactiveShopLayer").setVisible(false);
