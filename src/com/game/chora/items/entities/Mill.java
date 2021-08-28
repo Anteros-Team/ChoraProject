@@ -31,7 +31,7 @@ public class Mill extends Entity {
     
     public void rotateMill(Node rootNode, float tpf) {
         for(Spatial s : rootNode.getChildren()) {
-            System.out.println(s.getName());
+            //System.out.println("Nome mill: " + s.getName());
             if ("Mill".equals(s.getName())) {
                 ((Node) s).getChild("wheel").rotate(0, this.speed * tpf, 0);
             }
