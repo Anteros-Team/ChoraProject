@@ -127,6 +127,7 @@ public class Main extends SimpleApplication {
             e.setModel(assetManager, rootNode, "Models/well/well.j3o", shootables);
             e.spawn(rootNode, shootables);
             entities.add(e);
+            ((Well) e).createPopup(assetManager);
         } else {
             p = db.queryPlayer();
             es = db.queryEntity();
@@ -309,8 +310,19 @@ public class Main extends SimpleApplication {
                 }
             }
             if (e instanceof Mill) {
-                System.out.println(e);
                 ((Mill) e).rotateMill(rootNode, tpf);
+            }
+            if (e instanceof Well) {
+                if (((Well) e).getWater() < 5) {
+                    ((Well) e).increaseTime(tpf);
+                    if (((Well) e).getTime() >= 10) {
+                        ((Well) e).resetTime();                        
+                        ((Well) e).increaseWater();
+                        if (((Well) e).getWater() == 1) {
+                            ((Well) e).showPopup(rootNode);
+                        }
+                    }                    
+                }
             }
         }
         
@@ -438,8 +450,8 @@ public class Main extends SimpleApplication {
 
                                                 ImageRaster imageRaster = ImageRaster.create(scene.getAlphaTexture().getImage());
 
-                                                System.out.println(t.getPosition().x - t.getPickboxSize().x);
-                                                System.out.println(t.getPosition().x + t.getPickboxSize().x);
+                                                //System.out.println(t.getPosition().x - t.getPickboxSize().x);
+                                                //System.out.println(t.getPosition().x + t.getPickboxSize().x);
 
                                                 for (float i = 512 + t.getPosition().x - 55; i < 512 + t.getPosition().x + 65; i++) {
                                                     for (float j = 512 - t.getPosition().z - 65 ; j < + 512 - t.getPosition().z + 75; j++) {
@@ -462,6 +474,15 @@ public class Main extends SimpleApplication {
                                                 entities.add(st);
                                                 entities.remove(e);
                                                 p.setWaterBucket(p.getWaterBucket() - 1);
+                                                gui.setWaterBucket(p.getWaterBucket());
+                                                break;
+                                            }
+                                            
+                                            // Entity clicked is Well
+                                            if (e instanceof Well) {
+                                                p.setWaterBucket( p.getWaterBucket() + ((Well) e).getWater());
+                                                ((Well) e).hidePopup(rootNode);
+                                                ((Well) e).setWater(0);
                                                 gui.setWaterBucket(p.getWaterBucket());
                                                 break;
                                             }
