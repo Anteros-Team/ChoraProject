@@ -5,6 +5,7 @@
  */
 package com.game.chora.gui;
 
+import com.game.chora.Main;
 import com.game.chora.items.entities.Sprout;
 import com.game.chora.utils.Entity;
 import com.jme3.asset.AssetManager;
@@ -42,6 +43,7 @@ public class Gui {
     
     protected NiftyJmeDisplay niftyDisplay;
     protected Nifty nifty;
+    protected Main app;
     protected AssetManager assetManager;
     protected Node rootNode;
     protected Node shootables;
@@ -50,11 +52,12 @@ public class Gui {
     protected String selectedEntityFromShop;
     protected boolean guiOpened;
     
-    public Gui (AssetManager assetManager, InputManager inputManager, AudioRenderer audioRenderer, ViewPort guiViewPort, Node rootNode, Node shootables, List<Entity> entities) {
+    public Gui (Main app, AssetManager assetManager, InputManager inputManager, AudioRenderer audioRenderer, ViewPort guiViewPort, Node rootNode, Node shootables, List<Entity> entities) {
         niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, guiViewPort);
         nifty = niftyDisplay.getNifty();
         guiViewPort.addProcessor(niftyDisplay);
         
+        this.app = app;
         this.assetManager = assetManager;
         this.rootNode = rootNode;
         this.shootables = shootables;
@@ -143,8 +146,8 @@ public class Gui {
                     image(new ImageBuilder() {{
                         id("MenuImage");
                         filename("Interface/gui/menu_icon.png");
-                        width("30%");
-                        height("55%");
+                        width("55%");
+                        height("100%");
                     }});
                 }});
             
@@ -166,8 +169,8 @@ public class Gui {
                     image(new ImageBuilder() {{
                        id("ShopImage");
                        filename("Interface/gui/shop_icon.png");
-                       width("30%");
-                       height("55%");
+                       width("55%");
+                       height("100%");
                     }});
                 }});
             }});
@@ -239,8 +242,8 @@ public class Gui {
                 
                     // Menu button
                     control(new ControlBuilder("menuButton", "") {{
-                        width("30%");
-                        height("55%");
+                        width("55%");
+                        height("100%");
                         visibleToMouse(true);
                         
                         interactOnClick("openMenu()");
@@ -262,8 +265,8 @@ public class Gui {
                 
                     // Shop button
                     control(new ControlBuilder("shopButton", "") {{
-                        width("30%");
-                        height("55%");
+                        width("55%");
+                        height("100%");
                         visibleToMouse(true);
                         
                         interactOnClick("openShop()");
@@ -327,35 +330,35 @@ public class Gui {
                         image(new ImageBuilder() {{
                             id("MenuImage");
                             filename("Interface/gui/ShopItemModal.png");
-                            width("20%");
+                            width("25%");
                             height("40%");
                             alignLeft();
-                            valignTop();                            
-                            marginLeft("15%");
-                            marginTop("20%");
+                            valignTop();
+                            marginLeft("7.5%");
+                            marginTop("30%");
                             
                         }});
                         
                         image(new ImageBuilder() {{
                             id("MenuImage");
                             filename("Interface/gui/ShopItemModal.png");
-                            width("20%");
+                            width("25%");
                             height("40%");
                             alignLeft();
                             valignTop();
-                            marginLeft("40%");
-                            marginTop("20%");
+                            marginLeft("37.5%");
+                            marginTop("30%");
                         }});
                         
                         image(new ImageBuilder() {{
                             id("MenuImage");
                             filename("Interface/gui/ShopItemModal.png");
-                            width("20%");
+                            width("25%");
                             height("40%");
                             alignLeft();
                             valignTop();
-                            marginLeft("65%");
-                            marginTop("20%");
+                            marginLeft("67.5%");
+                            marginTop("30%");
                         }});
                         
                     }});
@@ -401,12 +404,12 @@ public class Gui {
                         panel(new PanelBuilder() {{
                             id("ItemShopContentPanel");
                             childLayoutCenter();                            
-                            width("20%");
+                            width("25%");
                             height("40%");
                             alignLeft();
                             valignTop();                            
-                            marginLeft("15%");
-                            marginTop("20%");
+                            marginLeft("7.5%");
+                            marginTop("30%");
                             visibleToMouse(true);
                        
                             image(new ImageBuilder() {{
@@ -419,7 +422,7 @@ public class Gui {
                             
                             // item 1 Button
                             control(new ControlBuilder("Item1_Button", "") {{
-                                width("20%");
+                                width("25%");
                                 height("17%");
                                 alignCenter();
                                 valignTop();   
@@ -442,12 +445,12 @@ public class Gui {
                         panel(new PanelBuilder() {{
                             id("ItemShopContentPanel");
                             childLayoutCenter();
-                            width("20%");
+                            width("25%");
                             height("40%");
                             alignLeft();
                             valignTop();
-                            marginLeft("40%");
-                            marginTop("20%");
+                            marginLeft("37.5%");
+                            marginTop("30%");
                             visibleToMouse(true);
                             
                             image(new ImageBuilder() {{
@@ -460,7 +463,7 @@ public class Gui {
                             
                             // item 2 Button
                             control(new ControlBuilder("Item2_Button", "") {{
-                                width("20%");
+                                width("25%");
                                 height("17%");
                                 alignCenter();
                                 valignTop();   
@@ -483,12 +486,12 @@ public class Gui {
                         panel(new PanelBuilder() {{
                             id("ItemShopContentPanel");
                             childLayoutCenter();
-                            width("20%");
+                            width("25%");
                             height("40%");
                             alignLeft();
                             valignTop();
-                            marginLeft("65%");
-                            marginTop("20%");
+                            marginLeft("67.5%");
+                            marginTop("30%");
                             visibleToMouse(true);
                             
                             image(new ImageBuilder() {{
@@ -502,7 +505,7 @@ public class Gui {
                         
                             // item 3 Button
                             control(new ControlBuilder("Item3_Button", "") {{
-                                width("20%");
+                                width("25%");
                                 height("17%");
                                 alignCenter();
                                 valignTop();   
@@ -684,7 +687,7 @@ public class Gui {
                             marginTop("65%");
                             visibleToMouse(true);                            
                         
-                            interactOnClick("");
+                            interactOnClick("exitGame()");
                             
                             text(new TextBuilder() {{
                                 text("Exit");
@@ -699,7 +702,117 @@ public class Gui {
                 }});
             }});
             
+            // Close game layer
+            layer(new LayerBuilder("closeGameLayer") {{
+                childLayoutCenter();
+                
+                // Modal panel
+                panel(new PanelBuilder() {{
+                    id("CloseGamePanel");
+                    childLayoutCenter();
+                    height("45%");
+                    width("45%");
+                    alignCenter();
+                    valignCenter();
+                    visibleToMouse(true);
+                    
+                    image(new ImageBuilder() {{
+                       id("CloseGameImage");
+                       filename("Interface/gui/CloseGameModal.png");
+                       width("100%");
+                       height("100%");
+                    }});
+                }});
+            }});
             
+            // Interactive close game layer
+            layer(new LayerBuilder("interactiveCloseGameLayer") {{
+                childLayoutCenter();
+                
+                // Modal panel
+                panel(new PanelBuilder() {{
+                    id("CloseGamePanel");
+                    childLayoutCenter();
+                    height("45%");
+                    width("45%");
+                    alignCenter();
+                    valignCenter();
+                    visibleToMouse(true);
+                    
+                    // Text panel
+                    panel(new PanelBuilder() {{
+                        id("MenuModalPanel");
+                        childLayoutCenter();
+                        height("50%");
+                        width("100%");
+                        alignCenter();
+                        valignTop();
+                        visibleToMouse(true);
+
+                        text(new TextBuilder() {{
+                            text("Quit game?");
+                            font("Interface/Fonts/SegoeUIBlack.fnt");
+                            color("#000");
+                            height("100%");
+                            width("100%");
+                        }});
+                    }});
+
+                    // Buttons panel
+                    panel(new PanelBuilder() {{
+                        id("MenuModalPanel");
+                        childLayoutCenter();
+                        height("50%");
+                        width("100%");
+                        alignCenter();
+                        valignBottom();
+                        visibleToMouse(true);
+                        marginBottom("25%");
+
+                        control(new ControlBuilder("yesButton", "") {{
+                            width("28%");
+                            height("34%");
+                            alignLeft();
+                            valignCenter();
+                            marginLeft("14%");
+                            marginTop("20%");
+                            visibleToMouse(true);     
+                            font("Interface/Fonts/SegoeUIBlack.fnt");                                                       
+
+                            interactOnClick("");
+
+                            text(new TextBuilder() {{
+                                text("Yes");
+                                font("Interface/Fonts/SegoeUIBlack.fnt");
+                                color("#000");
+                                height("100%");
+                                width("100%");
+                            }});
+                        }});
+
+                        control(new ControlBuilder("noButton", "") {{
+                            width("28%");
+                            height("34%");
+                            alignRight();
+                            valignCenter();
+                            marginRight("14%");
+                            marginTop("20%");
+                            visibleToMouse(true);     
+                            font("Interface/Fonts/SegoeUIBlack.fnt");                                                       
+
+                            interactOnClick("cancelExit()");
+
+                            text(new TextBuilder() {{
+                                text("No");
+                                font("Interface/Fonts/SegoeUIBlack.fnt");
+                                color("#000");
+                                height("100%");
+                                width("100%");
+                            }});
+                        }});                    
+                    }});
+                }});
+            }});
             
             
         }}.build(nifty);
@@ -791,6 +904,11 @@ public class Gui {
         nifty.getCurrentScreen().findElementById("shopLayer").setVisible(false);
         nifty.getCurrentScreen().findElementById("interactiveShopLayer").setVisible(false);
         
+        nifty.getCurrentScreen().findElementById("closeGameLayer").setVisible(false);
+        nifty.getCurrentScreen().findElementById("interactiveCloseGameLayer").setVisible(false);
+        
+        nifty.getCurrentScreen().findElementById("yesButton").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "closeGame()", this));
+        
         nifty.getCurrentScreen().findElementById("Item1_Button").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "buyFromShop(sprout)", this));
         nifty.getCurrentScreen().findElementById("Item2_Button").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "buyFromShop(well)", this));
         nifty.getCurrentScreen().findElementById("Item3_Button").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "buyFromShop(mill)", this));
@@ -810,6 +928,10 @@ public class Gui {
     
     public void setWaterBucket(int waterBucket) {
         nifty.getCurrentScreen().findElementById("WaterBucket").getRenderer(TextRenderer.class).setText(""+waterBucket+"");
+    }
+    
+    public void closeGame() {
+        app.stop(false);
     }
     
     public void buyFromShop(String selectedEntity) {

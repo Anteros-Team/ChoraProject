@@ -41,23 +41,15 @@ public class Well extends Entity implements Serializable {
     }
     
     public void createPopup(AssetManager assetManager) {
-        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setTexture("ColorMap", assetManager.loadTexture("Textures/sky/sun.png"));
-        mat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
-        mat.getAdditionalRenderState().setDepthWrite(false);
-        
-        popup = new ItemBillboard("popup", 50f);
-        popup.setMaterial(mat);
-        popup.setLocalTranslation(new Vector3f(position.x, position.y + 20f, position.z));
-        popup.setShadowMode(RenderQueue.ShadowMode.Off);
+        popup = new ItemBillboard("popup", 50f, position, 25f, assetManager, "Interface/gui/acqua.png");
     }
     
     public void showPopup(Node rootNode) {
-        rootNode.attachChild(popup);
+        rootNode.attachChild(popup.getNode());
     }
     
     public void hidePopup(Node rootNode) {
-        rootNode.detachChild(popup);
+        rootNode.detachChild(popup.getNode());
     }
     
     public void setWater(int water) {

@@ -72,11 +72,16 @@ public class GuiScreenController implements ScreenController {
     }
     
     public void exitGame() {
+        nifty.getCurrentScreen().findElementById("menuLayer").setVisible(false);
+        nifty.getCurrentScreen().findElementById("interactiveMenuLayer").setVisible(false);
         
+        nifty.getCurrentScreen().findElementById("closeGameLayer").setVisible(true);
+        nifty.getCurrentScreen().findElementById("interactiveCloseGameLayer").setVisible(true);
     }
     
     public void cancelExit() {
-        
+        nifty.getCurrentScreen().findElementById("closeGameLayer").setVisible(false);
+        nifty.getCurrentScreen().findElementById("interactiveCloseGameLayer").setVisible(false);
     }
     
     public void buyFromShop(String elementId, AssetManager assetManager, Node rootNode, Node shootables) {

@@ -29,6 +29,7 @@ import java.util.ListIterator;
 
 public class Main extends SimpleApplication {
     
+    static private Main app;
     private Player p;
     private DynamicSky sky = null;
     //private BulletAppState bulletAppState;
@@ -42,6 +43,8 @@ public class Main extends SimpleApplication {
     private List<EntitySerialization> es;
     private Gui gui;
     
+    private int speed = 10;
+    
     protected NiftyJmeDisplay niftyDisplay;
     protected Nifty nifty;
     
@@ -52,18 +55,21 @@ public class Main extends SimpleApplication {
     private boolean newGame = false;
     
     public static void main(String[] args) {
-        Main app = new Main();
+        app = new Main();
         app.start(); // start the game
     }
     
     @Override
     public void simpleInitApp() {
         
+        inputManager.deleteMapping(SimpleApplication.INPUT_MAPPING_EXIT);
+        
         //ChaseCamera chaseCam = new ChaseCamera(cam, rootNode, inputManager);
         //chaseCam.setMinDistance(500);
         flyCam.setMoveSpeed(500);
         flyCam.setDragToRotate(true);
         cam.setFrustumFar(100000f);
+        cam.setLocation(new Vector3f(-700, 300, 700));
         
         shootables = new Node("Shootables");
         rootNode.attachChild(shootables);
@@ -122,7 +128,9 @@ public class Main extends SimpleApplication {
             e.setModel(assetManager, rootNode, "Models/mill/mill.j3o", shootables);
             e.spawn(rootNode, shootables);
             entities.add(e);
-
+            ((Mill) e).createPopup(assetManager);
+            ((Mill) e).showPopup(rootNode);
+            
             e = new Well(new Vector3f(-100, 0 , 100), 15, new Vector3f(20, 20, 20));
             e.setModel(assetManager, rootNode, "Models/well/well.j3o", shootables);
             e.spawn(rootNode, shootables);
@@ -213,7 +221,7 @@ public class Main extends SimpleApplication {
         }*/
 
         
-        gui = new Gui(assetManager, inputManager, audioRenderer, guiViewPort, rootNode, shootables, entities);
+        gui = new Gui(app, assetManager, inputManager, audioRenderer, guiViewPort, rootNode, shootables, entities);
    
         gui.setApple(p.getApple());
         gui.setWaterBucket(p.getWaterBucket());
@@ -223,6 +231,7 @@ public class Main extends SimpleApplication {
         // Create scene and terrain
         
         scene = new Scene(assetManager, rootNode, shootables);
+        cam.lookAt(scene.getTerrain().getLocalTranslation(), Vector3f.ZERO);
 
         // Create Sky, Sun and Moon and Ambient Light
         
@@ -290,7 +299,7 @@ public class Main extends SimpleApplication {
         for (Entity e: entities) {
             if (e instanceof Tree) {
                 ((Tree) e).increaseTime(tpf);
-                if (((Tree) e).getTime() >= 10) {
+                if (((Tree) e).getTime() >= speed) {
                     ((Tree) e).resetTime();
                     ((Tree) e).newApple(assetManager, rootNode, shootables);
                 }
@@ -310,12 +319,32 @@ public class Main extends SimpleApplication {
                 }
             }
             if (e instanceof Mill) {
-                ((Mill) e).rotateMill(rootNode, tpf);
+                if (((Mill) e).getState() == 0) {
+                    ((Mill) e).rotateMill(rootNode, tpf * 0.3f);
+                }
+                if (((Mill) e).getState() == 1) {
+                    ((Mill) e).rotateMill(rootNode, tpf * 3f);
+                    ((Mill) e).increaseTime(tpf);
+                    if (((Mill) e).getTime() >= 30) {
+                        ((Mill) e).resetTime();
+                        ((Mill) e).setState(2);
+                        speed *= 2;
+                    }
+                }
+                if (((Mill) e).getState() == 2) {
+                    ((Mill) e).rotateMill(rootNode, tpf * 0.3f);
+                    ((Mill) e).increaseTime(tpf);
+                    if (((Mill) e).getTime() >= 10) {
+                        ((Mill) e).resetTime();
+                        ((Mill) e).setState(0);
+                        ((Mill) e).showPopup(rootNode);
+                    }
+                }
             }
             if (e instanceof Well) {
                 if (((Well) e).getWater() < 5) {
                     ((Well) e).increaseTime(tpf);
-                    if (((Well) e).getTime() >= 10) {
+                    if (((Well) e).getTime() >= speed) {
                         ((Well) e).resetTime();                        
                         ((Well) e).increaseWater();
                         if (((Well) e).getWater() == 1) {
@@ -485,6 +514,15 @@ public class Main extends SimpleApplication {
                                                 ((Well) e).setWater(0);
                                                 gui.setWaterBucket(p.getWaterBucket());
                                                 break;
+                                            }
+                                            
+                                            // Entity clicked is Mill
+                                            if (e instanceof Mill) {
+                                                if (((Mill) e).getState() == 0) {
+                                                    ((Mill) e).setState(1);
+                                                    speed /= 2;
+                                                    ((Mill) e).hidePopup(rootNode);
+                                                }
                                             }
                                         }
                                     }
