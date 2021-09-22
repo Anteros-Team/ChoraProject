@@ -6,6 +6,7 @@
 package com.game.chora.gui;
 
 import com.game.chora.Main;
+import com.game.chora.Player;
 import com.game.chora.items.entities.Sprout;
 import com.game.chora.utils.Entity;
 import com.jme3.asset.AssetManager;
@@ -33,7 +34,9 @@ import de.lessvoid.nifty.render.NiftyImage;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.tools.SizeValue;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -48,11 +51,15 @@ public class Gui {
     protected Node rootNode;
     protected Node shootables;
     protected List<Entity> entities;
+    protected Player p;
     protected boolean placeEntity;
     protected String selectedEntityFromShop;
     protected boolean guiOpened;
+    protected float time;
     
-    public Gui (Main app, AssetManager assetManager, InputManager inputManager, AudioRenderer audioRenderer, ViewPort guiViewPort, Node rootNode, Node shootables, List<Entity> entities) {
+    protected Map<String, Integer> shopProducts;    
+    
+    public Gui (Main app, AssetManager assetManager, InputManager inputManager, AudioRenderer audioRenderer, ViewPort guiViewPort, Node rootNode, Node shootables, List<Entity> entities, Player p) {
         niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, guiViewPort);
         nifty = niftyDisplay.getNifty();
         guiViewPort.addProcessor(niftyDisplay);
@@ -62,9 +69,16 @@ public class Gui {
         this.rootNode = rootNode;
         this.shootables = shootables;
         this.entities = entities;
+        this.p = p;
         this.placeEntity = false;
         this.selectedEntityFromShop = "";
         this.guiOpened = false;
+        this.time = 0;
+        
+        this.shopProducts = new HashMap<String, Integer>();
+        this.shopProducts.put("Sprout", 10);
+        this.shopProducts.put("Well", 20);
+        this.shopProducts.put("Mill", 50);
         
         nifty.loadStyleFile("nifty-default-styles.xml");
         nifty.loadControlFile("nifty-default-controls.xml");
@@ -86,7 +100,6 @@ public class Gui {
                     width("45%");
                     alignLeft();
                     valignTop();
-                    backgroundColor("#f60f");
                     visibleToMouse();
                     //interactOnClick("quit()");
                     marginLeft("2%");
@@ -136,7 +149,6 @@ public class Gui {
                     width("15%");
                     alignRight();
                     valignTop();
-                    backgroundColor("#f60f");
                     visibleToMouse();
                     interactOnClick("openMenu()");
                     marginRight("2%");
@@ -146,7 +158,7 @@ public class Gui {
                     image(new ImageBuilder() {{
                         id("MenuImage");
                         filename("Interface/gui/menu_icon.png");
-                        width("55%");
+                        width("60%");
                         height("100%");
                     }});
                 }});
@@ -159,7 +171,6 @@ public class Gui {
                     width("15%");
                     alignRight();
                     valignBottom();
-                    backgroundColor("#f60f");
                     visibleToMouse();
                     //interactOnClick("quit()");
                     marginRight("2%");
@@ -169,7 +180,7 @@ public class Gui {
                     image(new ImageBuilder() {{
                        id("ShopImage");
                        filename("Interface/gui/shop_icon.png");
-                       width("55%");
+                       width("60%");
                        height("100%");
                     }});
                 }});
@@ -187,7 +198,6 @@ public class Gui {
                     width("45%");
                     alignLeft();
                     valignTop();
-                    //backgroundColor("#f60f");
                     visibleToMouse();
                     //interactOnClick("quit()");
                     marginLeft("2%");
@@ -200,28 +210,37 @@ public class Gui {
                         valignCenter();
                         width("100%");
                         
+                        // Player avatar image
+                        image(new ImageBuilder() {{
+                            id("playerImage");
+                            width("10%");
+                            height("100%");
+                        }});
+                        
                         // Player info texts
                         control(new LabelBuilder("PlayerInfo", "") {{
-                            //font("Interface/Fonts/Default.fnt");
                             font("Interface/Fonts/SegoeUIBlack.fnt");
                             color("#000f");
-                            width("40%");
+                            width("30%");
+                            height("20%");
+                            marginTop("23%");
                         }});
                         
                         // Apples text
                         control(new LabelBuilder("Apple", "0") {{
-                            //font("Interface/Fonts/Default.fnt");
-                            //font("aurulent-sans-16.fnt");
                             font("Interface/Fonts/SegoeUIBlack.fnt");
                             //color("#f00f");
-                            width("25%");
+                            width("30%");
+                            height("100%");
+                            valignCenter();
                         }});
                 
                         // Water bucket text
                         control(new LabelBuilder("WaterBucket", "2") {{
-                            //font("Interface/Fonts/Default.fnt");
                             font("Interface/Fonts/SegoeUIBlack.fnt");
-                            width("25%");
+                            width("30%");                            
+                            height("100%");
+                            valignCenter();
                         }});
                     }});
                     
@@ -234,7 +253,6 @@ public class Gui {
                     width("15%");
                     alignRight();
                     valignTop();
-                    //backgroundColor("#f60f");
                     visibleToMouse();
                     //interactOnClick("quit()");
                     marginRight("2%");
@@ -242,8 +260,8 @@ public class Gui {
                 
                     // Menu button
                     control(new ControlBuilder("menuButton", "") {{
-                        width("55%");
-                        height("100%");
+                        width("53%");
+                        height("98%");
                         visibleToMouse(true);
                         
                         interactOnClick("openMenu()");
@@ -257,7 +275,6 @@ public class Gui {
                     width("15%");
                     alignRight();
                     valignBottom();
-                    //backgroundColor("#f60f");
                     visibleToMouse();
                     //interactOnClick("quit()");
                     marginRight("2%");
@@ -265,8 +282,8 @@ public class Gui {
                 
                     // Shop button
                     control(new ControlBuilder("shopButton", "") {{
-                        width("55%");
-                        height("100%");
+                        width("53%");
+                        height("98%");
                         visibleToMouse(true);
                         
                         interactOnClick("openShop()");
@@ -283,7 +300,6 @@ public class Gui {
                 panel(new PanelBuilder() {{
                     id("ShopModalPanel");
                     childLayoutCenter();
-                    backgroundColor("#f60f");
                     height("70%");
                     width("70%");
                     alignCenter();
@@ -432,7 +448,7 @@ public class Gui {
                                 //interactOnClick("buyFromShop(\"sprout\", " + assetManager + ", " + rootNode + ", " + shootables + ")");
 
                                 text(new TextBuilder("Price1_Text") {{
-                                    text("30 Apples");
+                                    text(shopProducts.get("Sprout") + " Apples");
                                     font("Interface/Fonts/SegoeUIBlack.fnt");
                                     color("#000");
                                     height("100%");
@@ -473,7 +489,7 @@ public class Gui {
                                 interactOnClick("");
 
                                 text(new TextBuilder() {{
-                                    text("20 Apple");
+                                    text(shopProducts.get("Well") + " Apple");
                                     font("Interface/Fonts/SegoeUIBlack.fnt");
                                     color("#000");
                                     height("100%");
@@ -515,7 +531,7 @@ public class Gui {
                                 interactOnClick("");
 
                                 text(new TextBuilder() {{
-                                    text("50 Apple");
+                                    text(shopProducts.get("Mill") + " Apple");
                                     font("Interface/Fonts/SegoeUIBlack.fnt");
                                     color("#000");
                                     height("100%");
@@ -535,7 +551,6 @@ public class Gui {
                 panel(new PanelBuilder() {{
                     id("MenuModalPanel");
                     childLayoutCenter();
-                    backgroundColor("#f60f");
                     height("65%");
                     width("35%");
                     alignCenter();
@@ -647,7 +662,7 @@ public class Gui {
                             visibleToMouse(true);     
                             font("Interface/Fonts/SegoeUIBlack.fnt");                                                       
                         
-                            interactOnClick("");
+                            interactOnClick("openCredits()");
                             
                             text(new TextBuilder() {{
                                 text("Credits");
@@ -699,6 +714,86 @@ public class Gui {
                         }});
                         
                     }});
+                }});
+            }});
+            
+            // Credits game layer
+            layer(new LayerBuilder("creditsLayer") {{
+                childLayoutCenter();
+                backgroundColor("#000f");
+                
+                // Modal panel
+                panel(new PanelBuilder() {{
+                    id("CreditsPanel");
+                    childLayoutCenter();
+                    height("85%");
+                    width("60%");
+                    alignCenter();
+                    valignCenter();
+                    visibleToMouse(true);
+                    //backgroundColor("#00f");
+                    
+                    // Content Modal panel
+                    panel(new PanelBuilder() {{
+                        id("CreditsContentPanel");
+                        childLayoutCenter();
+                        width("100%");
+                        height("100%");
+                        visibleToMouse(true);                        
+                        
+                        image(new ImageBuilder() {{
+                            id("MenuImage");
+                            filename("Interface/gui/CloseModalButton.png");
+                            width("9%");
+                            height("10%");
+                            alignRight();
+                            valignTop();
+                            marginRight("9%");
+                            marginTop("7%");
+                        }});
+                    }});
+                }});
+            }});
+            
+            // Interactive credits layer
+            layer(new LayerBuilder("interactiveCreditsLayer") {{
+                childLayoutCenter();                
+                
+                // Modal panel
+                panel(new PanelBuilder() {{
+                    id("CreditsPanel");
+                    childLayoutCenter();
+                    height("85%");
+                    width("60%");
+                    alignCenter();
+                    valignCenter();
+                    visibleToMouse(true);
+                    
+                    // close Button
+                    control(new ControlBuilder("closeButton", "") {{
+                        width("9%");
+                        height("10%");
+                        alignRight();
+                        valignTop();
+                        marginRight("9%");
+                        marginTop("7%");
+                        visibleToMouse(true);                            
+                        
+                        interactOnRelease("closeCredits()");
+                    }});
+                    
+                    text(new TextBuilder() {{
+                        text("Developer: Alessandro Pilleri, Giorgia Bertacchini\n"
+                                + "Programming language: Java \n"
+                                + "Game engine: jMonkeyEngine.\n"
+                                + "Project for: 'Object-oriented programming' course of engineering UNIMORE of Modena\n"
+                                + "Teacher: Nicola Bicocchi");
+                        font("Interface/Fonts/SegoeUIBlack.fnt");
+                        color("#fff");
+                        height("80%");
+                        width("100%");
+                        alignLeft();
+                    }});                
                 }});
             }});
             
@@ -814,6 +909,43 @@ public class Gui {
                 }});
             }});
             
+            layer(new LayerBuilder("alertLayer") {{
+                childLayoutCenter();
+                
+                panel(new PanelBuilder() {{                    
+                    id("ErrorPanel");
+                    width("100%");
+                    height("65%");
+                    alignCenter();
+                    childLayoutCenter();
+                    valignTop();
+                    
+                    control(new LabelBuilder("errorLabel", "")  {{
+                        text("");
+                        font("Interface/Fonts/SegoeUIBlack.fnt");
+                        color("#000");
+                        height("100%");
+                        width("100%");
+                    }});
+                }});
+                
+                panel(new PanelBuilder() {{
+                    id("placingModePanel");
+                    width("100%");
+                    height("10%");
+                    alignCenter();
+                    childLayoutCenter();
+                    valignBottom();                    
+                    
+                    text(new TextBuilder() {{
+                        text("Placing mode");
+                        font("Interface/Fonts/SegoeUIBlack.fnt");
+                        color("#000");
+                        height("100%");
+                        width("100%");
+                    }});
+                }});
+            }});           
             
         }}.build(nifty);
 
@@ -904,14 +1036,21 @@ public class Gui {
         nifty.getCurrentScreen().findElementById("shopLayer").setVisible(false);
         nifty.getCurrentScreen().findElementById("interactiveShopLayer").setVisible(false);
         
+        nifty.getCurrentScreen().findElementById("creditsLayer").setVisible(false);
+        nifty.getCurrentScreen().findElementById("interactiveCreditsLayer").setVisible(false);
+        
         nifty.getCurrentScreen().findElementById("closeGameLayer").setVisible(false);
         nifty.getCurrentScreen().findElementById("interactiveCloseGameLayer").setVisible(false);
         
         nifty.getCurrentScreen().findElementById("yesButton").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "closeGame()", this));
         
-        nifty.getCurrentScreen().findElementById("Item1_Button").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "buyFromShop(sprout)", this));
-        nifty.getCurrentScreen().findElementById("Item2_Button").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "buyFromShop(well)", this));
-        nifty.getCurrentScreen().findElementById("Item3_Button").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "buyFromShop(mill)", this));
+        nifty.getCurrentScreen().findElementById("Item1_Button").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "buyFromShop(Sprout)", this));
+        nifty.getCurrentScreen().findElementById("Item2_Button").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "buyFromShop(Well)", this));
+        nifty.getCurrentScreen().findElementById("Item3_Button").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "buyFromShop(Mill)", this));
+        
+        nifty.getCurrentScreen().findElementById("alertLayer").setVisible(true);
+        nifty.getCurrentScreen().findElementById("errorLabel").setVisible(false);
+        nifty.getCurrentScreen().findElementById("placingModePanel").setVisible(false);    
     }
     
     public Nifty getNifty() {
@@ -935,23 +1074,34 @@ public class Gui {
     }
     
     public void buyFromShop(String selectedEntity) {
-        
-        // TODO: check if have sufficient apples, remove apples
-        
-        
-        nifty.getCurrentScreen().findElementById("shopLayer").setVisible(false);
-        nifty.getCurrentScreen().findElementById("interactiveShopLayer").setVisible(false);
+        if (p.getApple() >= shopProducts.get(selectedEntity)) {  
+            System.out.println(p.getMill());
+            if(("Mill".equals(selectedEntity) && p.getMill() < 2) || ("Well".equals(selectedEntity) && p.getWell() < 5)) {
+                p.setApple(p.getApple() - shopProducts.get(selectedEntity));
+                this.setApple(p.getApple());
+            
+                nifty.getCurrentScreen().findElementById("shopLayer").setVisible(false);
+                nifty.getCurrentScreen().findElementById("interactiveShopLayer").setVisible(false);
        
-        this.setSelectedEntityFromShop(selectedEntity);
-        this.setPlaceEntity(true);
+                this.setSelectedEntityFromShop(selectedEntity);
+                this.setPlaceEntity(true);
         
-        
-        System.out.println("Selected " + selectedEntity + " from shop. " + this.getPlaceEntity());
-        
-        /*Entity e = new Sprout(new Vector3f(190, 0, 190), 0.6f, new Vector3f(10, 8, 5));
-        e.setModel(this.assetManager, this.rootNode, "Models/sprout/sprout.j3o", this.shootables);
-        e.spawn(this.rootNode, this.shootables);
-        entities.add(e);*/
+                System.out.println("Selected " + selectedEntity + " from shop. " + this.getPlaceEntity());
+                nifty.getCurrentScreen().findElementById("placingModePanel").setVisible(true);
+            } 
+            else {
+                //TODO errore hai raggiunto il limite di mill/well
+                nifty.getCurrentScreen().findElementById("errorLabel").getRenderer(TextRenderer.class).setText("Maximum number of " + selectedEntity + " reached.");
+                nifty.getCurrentScreen().findElementById("errorLabel").setVisible(true);
+                time = 5;
+            }
+        }
+        else {
+            //TODO errore non hai abbastanza mele
+            nifty.getCurrentScreen().findElementById("errorLabel").getRenderer(TextRenderer.class).setText("Not enough apples.");  
+            nifty.getCurrentScreen().findElementById("errorLabel").setVisible(true);
+            time = 5;
+        }
     }
     
     public String getSelectedEntityFromShop() {
@@ -976,5 +1126,13 @@ public class Gui {
     
     public void setGuiOpened(boolean guiOpened) {
         this.guiOpened = guiOpened;
+    }
+    
+    public float getTime() {
+        return this.time;
+    }
+    
+    public void decreaseTime(float tpf) {
+        this.time -= tpf;
     }
 }

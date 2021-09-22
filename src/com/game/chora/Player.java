@@ -13,11 +13,15 @@ public class Player {
     protected String name;
     protected int waterBucket;
     protected int apple;
+    protected int well;
+    protected int mill;
     
     public Player(){
         this.name = "ciao";
         this.waterBucket = 2;
-        this.apple = 0;
+        this.apple = 50;
+        this.well = 0;
+        this.mill = 0;
     }
     
     public String getName() {
@@ -32,6 +36,14 @@ public class Player {
         return this.apple;
     }
     
+    public int getWell() {
+        return this.well;
+    }
+    
+    public int getMill() {
+        return this.mill;
+    }
+    
     public void setName(String name) {
         this.name = name;
     }
@@ -42,5 +54,13 @@ public class Player {
     
     public void setApple(int apple) {
         this.apple = apple;
+    }
+    
+    public void setWell(int well) {
+        this.well = well;
+    }
+    
+    public void setMill(int mill) {
+        this.mill = mill;
     }
 }

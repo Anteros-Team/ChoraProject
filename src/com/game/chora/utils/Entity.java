@@ -98,7 +98,8 @@ public class Entity {
         this.pickbox.add(new Geometry("PickBox" + this.hashCode(), cube.get(0)));
         this.pickbox.get(0).setShadowMode(RenderQueue.ShadowMode.Off);
         this.pickbox.get(0).setLocalTranslation(this.position.add(new Vector3f(0, this.pickboxSize.y, 0)));
-        //this.pickbox.get(0).setCullHint(Spatial.CullHint.Always);
+        // no visible pickbox
+        this.pickbox.get(0).setCullHint(Spatial.CullHint.Always);
         
         this.matPickBox = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         this.matPickBox.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);

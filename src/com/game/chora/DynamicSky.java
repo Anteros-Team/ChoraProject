@@ -20,12 +20,18 @@ public class DynamicSky extends Node {
     private DynamicStars dynamicStars = null;
     private DynamicSkyBackground dynamicBackground = null;
     
+    private boolean dayTime;
+    private float dayChanging;
+    
     private float scaling = 900;
     
     public DynamicSky(AssetManager assetManager, ViewPort viewPort, Node rootNode) {
         super("Sky");
         this.assetManager = assetManager;
-        this.viewPort = viewPort;        
+        this.viewPort = viewPort;      
+        
+        this.dayTime = true;
+        this.dayChanging = 1f;
                
         dynamicSun = new DynamicSun(assetManager, viewPort, rootNode, scaling);
         rootNode.attachChild(dynamicSun);
@@ -56,9 +62,27 @@ public class DynamicSky extends Node {
         return dynamicMoon.getSunLight();
     }
         
+    public boolean isDayTime() {
+        return this.dayTime;
+    }
+    
+    public float getDayChanging() {
+        return this.dayChanging;
+    }
+    
     public void updateTime(){
         dynamicSun.updateTime(dynamicSun.getSunSystem().getDirection());
         dynamicMoon.updateTime(dynamicMoon.getSunSystem().getDirection());
+        
+        this.dayTime = dynamicSun.getSunSystem().getPosition().y >= 0;
+        if (dynamicSun.getSunSystem().getPosition().y > 100 || dynamicSun.getSunSystem().getPosition().y < -100) {
+            this.dayChanging = 1f;
+        } else {
+            this.dayChanging = (float) Math.abs(dynamicSun.getSunSystem().getPosition().y) / 100f;
+        }
+        //System.out.println(dynamicSun.getSunSystem().getPosition().y);
+        //System.out.println(this.dayChanging);
+        
         dynamicBackground.updateLightPosition(dynamicSun.getSunSystem().getPosition());
         dynamicStars.update(dynamicSun.getSunSystem().getDirection());        
         dynamicStars.lookAt(dynamicSun.getSunSystem().getPosition(), Vector3f.ZERO);

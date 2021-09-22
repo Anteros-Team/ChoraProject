@@ -7,6 +7,7 @@ import com.game.chora.utils.EntitySerialization;
 import com.game.chora.water.Ocean;
 import com.game.chora.water.Pound;
 import com.jme3.app.SimpleApplication;
+import com.jme3.audio.AudioNode;
 import com.jme3.collision.CollisionResults;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
@@ -42,6 +43,10 @@ public class Main extends SimpleApplication {
     private List<Entity> entities;
     private List<EntitySerialization> es;
     private Gui gui;
+    private AudioNode menuAudio;
+    private AudioNode dayAudio;
+    private AudioNode nightAudio;
+    private AudioNode clickAudio;
     
     private int speed = 10;
     
@@ -74,6 +79,7 @@ public class Main extends SimpleApplication {
         shootables = new Node("Shootables");
         rootNode.attachChild(shootables);
         inputManager.setCursorVisible(true);
+        
         
         /*try {
             FileInputStream fileIn = new FileInputStream(playerFilePath);
@@ -128,6 +134,7 @@ public class Main extends SimpleApplication {
             e.setModel(assetManager, rootNode, "Models/mill/mill.j3o", shootables);
             e.spawn(rootNode, shootables);
             entities.add(e);
+            p.setMill(p.getMill() + 1);
             ((Mill) e).createPopup(assetManager);
             ((Mill) e).showPopup(rootNode);
             
@@ -135,6 +142,7 @@ public class Main extends SimpleApplication {
             e.setModel(assetManager, rootNode, "Models/well/well.j3o", shootables);
             e.spawn(rootNode, shootables);
             entities.add(e);
+            p.setWell(p.getWell() + 1);
             ((Well) e).createPopup(assetManager);
         } else {
             p = db.queryPlayer();
@@ -152,7 +160,7 @@ public class Main extends SimpleApplication {
                 }
                 if ("Mill".equals(s.getTypeOfEntity())) {
                     e = new Mill(s.getPosition(), s.getScale(), s.getPickboxSize());
-                    e.setModel(assetManager, rootNode, "Models/mill/mill.j3o", shootables);
+                    e.setModel(assetManager, rootNode, "Models/mill/mill.j3o", shootables);                    
                 }
                 if ("Well".equals(s.getTypeOfEntity())) {
                     e = new Well(s.getPosition(), s.getScale(), s.getPickboxSize());
@@ -221,7 +229,7 @@ public class Main extends SimpleApplication {
         }*/
 
         
-        gui = new Gui(app, assetManager, inputManager, audioRenderer, guiViewPort, rootNode, shootables, entities);
+        gui = new Gui(app, assetManager, inputManager, audioRenderer, guiViewPort, rootNode, shootables, entities, p);
    
         gui.setApple(p.getApple());
         gui.setWaterBucket(p.getWaterBucket());
@@ -240,6 +248,23 @@ public class Main extends SimpleApplication {
         
         view = new View(assetManager, rootNode);
         
+        // Add audio
+        
+        menuAudio = new AudioNode(assetManager, "Sounds/menu.wav");
+        menuAudio.setPositional(false);
+        menuAudio.setLooping(true);
+        
+        dayAudio = new AudioNode(assetManager, "Sounds/day.wav");
+        dayAudio.setPositional(false);
+        dayAudio.setLooping(true);
+        
+        nightAudio = new AudioNode(assetManager, "Sounds/night.wav");
+        nightAudio.setPositional(false);
+        nightAudio.setLooping(true);
+        
+        clickAudio = new AudioNode(assetManager, "Sounds/click.wav");
+        clickAudio.setPositional(false);
+        clickAudio.setLooping(false);
         
         // Add water pound
         
@@ -293,6 +318,18 @@ public class Main extends SimpleApplication {
     
     @Override
     public void simpleUpdate(float tpf) {
+        
+        //menuAudio.play();
+        if (sky.isDayTime()) {
+            nightAudio.stop();
+            dayAudio.play();
+            dayAudio.setVolume(sky.getDayChanging());
+        } else {
+            dayAudio.stop();
+            nightAudio.play();
+            nightAudio.setVolume(sky.getDayChanging());
+        }
+        
         view.updateLight(sky);
         sky.updateTime();
         
@@ -355,9 +392,17 @@ public class Main extends SimpleApplication {
             }
         }
         
+        if(gui.getTime() > 0) {
+            gui.decreaseTime(tpf);
+            if(gui.getTime() <= 0) {
+                gui.getNifty().getCurrentScreen().findElementById("errorLabel").setVisible(false);
+            }
+        }
+        
+        
         if (gui.getPlaceEntity() == true) {
             // show placing mode
-            System.out.println("Placing mode active.");
+            System.out.println("Placing mode active."); 
         }
     }
     
@@ -407,17 +452,19 @@ public class Main extends SimpleApplication {
                     shootables.collideWith(ray, results);
 
                     if (gui.getPlaceEntity() == true) {
-                        // placing mode
+                        // placing mode                        
                         System.out.println(results.size());
                         if (results.size() > 0) {
+                            clickAudio.playInstance();
                             Vector3f pt = results.getClosestCollision().getContactPoint();
                             addEntity(gui.getSelectedEntityFromShop(), pt);
+                            //gui.getNifty().getCurrentScreen().findElementById("alertLayer").setVisible(false);
                         }
                         
 
                     } else {
                         // picking mode
-
+                        
                         String closest;
                         for (int i = 0; i < results.size(); i++) {
                             float dist = results.getCollision(i).getDistance();
@@ -434,6 +481,7 @@ public class Main extends SimpleApplication {
 
                             // Pound clicked
                             if (pound.getPickBox().getName().equals(closest)) {
+                                clickAudio.playInstance();
                                 pound.takeWater();
                                 p.setWaterBucket(p.getWaterBucket() + 1);
                                 gui.setWaterBucket(p.getWaterBucket());
@@ -446,9 +494,11 @@ public class Main extends SimpleApplication {
 
                                     if (e != null) {                                
 
+                                        // Entity clicked is Apple
                                         if (e instanceof Tree) {
                                             for (Apple a: ((Tree) e).getApples()) {
                                                 if (a.getPickBox().get(0).getName().equals(closest)) {
+                                                    clickAudio.playInstance();
                                                     a.onAction(rootNode, shootables);
                                                     p.setApple(p.getApple() + 1);
                                                     gui.setApple(p.getApple());
@@ -459,6 +509,8 @@ public class Main extends SimpleApplication {
 
                                         if (e.getPickBox().get(0).getName().equals(closest)) {
 
+                                            clickAudio.playInstance();
+                                            
                                             // Entity clicked is Trash
                                             if (e instanceof Trash) {
                                                 e.onAction(rootNode, shootables);
@@ -541,7 +593,7 @@ public class Main extends SimpleApplication {
         System.out.println("Entity = " + selectedEntity);
         System.out.println("Position = " + position);
         
-        if ("sprout".equals(selectedEntity)) {
+        if ("Sprout".equals(selectedEntity)) {
             boolean notAllowedPlace = false;
             for (float i = 512 + position.x - 55; i < 512 + position.x + 65; i++) {
                 for (float j = 512 - position.z - 65 ; j < 512 - position.z + 75; j++) {
@@ -553,7 +605,7 @@ public class Main extends SimpleApplication {
                 }
             }
             if (scene.getPlaceableArea()[512 + (int) position.x][512 - (int) position.z] == false) {
-                notAllowedPlace = true;
+                notAllowedPlace = true;                
             }
                             
             if (notAllowedPlace == false) {
@@ -564,16 +616,17 @@ public class Main extends SimpleApplication {
                 e.spawn(this.rootNode, this.shootables);
                 entities.add(e);
                 gui.setPlaceEntity(false);
+                gui.getNifty().getCurrentScreen().findElementById("placingModePanel").setVisible(false);
             
                 for (float i = 512 + position.x - 55; i < 512 + position.x + 65; i++) {
                     for (float j = 512 - position.z - 65 ; j < + 512 - position.z + 75; j++) {
-                        scene.getCoveredArea()[(int) i][(int) j] = true;
+                        scene.getCoveredArea()[(int) i][(int) j] = true;                        
                     }
                 }
             }
             
         }
-        if ("mill".equals(selectedEntity)) {
+        if ("Mill".equals(selectedEntity)) {
             boolean notAllowedPlace = false;
             for (float i = 512 + position.x - 55; i < 512 + position.x + 65; i++) {
                 for (float j = 512 - position.z - 65 ; j < + 512 - position.z + 75; j++) {
@@ -592,7 +645,12 @@ public class Main extends SimpleApplication {
                 e.setModel(assetManager, rootNode, "Models/mill/mill.j3o", shootables);
                 e.spawn(rootNode, shootables);
                 entities.add(e);
+                p.setMill(p.getMill() + 1);
+                ((Mill) e).createPopup(assetManager);
+                // serve la riga dopo? 
                 gui.setPlaceEntity(false);
+                
+                gui.getNifty().getCurrentScreen().findElementById("placingModePanel").setVisible(false);
                 
                 for (float i = 512 + position.x - 55; i < 512 + position.x + 65; i++) {
                     for (float j = 512 - position.z - 65 ; j < + 512 - position.z + 75; j++) {
@@ -602,7 +660,7 @@ public class Main extends SimpleApplication {
             }
             
         }
-        if ("well".equals(selectedEntity)) {
+        if ("Well".equals(selectedEntity)) {
             boolean notAllowedPlace = false;
             for (float i = 512 + position.x - 55; i < 512 + position.x + 65; i++) {
                 for (float j = 512 - position.z - 65 ; j < + 512 - position.z + 75; j++) {
@@ -619,7 +677,10 @@ public class Main extends SimpleApplication {
                 e.setModel(assetManager, rootNode, "Models/well/well.j3o", shootables);
                 e.spawn(rootNode, shootables);
                 entities.add(e);
+                p.setWell(p.getWell() + 1);
+                ((Well) e).createPopup(assetManager);
                 gui.setPlaceEntity(false);
+                gui.getNifty().getCurrentScreen().findElementById("placingModePanel").setVisible(false);
                 
                 for (float i = 512 + position.x - 55; i < 512 + position.x + 65; i++) {
                     for (float j = 512 - position.z - 65 ; j < + 512 - position.z + 75; j++) {

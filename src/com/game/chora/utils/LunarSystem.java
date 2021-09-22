@@ -149,7 +149,7 @@ public class LunarSystem {
         
         matRz.fromAngleNormalAxis(i, new Vector3f(0, 0, 1));
         moonPosition = matRz.mult(matRx.mult(matRy.mult(moonPosition)));
-        i-=0.001;
+        i-=0.00005;
         
 
         // Get long, lat

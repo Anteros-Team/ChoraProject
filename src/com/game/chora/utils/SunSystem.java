@@ -149,7 +149,7 @@ public class SunSystem {
         
         matRz.fromAngleNormalAxis(i, new Vector3f(0, 0, 1));
         sunPosition = matRz.mult(matRx.mult(matRy.mult(sunPosition)));
-        i-=0.001;
+        i-=0.00005;
         
 
         // Get long, lat
