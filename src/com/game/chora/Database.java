@@ -210,14 +210,14 @@ public class Database {
              
             if (rs.next() == false) {
                 System.out.println("Select is empty.");
-                return false;
+                return true;
             }
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         System.out.println("Row founded.");
-        return true;
+        return false;
     }
     
     public Player queryPlayer() {

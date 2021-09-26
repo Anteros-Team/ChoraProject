@@ -46,6 +46,7 @@ public class Gui {
     
     protected NiftyJmeDisplay niftyDisplay;
     protected Nifty nifty;
+    protected boolean gameStarted;
     protected Main app;
     protected AssetManager assetManager;
     protected Node rootNode;
@@ -64,6 +65,7 @@ public class Gui {
         nifty = niftyDisplay.getNifty();
         guiViewPort.addProcessor(niftyDisplay);
         
+        this.gameStarted = false;
         this.app = app;
         this.assetManager = assetManager;
         this.rootNode = rootNode;
@@ -726,8 +728,8 @@ public class Gui {
                 panel(new PanelBuilder() {{
                     id("CreditsPanel");
                     childLayoutCenter();
-                    height("85%");
-                    width("60%");
+                    height("100%");
+                    width("100%");
                     alignCenter();
                     valignCenter();
                     visibleToMouse(true);
@@ -745,7 +747,7 @@ public class Gui {
                             id("MenuImage");
                             filename("Interface/gui/CloseModalButton.png");
                             width("9%");
-                            height("10%");
+                            height("12%");
                             alignRight();
                             valignTop();
                             marginRight("9%");
@@ -763,8 +765,8 @@ public class Gui {
                 panel(new PanelBuilder() {{
                     id("CreditsPanel");
                     childLayoutCenter();
-                    height("85%");
-                    width("60%");
+                    height("100%");
+                    width("100%");
                     alignCenter();
                     valignCenter();
                     visibleToMouse(true);
@@ -783,11 +785,14 @@ public class Gui {
                     }});
                     
                     text(new TextBuilder() {{
-                        text("Developer: Alessandro Pilleri, Giorgia Bertacchini\n"
-                                + "Programming language: Java \n"
-                                + "Game engine: jMonkeyEngine.\n"
-                                + "Project for: 'Object-oriented programming' course of engineering UNIMORE of Modena\n"
-                                + "Teacher: Nicola Bicocchi");
+                        text("Developer\nAlessandro Pilleri, Giorgia Bertacchini\n\n"
+                                + "Programming language\nJava\n\n"
+                                + "Game engine\njMonkeyEngine\n\n"
+                                + "Relevant Libraries\nSQLite, NiftyGUI\n\n"
+                                + "Graphic Department\nAlessandro Pilleri, Giorgia Bertacchini\n\n"
+                                + "Audio Department\nMusic provided by Genshin Impact by Mihoyo\n\n"
+                                + "Project for\n'Object-oriented programming'\nDepartment of Engineering \"Enzo Ferrari\" Modena\n\n"
+                                + "Teacher\nNicola Bicocchi");
                         font("Interface/Fonts/SegoeUIBlack.fnt");
                         color("#fff");
                         height("80%");
@@ -1178,8 +1183,6 @@ public class Gui {
                         marginBottom("34%");
                         visibleToMouse(true);                            
                         
-                        interactOnRelease("playGame()");
-                        
                         text(new TextBuilder() {{
                             text("Play");
                             font("Interface/Fonts/SegoeUIBlack.fnt");
@@ -1461,11 +1464,16 @@ public class Gui {
         nifty.getScreen("game").findElementById("errorLabel").setVisible(false);
         nifty.getScreen("game").findElementById("placingModePanel").setVisible(false);
         
+        nifty.getScreen("startMenu").findElementById("PlayButton").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "playGame()", this));
         nifty.getScreen("startMenu").findElementById("StartExitButton").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "closeGame()", this));
     }
     
     public Nifty getNifty() {
         return this.nifty;
+    }
+    
+    public boolean isGameStarted() {
+        return this.gameStarted;
     }
     
     public void setPlayerName(String name) {
@@ -1490,6 +1498,11 @@ public class Gui {
         p.setMusicVolume(!p.getMusicVolume());
         nifty.getScreen("startMenu").findElementById("MusicTick").setVisible(p.getMusicVolume());
         nifty.getScreen("game").findElementById("MusicTick").setVisible(p.getMusicVolume());
+    }
+    
+    public void playGame() {
+        nifty.gotoScreen("game");
+        this.gameStarted = true;
     }
     
     public void closeGame() {

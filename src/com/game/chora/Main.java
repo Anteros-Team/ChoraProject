@@ -67,7 +67,7 @@ public class Main extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         
-        inputManager.deleteMapping(SimpleApplication.INPUT_MAPPING_EXIT);
+        //inputManager.deleteMapping(SimpleApplication.INPUT_MAPPING_EXIT);
         
         pc = new PlayerCamera(cam, flyCam);
         
@@ -75,29 +75,15 @@ public class Main extends SimpleApplication {
         rootNode.attachChild(shootables);
         inputManager.setCursorVisible(true);
         
-        
-        /*try {
-            FileInputStream fileIn = new FileInputStream(playerFilePath);
-            ObjectInputStream reader = new ObjectInputStream(fileIn);
-            p = (Player) reader.readObject();
-        }
-        catch (Exception ex) {
-            System.err.println("Failed to read " + playerFilePath + ", " + ex);
-            newGame = true;
-            p = new Player();
-        }
-        System.out.println(p);
-        */
         db = new Database();
         db.createNewDatabase(currentRelativePath.toAbsolutePath().toString() + "\\assets\\GameData\\");
         db.createTables();
-        
         
         p = new Player();
         entities = new ArrayList<>();
         es = new ArrayList<>();
         
-        if (db.isPlayerEmpty() == false) {
+        if (db.isPlayerEmpty() == true) {
             System.out.println("No player found. Creating player...");
             db.insertPlayer(p.getName(), p.getApple(), p.getWaterBucket());
             
@@ -141,7 +127,7 @@ public class Main extends SimpleApplication {
             ((Well) e).createPopup(assetManager);
         } else {
             p = db.queryPlayer();
-            es = db.queryEntity();
+            /*es = db.queryEntity();
             
             for (EntitySerialization s: es) {
                 Entity e = new Entity();
@@ -163,74 +149,10 @@ public class Main extends SimpleApplication {
                 }
                 e.spawn(rootNode, shootables);
                 entities.add(e);
-            }
+            }*/
         }
-            //try {
-                /*FileInputStream fileInApple = new FileInputStream(appleFilePath);
-                FileInputStream fileInMill = new FileInputStream(millFilePath);
-                FileInputStream fileInSmallTree = new FileInputStream(smallTreeFilePath);
-                FileInputStream fileInSprout = new FileInputStream(sproutFilePath);
-                FileInputStream fileInTrash = new FileInputStream(trashFilePath);
-                FileInputStream fileInTree = new FileInputStream(treeFilePath);
-                FileInputStream fileInWell = new FileInputStream(wellFilePath);
-
-                ObjectInputStream readerApple = new ObjectInputStream(fileInApple);
-                ObjectInputStream readerMill = new ObjectInputStream(fileInMill);
-                ObjectInputStream readerSmallTree = new ObjectInputStream(fileInSmallTree);
-                ObjectInputStream readerSprout = new ObjectInputStream(fileInSprout);
-                ObjectInputStream readerTrash = new ObjectInputStream(fileInTrash);
-                ObjectInputStream readerTree = new ObjectInputStream(fileInTree);
-                ObjectInputStream readerWell = new ObjectInputStream(fileInWell);*/
-
-               /* FileInputStream fileIn = new FileInputStream(filePath);
-                ObjectInputStream reader = new ObjectInputStream(fileIn);
-                
-                while (true) {
-                    try {
-                        EntitySerialization s = (EntitySerialization) reader.readObject();
-                        System.out.println(reader.readObject());
-                        es.add(s);
-                    } catch (Exception ex) {
-                        System.out.println("end of reader file ");
-                        break;
-                    }
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            
-            for (EntitySerialization s: es) {
-                Entity e = new Entity();
-                if ("Trash".equals(s.getTypeOfEntity())) {
-                    e = new Trash(s.getPosition(), s.getScale(), s.getPickboxSize());
-                    e.setModel(assetManager, rootNode, "Models/trash/trash.j3o", shootables);
-                }
-                if ("Sprout".equals(s.getTypeOfEntity())) {
-                    e = new Sprout(s.getPosition(), s.getScale(), s.getPickboxSize());
-                    e.setModel(assetManager, rootNode, "Models/sprout/sprout.j3o", shootables);
-                }
-                if ("Mill".equals(s.getTypeOfEntity())) {
-                    e = new Mill(s.getPosition(), s.getScale(), s.getPickboxSize());
-                    e.setModel(assetManager, rootNode, "Models/mill/mill.j3o", shootables);
-                }
-                if ("Well".equals(s.getTypeOfEntity())) {
-                    e = new Well(s.getPosition(), s.getScale(), s.getPickboxSize());
-                    e.setModel(assetManager, rootNode, "Models/well/well.j3o", shootables);
-                }
-                e.spawn(rootNode, shootables);
-                entities.add(e);
-            }
-            
-        }*/
-
         
         gui = new Gui(app, assetManager, inputManager, audioRenderer, guiViewPort, rootNode, shootables, entities, p);
-        
-        if (gui.getNifty().getCurrentScreen().getScreenId().equals("game")) {
-            gui.setApple(p.getApple());
-            gui.setWaterBucket(p.getWaterBucket());
-            gui.setPlayerName(p.getName());
-        }
         
         // Create scene and terrain
         
@@ -315,108 +237,119 @@ public class Main extends SimpleApplication {
     @Override
     public void simpleUpdate(float tpf) {
         
-        pc.checkCameraLimits(cam);
-        
-        //menuAudio.play();
-        if (sky.isDayTime()) {
-            nightAudio.stop();
-            dayAudio.play();
-            if (p.getMusicVolume()) {
-                dayAudio.setVolume(sky.getDayChanging());
+        if (gui.isGameStarted()) {
+            pc.checkCameraLimits(cam);
+
+            menuAudio.stop();
+            if (sky.isDayTime()) {
+                nightAudio.stop();
+                dayAudio.play();
+                if (p.getMusicVolume()) {
+                    dayAudio.setVolume(sky.getDayChanging());
+                } else {
+                    dayAudio.setVolume(0);
+                }
             } else {
-                dayAudio.setVolume(0);
-            }
-        } else {
-            dayAudio.stop();
-            nightAudio.play();
-            nightAudio.setVolume(sky.getDayChanging());
-            if (p.getMusicVolume()) {
+                dayAudio.stop();
+                nightAudio.play();
                 nightAudio.setVolume(sky.getDayChanging());
+                if (p.getMusicVolume()) {
+                    nightAudio.setVolume(sky.getDayChanging());
+                } else {
+                    nightAudio.setVolume(0);
+                }
+            }
+
+            if (!p.getAmbientVolume()) {
+                clickAudio.setVolume(0);
             } else {
-                nightAudio.setVolume(0);
+                clickAudio.setVolume(1);
             }
-        }
-        
-        if (!p.getAmbientVolume()) {
-            clickAudio.setVolume(0);
+
+            view.updateLight(sky);
+            sky.updateTime();
+
+            for (Entity e: entities) {
+                if (e instanceof Tree) {
+                    ((Tree) e).increaseTime(tpf);
+                    if (((Tree) e).getTime() >= speed) {
+                        ((Tree) e).resetTime();
+                        ((Tree) e).newApple(assetManager, rootNode, shootables);
+                    }
+                    for (Apple a: ((Tree)e).getApples()) {
+                        if (a.getPosition().y > 0) {
+                            Vector3f position = new Vector3f();
+                            position.x = a.getPosition().x;
+                            position.y = a.getPosition().y - (100 * tpf);
+                            position.z = a.getPosition().z;
+
+                            if (position.y < 0) {
+                                position.y = 0;
+                            }
+
+                            a.modifyPosition(position);
+                        }
+                    }
+                }
+                if (e instanceof Mill) {
+                    if (((Mill) e).getState() == 0) {
+                        ((Mill) e).rotateMill(rootNode, tpf * 0.3f);
+                    }
+                    if (((Mill) e).getState() == 1) {
+                        ((Mill) e).rotateMill(rootNode, tpf * 3f);
+                        ((Mill) e).increaseTime(tpf);
+                        if (((Mill) e).getTime() >= 30) {
+                            ((Mill) e).resetTime();
+                            ((Mill) e).setState(2);
+                            speed *= 2;
+                        }
+                    }
+                    if (((Mill) e).getState() == 2) {
+                        ((Mill) e).rotateMill(rootNode, tpf * 0.3f);
+                        ((Mill) e).increaseTime(tpf);
+                        if (((Mill) e).getTime() >= 10) {
+                            ((Mill) e).resetTime();
+                            ((Mill) e).setState(0);
+                            ((Mill) e).showPopup(rootNode);
+                        }
+                    }
+                }
+                if (e instanceof Well) {
+                    if (((Well) e).getWater() < 5) {
+                        ((Well) e).increaseTime(tpf);
+                        if (((Well) e).getTime() >= speed) {
+                            ((Well) e).resetTime();                        
+                            ((Well) e).increaseWater();
+                            if (((Well) e).getWater() == 1) {
+                                ((Well) e).showPopup(rootNode);
+                            }
+                        }                    
+                    }
+                }
+            }
+
+            if(gui.getTime() > 0) {
+                gui.decreaseTime(tpf);
+                if(gui.getTime() <= 0) {
+                    gui.getNifty().getCurrentScreen().findElementById("errorLabel").setVisible(false);
+                }
+            }
+
+
+            if (gui.getPlaceEntity() == true) {
+                // show placing mode
+                System.out.println("Placing mode active."); 
+            }
         } else {
-            clickAudio.setVolume(1);
-        }
-        
-        view.updateLight(sky);
-        sky.updateTime();
-        
-        for (Entity e: entities) {
-            if (e instanceof Tree) {
-                ((Tree) e).increaseTime(tpf);
-                if (((Tree) e).getTime() >= speed) {
-                    ((Tree) e).resetTime();
-                    ((Tree) e).newApple(assetManager, rootNode, shootables);
-                }
-                for (Apple a: ((Tree)e).getApples()) {
-                    if (a.getPosition().y > 0) {
-                        Vector3f position = new Vector3f();
-                        position.x = a.getPosition().x;
-                        position.y = a.getPosition().y - (100 * tpf);
-                        position.z = a.getPosition().z;
-                        
-                        if (position.y < 0) {
-                            position.y = 0;
-                        }
-                        
-                        a.modifyPosition(position);
-                    }
-                }
-            }
-            if (e instanceof Mill) {
-                if (((Mill) e).getState() == 0) {
-                    ((Mill) e).rotateMill(rootNode, tpf * 0.3f);
-                }
-                if (((Mill) e).getState() == 1) {
-                    ((Mill) e).rotateMill(rootNode, tpf * 3f);
-                    ((Mill) e).increaseTime(tpf);
-                    if (((Mill) e).getTime() >= 30) {
-                        ((Mill) e).resetTime();
-                        ((Mill) e).setState(2);
-                        speed *= 2;
-                    }
-                }
-                if (((Mill) e).getState() == 2) {
-                    ((Mill) e).rotateMill(rootNode, tpf * 0.3f);
-                    ((Mill) e).increaseTime(tpf);
-                    if (((Mill) e).getTime() >= 10) {
-                        ((Mill) e).resetTime();
-                        ((Mill) e).setState(0);
-                        ((Mill) e).showPopup(rootNode);
-                    }
-                }
-            }
-            if (e instanceof Well) {
-                if (((Well) e).getWater() < 5) {
-                    ((Well) e).increaseTime(tpf);
-                    if (((Well) e).getTime() >= speed) {
-                        ((Well) e).resetTime();                        
-                        ((Well) e).increaseWater();
-                        if (((Well) e).getWater() == 1) {
-                            ((Well) e).showPopup(rootNode);
-                        }
-                    }                    
-                }
-            }
-        }
-        
-        if(gui.getTime() > 0) {
-            gui.decreaseTime(tpf);
-            if(gui.getTime() <= 0) {
-                gui.getNifty().getCurrentScreen().findElementById("errorLabel").setVisible(false);
+            menuAudio.play();
+            if (p.getMusicVolume()) {
+                menuAudio.setVolume(1);
+            } else {
+                menuAudio.setVolume(0);
             }
         }
         
         
-        if (gui.getPlaceEntity() == true) {
-            // show placing mode
-            System.out.println("Placing mode active."); 
-        }
     }
     
     private Geometry getGeometry(Spatial spatial, String name) {

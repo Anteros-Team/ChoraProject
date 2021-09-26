@@ -32,10 +32,6 @@ public class GuiScreenController implements ScreenController {
         
     }
     
-    public void playGame() {
-        nifty.gotoScreen("game"); 
-    }
-    
     public void openMenu() {
         nifty.getScreen("game").findElementById("menuLayer").setVisible(true);
         nifty.getScreen("game").findElementById("interactiveMenuLayer").setVisible(true);
