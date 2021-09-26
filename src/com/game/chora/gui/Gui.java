@@ -227,7 +227,7 @@ public class Gui {
                         }});
                         
                         // Apples text
-                        control(new LabelBuilder("Apple", "0") {{
+                        control(new LabelBuilder("Apple", "") {{
                             font("Interface/Fonts/SegoeUIBlack.fnt");
                             //color("#f00f");
                             width("30%");
@@ -236,7 +236,7 @@ public class Gui {
                         }});
                 
                         // Water bucket text
-                        control(new LabelBuilder("WaterBucket", "2") {{
+                        control(new LabelBuilder("WaterBucket", "") {{
                             font("Interface/Fonts/SegoeUIBlack.fnt");
                             width("30%");                            
                             height("100%");
@@ -682,7 +682,7 @@ public class Gui {
                             marginTop("45%");
                             visibleToMouse(true);                            
                         
-                            interactOnClick("");
+                            interactOnRelease("openOptions()");
                             
                             text(new TextBuilder() {{
                                 text("Option");
@@ -797,6 +797,177 @@ public class Gui {
                 }});
             }});
             
+            // Option layer
+            layer(new LayerBuilder("optionsLayer") {{
+                childLayoutCenter();
+                
+                // Modal panel
+                panel(new PanelBuilder() {{
+                    id("optionsPanel");
+                    childLayoutCenter();
+                    width("100%");
+                    height("100%");
+                    visibleToMouse(true);
+                    
+                    image(new ImageBuilder() {{
+                        filename("Interface/gui/OptionMenu.png");
+                        width("100%");
+                        height("100%");
+                    }});
+                    
+                    // Ambient tick panel
+                    panel(new PanelBuilder() {{
+                        id("AmbientTick");
+                        childLayoutCenter();
+                        width("6%");
+                        height("10%");
+                        alignRight();
+                        valignTop();
+                        marginRight("29.5%");
+                        marginTop("28%");
+                        visibleToMouse(true); 
+
+                        image(new ImageBuilder() {{
+                            id("AmbientVolumeTick");
+                            filename("Interface/gui/tick.png");
+                            width("100%");
+                            height("100%");
+                        }});
+                    }});
+                    
+                    // Music tick panel
+                    panel(new PanelBuilder() {{
+                        id("MusicTick");
+                        childLayoutCenter();
+                        width("6%");
+                        height("10%");
+                        alignRight();
+                        valignTop();
+                        marginRight("29.5%");
+                        marginTop("47%");
+                        visibleToMouse(true);   
+
+                        image(new ImageBuilder() {{
+                            id("MusicVolumeTick");
+                            filename("Interface/gui/tick.png");
+                            width("100%");
+                            height("100%");
+                        }});
+                    }});
+                }});
+            }});
+            
+            // Interactive Option Layer
+            layer(new LayerBuilder("interactiveOptionsLayer") {{
+                childLayoutCenter();
+                
+                // Ambient text panel
+                panel(new PanelBuilder() {{
+                    id("AmbientText");
+                    childLayoutCenter();
+                    width("20%");
+                    height("20%");
+                    alignCenter();
+                    valignTop();
+                    marginTop("23%");
+                    visibleToMouse(true);
+                    
+                    text(new TextBuilder() {{
+                        text("Ambient Volume");
+                        font("Interface/Fonts/SegoeUIBlack.fnt");
+                        color("#000");
+                        height("100%");
+                        width("100%");
+                    }});
+                }});
+                
+                // Music text panel
+                panel(new PanelBuilder() {{
+                    id("MusicText");
+                    childLayoutCenter();
+                    width("20%");
+                    height("20%");
+                    alignCenter();
+                    valignTop();
+                    marginTop("42.5%");
+                    visibleToMouse(true);
+                    
+                    text(new TextBuilder() {{
+                        text("Music Volume");
+                        font("Interface/Fonts/SegoeUIBlack.fnt");
+                        color("#000");
+                        height("100%");
+                        width("100%");
+                    }});
+                }});
+                
+                // Ambient button panel
+                panel(new PanelBuilder() {{
+                    id("AmbientButton");
+                    childLayoutCenter();
+                    width("6%");
+                    height("10%");
+                    alignRight();
+                    valignTop();
+                    marginRight("29.5%");
+                    marginTop("28%");
+                    visibleToMouse(true);                    
+                    
+                    control(new ControlBuilder("AmbientVolume", "") {{
+                        width("100%");
+                        height("100%");
+                        visibleToMouse(true);
+                    }});
+                }});
+                
+                // Music button panel
+                panel(new PanelBuilder() {{
+                    id("MusicButton");
+                    childLayoutCenter();
+                    width("6%");
+                    height("10%");
+                    alignRight();
+                    valignTop();
+                    marginRight("29.5%");
+                    marginTop("47%");
+                    visibleToMouse(true);
+                    
+                    control(new ControlBuilder("MusicVolume", "") {{
+                        width("100%");
+                        height("100%");
+                        visibleToMouse(true);                            
+                    }});
+                }});
+                
+                // Close options panel
+                panel(new PanelBuilder() {{
+                    id("closeOptionsPanel");
+                    childLayoutCenter();
+                    width("19%");
+                    height("13%");
+                    alignCenter();
+                    valignTop();
+                    marginTop("68.5%");
+                    visibleToMouse(true);
+                    
+                    control(new ControlBuilder("CloseOptions", "") {{
+                        width("100%");
+                        height("100%");
+                        visibleToMouse(true);
+                       
+                        interactOnRelease("closeOptions()");
+                        
+                        text(new TextBuilder() {{
+                            text("Close");
+                            font("Interface/Fonts/SegoeUIBlack.fnt");
+                            color("#000");
+                            height("100%");
+                            width("100%");
+                        }});
+                    }});
+                }});
+            }});
+            
             // Close game layer
             layer(new LayerBuilder("closeGameLayer") {{
                 childLayoutCenter();
@@ -874,7 +1045,7 @@ public class Gui {
                             visibleToMouse(true);     
                             font("Interface/Fonts/SegoeUIBlack.fnt");                                                       
 
-                            interactOnClick("");
+                            //interactOnClick("");
 
                             text(new TextBuilder() {{
                                 text("Yes");
@@ -980,7 +1151,7 @@ public class Gui {
                 panel(new PanelBuilder() {{
                     width("100%");
                     height("100%");
-                    childLayoutCenter();
+                    childLayoutCenter();  
                     
                     image(new ImageBuilder() {{
                         filename("Interface/gui/StartingMenu.png");
@@ -998,16 +1169,237 @@ public class Gui {
                     height("100%");
                     childLayoutCenter();
                     
-                    control(new TextFieldBuilder("Name input", "Write your name here") {{
-                        width("35%");
-                        height("6%");
-                        marginTop("0.6%");
+                    // Play Button
+                    control(new ControlBuilder("PlayButton", "") {{
+                        width("29%");
+                        height("21%");
+                        alignCenter();
+                        valignBottom();
+                        marginBottom("34%");
+                        visibleToMouse(true);                            
+                        
+                        interactOnRelease("playGame()");
+                        
+                        text(new TextBuilder() {{
+                            text("Play");
+                            font("Interface/Fonts/SegoeUIBlack.fnt");
+                            color("#000");
+                            height("100%");
+                            width("100%");
+                        }});
                     }});
                     
-                    control(new ImageSelectBuilder("someImageSelect") {{
-                       width("5%");
-                       height("10%");
-                       //imageList("apple.png, waterBucket.png");
+                    // Option Button
+                    control(new ControlBuilder("StartOptionButton", "") {{
+                        width("19.5%");
+                        height("13%");
+                        valignBottom();
+                        alignLeft();
+                        marginBottom("15%");
+                        marginLeft("21%");
+                        visibleToMouse(true);                            
+                        
+                        interactOnRelease("openOptions()");
+                        
+                        text(new TextBuilder() {{
+                            text("Options");
+                            font("Interface/Fonts/SegoeUIBlack.fnt");
+                            color("#000");
+                            height("100%");
+                            width("100%");
+                        }});
+                    }});
+                    
+                    // Exit Button
+                    control(new ControlBuilder("StartExitButton", "") {{
+                        width("19.5%");
+                        height("13%");
+                        valignBottom();
+                        alignRight();
+                        marginBottom("15%");
+                        marginRight("21%");
+                        visibleToMouse(true);                            
+                        
+                        //interactOnRelease("");
+                        
+                        text(new TextBuilder() {{
+                            text("Exit");
+                            font("Interface/Fonts/SegoeUIBlack.fnt");
+                            color("#000");
+                            height("100%");
+                            width("100%");
+                        }});
+                    }});
+                }});
+            }});
+            
+            // Option layer
+            layer(new LayerBuilder("optionsLayer") {{
+                childLayoutCenter();
+                
+                // Modal panel
+                panel(new PanelBuilder() {{
+                    id("optionsPanel");
+                    childLayoutCenter();
+                    width("100%");
+                    height("100%");
+                    visibleToMouse(true);
+                    
+                    image(new ImageBuilder() {{
+                        filename("Interface/gui/OptionMenu.png");
+                        width("100%");
+                        height("100%");
+                    }});
+                    
+                    // Ambient tick panel
+                    panel(new PanelBuilder() {{
+                        id("AmbientTick");
+                        childLayoutCenter();
+                        width("6%");
+                        height("10%");
+                        alignRight();
+                        valignTop();
+                        marginRight("29.5%");
+                        marginTop("28%");
+                        visibleToMouse(true); 
+
+                        image(new ImageBuilder() {{
+                            id("AmbientVolumeTick");
+                            filename("Interface/gui/tick.png");
+                            width("100%");
+                            height("100%");
+                        }});
+                    }});
+                    
+                    // Music tick panel
+                    panel(new PanelBuilder() {{
+                        id("MusicTick");
+                        childLayoutCenter();
+                        width("6%");
+                        height("10%");
+                        alignRight();
+                        valignTop();
+                        marginRight("29.5%");
+                        marginTop("47%");
+                        visibleToMouse(true);   
+
+                        image(new ImageBuilder() {{
+                            id("MusicVolumeTick");
+                            filename("Interface/gui/tick.png");
+                            width("100%");
+                            height("100%");
+                        }});
+                    }});
+                }});
+            }});
+            
+            // Interactive Option Layer
+            layer(new LayerBuilder("interactiveOptionsLayer") {{
+                childLayoutCenter();
+                
+                // Ambient text panel
+                panel(new PanelBuilder() {{
+                    id("AmbientText");
+                    childLayoutCenter();
+                    width("20%");
+                    height("20%");
+                    alignCenter();
+                    valignTop();
+                    marginTop("23%");
+                    visibleToMouse(true);
+                    
+                    text(new TextBuilder() {{
+                        text("Ambient Volume");
+                        font("Interface/Fonts/SegoeUIBlack.fnt");
+                        color("#000");
+                        height("100%");
+                        width("100%");
+                    }});
+                }});
+                
+                // Music text panel
+                panel(new PanelBuilder() {{
+                    id("MusicText");
+                    childLayoutCenter();
+                    width("20%");
+                    height("20%");
+                    alignCenter();
+                    valignTop();
+                    marginTop("42.5%");
+                    visibleToMouse(true);
+                    
+                    text(new TextBuilder() {{
+                        text("Music Volume");
+                        font("Interface/Fonts/SegoeUIBlack.fnt");
+                        color("#000");
+                        height("100%");
+                        width("100%");
+                    }});
+                }});
+                
+                // Ambient button panel
+                panel(new PanelBuilder() {{
+                    id("AmbientButton");
+                    childLayoutCenter();
+                    width("6%");
+                    height("10%");
+                    alignRight();
+                    valignTop();
+                    marginRight("29.5%");
+                    marginTop("28%");
+                    visibleToMouse(true);                    
+                    
+                    control(new ControlBuilder("AmbientVolume", "") {{
+                        width("100%");
+                        height("100%");
+                        visibleToMouse(true);
+                    }});
+                }});
+                
+                // Music button panel
+                panel(new PanelBuilder() {{
+                    id("MusicButton");
+                    childLayoutCenter();
+                    width("6%");
+                    height("10%");
+                    alignRight();
+                    valignTop();
+                    marginRight("29.5%");
+                    marginTop("47%");
+                    visibleToMouse(true);
+                    
+                    control(new ControlBuilder("MusicVolume", "") {{
+                        width("100%");
+                        height("100%");
+                        visibleToMouse(true);                            
+                    }});
+                }});
+                
+                // Close options panel
+                panel(new PanelBuilder() {{
+                    id("closeOptionsPanel");
+                    childLayoutCenter();
+                    width("19%");
+                    height("13%");
+                    alignCenter();
+                    valignTop();
+                    marginTop("68.5%");
+                    visibleToMouse(true);
+                    
+                    control(new ControlBuilder("CloseOptions", "") {{
+                        width("100%");
+                        height("100%");
+                        visibleToMouse(true);
+                       
+                        interactOnRelease("closeOptions()");
+                        
+                        text(new TextBuilder() {{
+                            text("Close");
+                            font("Interface/Fonts/SegoeUIBlack.fnt");
+                            color("#000");
+                            height("100%");
+                            width("100%");
+                        }});
                     }});
                 }});
             }});
@@ -1017,7 +1409,8 @@ public class Gui {
         nifty.addScreen("start", startScreen);
         nifty.addScreen("startMenu", startMenuScreen);
         nifty.addScreen("game", gameScreen);
-        nifty.gotoScreen("game");
+        //nifty.gotoScreen("game");
+        nifty.gotoScreen("startMenu");
         
         /*ImageRenderer imageRenderer = nifty.getCurrentScreen().findElementById("someImageSelect").getRenderer(ImageRenderer.class);
         List<NiftyImage> images = new ArrayList<>();
@@ -1027,30 +1420,48 @@ public class Gui {
         nifty.getCurrentScreen().findElementById("someImageSelect").setConstraintHeight(SizeValue.px(n.getHeight()));
         nifty.getCurrentScreen().findElementById("someImageSelect").layoutElements();
         nifty.getCurrentScreen().findElementById("someImageSelect").show();*/
-        String tmp = nifty.getCurrentScreen().findElementById("Apple").getRenderer(TextRenderer.class).getWrappedText();
-        nifty.getCurrentScreen().findElementById("Apple").getRenderer(TextRenderer.class).setText(tmp);
-                    
-        nifty.getCurrentScreen().findElementById("menuLayer").setVisible(false);
-        nifty.getCurrentScreen().findElementById("interactiveMenuLayer").setVisible(false);
         
-        nifty.getCurrentScreen().findElementById("shopLayer").setVisible(false);
-        nifty.getCurrentScreen().findElementById("interactiveShopLayer").setVisible(false);
+        nifty.getScreen("game").findElementById("Apple").getRenderer(TextRenderer.class).setText(""+p.getApple());
+        nifty.getScreen("game").findElementById("WaterBucket").getRenderer(TextRenderer.class).setText(""+p.getWaterBucket());
         
-        nifty.getCurrentScreen().findElementById("creditsLayer").setVisible(false);
-        nifty.getCurrentScreen().findElementById("interactiveCreditsLayer").setVisible(false);
+        nifty.getScreen("game").findElementById("menuLayer").setVisible(false);
+        nifty.getScreen("game").findElementById("interactiveMenuLayer").setVisible(false);
+
+        nifty.getScreen("game").findElementById("shopLayer").setVisible(false);
+        nifty.getScreen("game").findElementById("interactiveShopLayer").setVisible(false);
+
+        nifty.getScreen("game").findElementById("creditsLayer").setVisible(false);
+        nifty.getScreen("game").findElementById("interactiveCreditsLayer").setVisible(false);
+
+        nifty.getScreen("startMenu").findElementById("optionsLayer").setVisible(false);
+        nifty.getScreen("startMenu").findElementById("interactiveOptionsLayer").setVisible(false);
+        nifty.getScreen("game").findElementById("optionsLayer").setVisible(false);
+        nifty.getScreen("game").findElementById("interactiveOptionsLayer").setVisible(false);
         
-        nifty.getCurrentScreen().findElementById("closeGameLayer").setVisible(false);
-        nifty.getCurrentScreen().findElementById("interactiveCloseGameLayer").setVisible(false);
+        nifty.getScreen("startMenu").findElementById("AmbientTick").setVisible(p.getAmbientVolume());
+        nifty.getScreen("startMenu").findElementById("MusicTick").setVisible(p.getMusicVolume());
+        nifty.getScreen("game").findElementById("AmbientTick").setVisible(p.getAmbientVolume());
+        nifty.getScreen("game").findElementById("MusicTick").setVisible(p.getMusicVolume());
         
-        nifty.getCurrentScreen().findElementById("yesButton").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "closeGame()", this));
+        nifty.getScreen("startMenu").findElementById("AmbientVolume").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "switchAmbientVolume()", this));
+        nifty.getScreen("startMenu").findElementById("MusicVolume").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "switchMusicVolume()", this));
+        nifty.getScreen("game").findElementById("AmbientVolume").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "switchAmbientVolume()", this));
+        nifty.getScreen("game").findElementById("MusicVolume").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "switchMusicVolume()", this));
         
-        nifty.getCurrentScreen().findElementById("Item1_Button").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "buyFromShop(Sprout)", this));
-        nifty.getCurrentScreen().findElementById("Item2_Button").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "buyFromShop(Well)", this));
-        nifty.getCurrentScreen().findElementById("Item3_Button").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "buyFromShop(Mill)", this));
+        nifty.getScreen("game").findElementById("closeGameLayer").setVisible(false);
+        nifty.getScreen("game").findElementById("interactiveCloseGameLayer").setVisible(false);
+
+        nifty.getScreen("game").findElementById("yesButton").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "closeGame()", this));
         
-        nifty.getCurrentScreen().findElementById("alertLayer").setVisible(true);
-        nifty.getCurrentScreen().findElementById("errorLabel").setVisible(false);
-        nifty.getCurrentScreen().findElementById("placingModePanel").setVisible(false);    
+        nifty.getScreen("game").findElementById("Item1_Button").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "buyFromShop(Sprout)", this));
+        nifty.getScreen("game").findElementById("Item2_Button").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "buyFromShop(Well)", this));
+        nifty.getScreen("game").findElementById("Item3_Button").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "buyFromShop(Mill)", this));
+
+        nifty.getScreen("game").findElementById("alertLayer").setVisible(true);
+        nifty.getScreen("game").findElementById("errorLabel").setVisible(false);
+        nifty.getScreen("game").findElementById("placingModePanel").setVisible(false);
+        
+        nifty.getScreen("startMenu").findElementById("StartExitButton").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "closeGame()", this));
     }
     
     public Nifty getNifty() {
@@ -1062,11 +1473,23 @@ public class Gui {
     }
     
     public void setApple(int apple) {
-        nifty.getCurrentScreen().findElementById("Apple").getRenderer(TextRenderer.class).setText(""+apple+"");
+        nifty.getScreen("game").findElementById("Apple").getRenderer(TextRenderer.class).setText(""+apple+"");
     }
     
     public void setWaterBucket(int waterBucket) {
-        nifty.getCurrentScreen().findElementById("WaterBucket").getRenderer(TextRenderer.class).setText(""+waterBucket+"");
+        nifty.getScreen("game").findElementById("WaterBucket").getRenderer(TextRenderer.class).setText(""+waterBucket+"");
+    }
+    
+    public void switchAmbientVolume() {
+        p.setAmbientVolume(!p.getAmbientVolume());
+        nifty.getScreen("startMenu").findElementById("AmbientTick").setVisible(p.getAmbientVolume());
+        nifty.getScreen("game").findElementById("AmbientTick").setVisible(p.getAmbientVolume());
+    }
+    
+    public void switchMusicVolume() {
+        p.setMusicVolume(!p.getMusicVolume());
+        nifty.getScreen("startMenu").findElementById("MusicTick").setVisible(p.getMusicVolume());
+        nifty.getScreen("game").findElementById("MusicTick").setVisible(p.getMusicVolume());
     }
     
     public void closeGame() {

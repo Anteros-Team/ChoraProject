@@ -33,7 +33,7 @@ public class Main extends SimpleApplication {
     static private Main app;
     private Player p;
     private DynamicSky sky = null;
-    //private BulletAppState bulletAppState;
+    private PlayerCamera pc;
     private Scene scene;
     private View view;
     private Pound pound;
@@ -69,12 +69,7 @@ public class Main extends SimpleApplication {
         
         inputManager.deleteMapping(SimpleApplication.INPUT_MAPPING_EXIT);
         
-        //ChaseCamera chaseCam = new ChaseCamera(cam, rootNode, inputManager);
-        //chaseCam.setMinDistance(500);
-        flyCam.setMoveSpeed(500);
-        flyCam.setDragToRotate(true);
-        cam.setFrustumFar(100000f);
-        cam.setLocation(new Vector3f(-700, 300, 700));
+        pc = new PlayerCamera(cam, flyCam);
         
         shootables = new Node("Shootables");
         rootNode.attachChild(shootables);
@@ -230,16 +225,17 @@ public class Main extends SimpleApplication {
 
         
         gui = new Gui(app, assetManager, inputManager, audioRenderer, guiViewPort, rootNode, shootables, entities, p);
-   
-        gui.setApple(p.getApple());
-        gui.setWaterBucket(p.getWaterBucket());
-        gui.setPlayerName(p.getName());
         
+        if (gui.getNifty().getCurrentScreen().getScreenId().equals("game")) {
+            gui.setApple(p.getApple());
+            gui.setWaterBucket(p.getWaterBucket());
+            gui.setPlayerName(p.getName());
+        }
         
         // Create scene and terrain
         
         scene = new Scene(assetManager, rootNode, shootables);
-        cam.lookAt(scene.getTerrain().getLocalTranslation(), Vector3f.ZERO);
+        pc.lookAtWorld(cam, scene);
 
         // Create Sky, Sun and Moon and Ambient Light
         
@@ -319,15 +315,32 @@ public class Main extends SimpleApplication {
     @Override
     public void simpleUpdate(float tpf) {
         
+        pc.checkCameraLimits(cam);
+        
         //menuAudio.play();
         if (sky.isDayTime()) {
             nightAudio.stop();
             dayAudio.play();
-            dayAudio.setVolume(sky.getDayChanging());
+            if (p.getMusicVolume()) {
+                dayAudio.setVolume(sky.getDayChanging());
+            } else {
+                dayAudio.setVolume(0);
+            }
         } else {
             dayAudio.stop();
             nightAudio.play();
             nightAudio.setVolume(sky.getDayChanging());
+            if (p.getMusicVolume()) {
+                nightAudio.setVolume(sky.getDayChanging());
+            } else {
+                nightAudio.setVolume(0);
+            }
+        }
+        
+        if (!p.getAmbientVolume()) {
+            clickAudio.setVolume(0);
+        } else {
+            clickAudio.setVolume(1);
         }
         
         view.updateLight(sky);

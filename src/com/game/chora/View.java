@@ -40,7 +40,7 @@ public class View {
         this.dlsfSun.setEnabledStabilization(true);
         this.dlsfSun.setEdgeFilteringMode(EdgeFilteringMode.Bilinear);
         
-        this.dlsfSun.setShadowZExtend(650);
+        this.dlsfSun.setShadowZExtend(5000);
         this.dlsfSun.setShadowZFadeLength(150);
         this.fpp.addFilter(this.dlsfSun);
     }
@@ -64,7 +64,7 @@ public class View {
     
     private void setAmbientLight(Node rootNode) {
         this.al = new AmbientLight();
-        al.setColor(ColorRGBA.White.mult(.3f));        
+        al.setColor(ColorRGBA.White.mult(.8f));        
         rootNode.addLight(al);
     }
     

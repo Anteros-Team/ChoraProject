@@ -90,6 +90,7 @@ public class Entity {
         this.entity = assetManager.loadModel(pathModel);
         this.entity.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         this.entity.move(this.position);
+        this.entity.rotate(0, 90f, 0);
         this.entity.scale(this.scale);
         
         this.cube = new ArrayList<>();

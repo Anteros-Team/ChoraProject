@@ -15,13 +15,17 @@ public class Player {
     protected int apple;
     protected int well;
     protected int mill;
+    protected boolean ambientVolume;
+    protected boolean musicVolume;
     
     public Player(){
         this.name = "ciao";
-        this.waterBucket = 2;
-        this.apple = 50;
+        this.waterBucket = 0;
+        this.apple = 0;
         this.well = 0;
         this.mill = 0;
+        this.ambientVolume = true;
+        this.musicVolume = true;
     }
     
     public String getName() {
@@ -44,6 +48,14 @@ public class Player {
         return this.mill;
     }
     
+    public boolean getAmbientVolume() {
+        return this.ambientVolume;
+    }
+    
+    public boolean getMusicVolume() {
+        return this.musicVolume;
+    }
+    
     public void setName(String name) {
         this.name = name;
     }
@@ -62,5 +74,13 @@ public class Player {
     
     public void setMill(int mill) {
         this.mill = mill;
+    }
+    
+    public void setAmbientVolume(boolean av) {
+        this.ambientVolume = av;
+    }
+    
+    public void setMusicVolume(boolean mv) {
+        this.musicVolume = mv;
     }
 }

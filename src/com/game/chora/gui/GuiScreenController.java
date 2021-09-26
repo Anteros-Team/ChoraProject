@@ -6,6 +6,8 @@ import com.jme3.asset.AssetManager;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.NiftyMethodInvoker;
+import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 
@@ -30,62 +32,64 @@ public class GuiScreenController implements ScreenController {
         
     }
     
+    public void playGame() {
+        nifty.gotoScreen("game"); 
+    }
+    
     public void openMenu() {
-        nifty.getCurrentScreen().findElementById("menuLayer").setVisible(true);
-        nifty.getCurrentScreen().findElementById("interactiveMenuLayer").setVisible(true);
+        nifty.getScreen("game").findElementById("menuLayer").setVisible(true);
+        nifty.getScreen("game").findElementById("interactiveMenuLayer").setVisible(true);
     }
     
     public void openShop() {
-        nifty.getCurrentScreen().findElementById("shopLayer").setVisible(true);
-        nifty.getCurrentScreen().findElementById("interactiveShopLayer").setVisible(true);
+        nifty.getScreen("game").findElementById("shopLayer").setVisible(true);
+        nifty.getScreen("game").findElementById("interactiveShopLayer").setVisible(true);
     }
     
     public void openCredits() {
-        nifty.getCurrentScreen().findElementById("menuLayer").setVisible(false);
-        nifty.getCurrentScreen().findElementById("interactiveMenuLayer").setVisible(false);
+        nifty.getScreen("game").findElementById("menuLayer").setVisible(false);
+        nifty.getScreen("game").findElementById("interactiveMenuLayer").setVisible(false);
         
-        nifty.getCurrentScreen().findElementById("creditsLayer").setVisible(true);
-        nifty.getCurrentScreen().findElementById("interactiveCreditsLayer").setVisible(true);
+        nifty.getScreen("game").findElementById("creditsLayer").setVisible(true);
+        nifty.getScreen("game").findElementById("interactiveCreditsLayer").setVisible(true);
     }
     
     public void openOptions() {
-        
-    }
-    
-    public void openExit() {
-        
+        nifty.getCurrentScreen().findElementById("optionsLayer").setVisible(true);
+        nifty.getCurrentScreen().findElementById("interactiveOptionsLayer").setVisible(true);
     }
     
     public void closeMenu() {
-        nifty.getCurrentScreen().findElementById("menuLayer").setVisible(false);
-        nifty.getCurrentScreen().findElementById("interactiveMenuLayer").setVisible(false);
+        nifty.getScreen("game").findElementById("menuLayer").setVisible(false);
+        nifty.getScreen("game").findElementById("interactiveMenuLayer").setVisible(false);
     }
     
     public void closeShop() {
-        nifty.getCurrentScreen().findElementById("shopLayer").setVisible(false);
-        nifty.getCurrentScreen().findElementById("interactiveShopLayer").setVisible(false);
+        nifty.getScreen("game").findElementById("shopLayer").setVisible(false);
+        nifty.getScreen("game").findElementById("interactiveShopLayer").setVisible(false);
     }
     
     public void closeCredits() {
-        nifty.getCurrentScreen().findElementById("creditsLayer").setVisible(false);
-        nifty.getCurrentScreen().findElementById("interactiveCreditsLayer").setVisible(false);
+        nifty.getScreen("game").findElementById("creditsLayer").setVisible(false);
+        nifty.getScreen("game").findElementById("interactiveCreditsLayer").setVisible(false);
     }
     
     public void closeOptions() {
-        
+        nifty.getCurrentScreen().findElementById("optionsLayer").setVisible(false);
+        nifty.getCurrentScreen().findElementById("interactiveOptionsLayer").setVisible(false);
     }
     
     public void exitGame() {
-        nifty.getCurrentScreen().findElementById("menuLayer").setVisible(false);
-        nifty.getCurrentScreen().findElementById("interactiveMenuLayer").setVisible(false);
+        nifty.getScreen("game").findElementById("menuLayer").setVisible(false);
+        nifty.getScreen("game").findElementById("interactiveMenuLayer").setVisible(false);
         
-        nifty.getCurrentScreen().findElementById("closeGameLayer").setVisible(true);
-        nifty.getCurrentScreen().findElementById("interactiveCloseGameLayer").setVisible(true);
+        nifty.getScreen("game").findElementById("closeGameLayer").setVisible(true);
+        nifty.getScreen("game").findElementById("interactiveCloseGameLayer").setVisible(true);
     }
     
     public void cancelExit() {
-        nifty.getCurrentScreen().findElementById("closeGameLayer").setVisible(false);
-        nifty.getCurrentScreen().findElementById("interactiveCloseGameLayer").setVisible(false);
+        nifty.getScreen("game").findElementById("closeGameLayer").setVisible(false);
+        nifty.getScreen("game").findElementById("interactiveCloseGameLayer").setVisible(false);
     }
     
     public void buyFromShop(String elementId, AssetManager assetManager, Node rootNode, Node shootables) {
