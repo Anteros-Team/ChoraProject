@@ -88,29 +88,25 @@ public class Main extends SimpleApplication {
         
         if (db.isPlayerEmpty() == true) {
             System.out.println("No player found. Creating player...");
-            db.insertPlayer(p.getName(), p.getApple(), p.getWaterBucket());
+            db.insertPlayer(p.getName(), p.getApple(), p.getWaterBucket(), p.getWell(), p.getMill(), p.getTakePound(), p.getMusicVolume(), p.getAmbientVolume());
             
             Entity e = new Trash(new Vector3f(0, 0, 0), 8, new Vector3f(25, 10, 25));
             e.setModel(assetManager, rootNode, "Models/trash/trash.j3o", shootables);
-            //e.setPhysics(bulletAppState);
             e.spawn(rootNode, shootables);
             entities.add(e);
 
             e = new Trash(new Vector3f(50, 0, 50), 8, new Vector3f(25, 10, 25));
             e.setModel(assetManager, rootNode, "Models/trash/trash.j3o", shootables);
-            //e.setPhysics(bulletAppState);
             e.spawn(rootNode, shootables);
             entities.add(e);
 
             e = new Sprout(new Vector3f(90, 0, 90), 0.6f, new Vector3f(10, 8, 5));
             e.setModel(assetManager, rootNode, "Models/sprout/sprout.j3o", shootables);
-            //e.setPhysics(bulletAppState);
             e.spawn(rootNode, shootables);
             entities.add(e);
 
             e = new Sprout(new Vector3f(200, 0, 0), 0.6f, new Vector3f(10, 8, 5));
             e.setModel(assetManager, rootNode, "Models/sprout/sprout.j3o", shootables);
-            //e.setPhysics(bulletAppState);
             e.spawn(rootNode, shootables);
             entities.add(e);
 
@@ -150,20 +146,16 @@ public class Main extends SimpleApplication {
                     e = new Tree(s.getPosition(), s.getScale(), s.getPickboxSize());
                     e.setModel(assetManager, rootNode, "Models/tree/tree.j3o", shootables);
                     
-                                                ImageRaster imageRaster = ImageRaster.create(scene.getAlphaTexture().getImage());
+                    ImageRaster imageRaster = ImageRaster.create(scene.getAlphaTexture().getImage());
 
-                                                //System.out.println(t.getPosition().x - t.getPickboxSize().x);
-                                                //System.out.println(t.getPosition().x + t.getPickboxSize().x);
-
-                                                for (float i = 512 + ((Tree) e).getPosition().x - 55; i < 512 + ((Tree) e).getPosition().x + 65; i++) {
-                                                    for (float j = 512 - ((Tree) e).getPosition().z - 65 ; j < + 512 - ((Tree) e).getPosition().z + 75; j++) {
-                                                        if (imageRaster.getPixel((int) i, (int) j).r > 0.7) {
-                                                            imageRaster.setPixel((int) i, (int) j, ColorRGBA.Green);
-                                                        }
-                                                        
-                                                    }
-                                                }
-                                                scene.getTerrain().updateModelBound();
+                    for (float i = 512 + s.getPosition().x - 55; i < 512 + s.getPosition().x + 65; i++) {
+                        for (float j = 512 - s.getPosition().z - 65 ; j < + 512 - s.getPosition().z + 75; j++) {
+                            if (imageRaster.getPixel((int) i, (int) j).r > 0.7) {
+                                imageRaster.setPixel((int) i, (int) j, ColorRGBA.Green);
+                            }
+                        }
+                    }
+                    scene.getTerrain().updateModelBound();
                 }
                 if ("Mill".equals(s.getTypeOfEntity())) {
                     e = new Mill(s.getPosition(), s.getScale(), s.getPickboxSize());
@@ -226,7 +218,7 @@ public class Main extends SimpleApplication {
     @Override
     public void stop() {
         
-        db.clearTables(); 
+        db.clearTablePlayer(); 
         db.clearTableEntity();
         //db.createTables();
         //Player pp = db.queryPlayer();
@@ -235,7 +227,7 @@ public class Main extends SimpleApplication {
         System.out.println("Entity table empty: " + db.queryEntity().isEmpty());
         
         //System.out.println("Player table empty: " + db.queryPlayer().waterBucket);
-        db.insertPlayer(p.getName(), p.getApple(), p.getWaterBucket());
+        db.insertPlayer(p.getName(), p.getApple(), p.getWaterBucket(), p.getWell(), p.getMill(), p.getTakePound(), p.getAmbientVolume(), p.getMusicVolume());
         for(Entity e: entities) {
             EntitySerialization s = new EntitySerialization();
             s.setPosition(e.getPosition());

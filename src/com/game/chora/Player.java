@@ -15,6 +15,7 @@ public class Player {
     protected int apple;
     protected int well;
     protected int mill;
+    protected int takePound;
     protected boolean ambientVolume;
     protected boolean musicVolume;
     
@@ -24,6 +25,7 @@ public class Player {
         this.apple = 0;
         this.well = 0;
         this.mill = 0;
+        this.takePound = 0;
         this.ambientVolume = true;
         this.musicVolume = true;
     }
@@ -46,6 +48,10 @@ public class Player {
     
     public int getMill() {
         return this.mill;
+    }
+    
+    public int getTakePound() {
+        return this.takePound;
     }
     
     public boolean getAmbientVolume() {
@@ -74,6 +80,10 @@ public class Player {
     
     public void setMill(int mill) {
         this.mill = mill;
+    }
+    
+    public void setTakePound(int takePound) {
+        this.takePound = takePound;
     }
     
     public void setAmbientVolume(boolean av) {

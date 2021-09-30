@@ -55,7 +55,12 @@ public class Database {
         String sqlPlayer = "CREATE TABLE IF NOT EXISTS Player ("
                 + " name text PRIMARY KEY,"
                 + " apple integer DEFAULT 0,"
-                + " waterBucket integer DEFAULT 0"
+                + " waterBucket integer DEFAULT 0,"
+                + " well integer DEFAULT 0,"
+                + " mill integer DEFAULT 0,"
+                + " takePound integer DEFAULT 0,"
+                + " ambientVolume boolean DEFAULT true,"
+                + " musicVolume boolean true"
                 + ");";
         System.out.println(sqlPlayer);
         
@@ -92,7 +97,7 @@ public class Database {
         
     }
     
-    public void clearTables() {
+    public void clearTablePlayer() {
         Connection conn = this.connect();
         PreparedStatement ps = null;
         
@@ -175,13 +180,11 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        
-        
     }
     
-    public void insertPlayer(String name, int apple, int waterBucket) {
+    public void insertPlayer(String name, int apple, int waterBucket, int well, int mill, int takePound, boolean ambientVolume, boolean musicVolume) {
         
-        String sql = "INSERT INTO Player(name, apple, waterBucket) VALUES(?,?,?);";
+        String sql = "INSERT INTO Player(name, apple, waterBucket, well, mill, takePound, ambientVolume, musicVolume) VALUES(?,?,?,?,?,?,?,?);";
         System.out.println(sql);
         
         try (Connection conn = this.connect();
@@ -190,6 +193,11 @@ public class Database {
             pstmt.setString(1, name);
             pstmt.setInt(2, apple);
             pstmt.setInt(3, waterBucket);
+            pstmt.setInt(4, well);
+            pstmt.setInt(5, mill);
+            pstmt.setInt(6, takePound);
+            pstmt.setBoolean(7, ambientVolume);
+            pstmt.setBoolean(8, musicVolume);
             
             pstmt.executeUpdate();
             
@@ -257,6 +265,11 @@ public class Database {
                 p.setName(rs.getString("name"));
                 p.setApple(rs.getInt("apple"));
                 p.setWaterBucket(rs.getInt("waterBucket"));
+                p.setWell(rs.getInt("well"));
+                p.setMill(rs.getInt("mill"));
+                p.setTakePound(rs.getInt("takePound"));
+                p.setAmbientVolume(rs.getBoolean("ambientVolume"));
+                p.setMusicVolume(rs.getBoolean("musicVolume"));
                 System.out.println(p.toString());
                 return p;
             }
