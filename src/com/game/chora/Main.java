@@ -83,6 +83,9 @@ public class Main extends SimpleApplication {
         entities = new ArrayList<>();
         es = new ArrayList<>();
         
+                scene = new Scene(assetManager, rootNode, shootables);
+        pc.lookAtWorld(cam, scene);
+        
         if (db.isPlayerEmpty() == true) {
             System.out.println("No player found. Creating player...");
             db.insertPlayer(p.getName(), p.getApple(), p.getWaterBucket());
@@ -127,7 +130,7 @@ public class Main extends SimpleApplication {
             ((Well) e).createPopup(assetManager);
         } else {
             p = db.queryPlayer();
-            /*es = db.queryEntity();
+            es = db.queryEntity();
             
             for (EntitySerialization s: es) {
                 Entity e = new Entity();
@@ -139,25 +142,48 @@ public class Main extends SimpleApplication {
                     e = new Sprout(s.getPosition(), s.getScale(), s.getPickboxSize());
                     e.setModel(assetManager, rootNode, "Models/sprout/sprout.j3o", shootables);
                 }
+                if ("SmallTree".equals(s.getTypeOfEntity())) {
+                    e = new SmallTree(s.getPosition(), s.getScale(), s.getPickboxSize());
+                    e.setModel(assetManager, rootNode, "Models/small_tree/small_tree.j3o", shootables);
+                }
+                if ("Tree".equals(s.getTypeOfEntity())) {
+                    e = new Tree(s.getPosition(), s.getScale(), s.getPickboxSize());
+                    e.setModel(assetManager, rootNode, "Models/tree/tree.j3o", shootables);
+                    
+                                                ImageRaster imageRaster = ImageRaster.create(scene.getAlphaTexture().getImage());
+
+                                                //System.out.println(t.getPosition().x - t.getPickboxSize().x);
+                                                //System.out.println(t.getPosition().x + t.getPickboxSize().x);
+
+                                                for (float i = 512 + ((Tree) e).getPosition().x - 55; i < 512 + ((Tree) e).getPosition().x + 65; i++) {
+                                                    for (float j = 512 - ((Tree) e).getPosition().z - 65 ; j < + 512 - ((Tree) e).getPosition().z + 75; j++) {
+                                                        if (imageRaster.getPixel((int) i, (int) j).r > 0.7) {
+                                                            imageRaster.setPixel((int) i, (int) j, ColorRGBA.Green);
+                                                        }
+                                                        
+                                                    }
+                                                }
+                                                scene.getTerrain().updateModelBound();
+                }
                 if ("Mill".equals(s.getTypeOfEntity())) {
                     e = new Mill(s.getPosition(), s.getScale(), s.getPickboxSize());
-                    e.setModel(assetManager, rootNode, "Models/mill/mill.j3o", shootables);                    
+                    e.setModel(assetManager, rootNode, "Models/mill/mill.j3o", shootables);
+                    p.setMill(p.getMill() + 1);
+                    ((Mill) e).createPopup(assetManager);
+                    ((Mill) e).showPopup(rootNode);
                 }
                 if ("Well".equals(s.getTypeOfEntity())) {
                     e = new Well(s.getPosition(), s.getScale(), s.getPickboxSize());
                     e.setModel(assetManager, rootNode, "Models/well/well.j3o", shootables);
+                    p.setWell(p.getWell() + 1);
+                    ((Well) e).createPopup(assetManager);
                 }
                 e.spawn(rootNode, shootables);
                 entities.add(e);
-            }*/
+            }
         }
         
         gui = new Gui(app, assetManager, inputManager, audioRenderer, guiViewPort, rootNode, shootables, entities, p);
-        
-        // Create scene and terrain
-        
-        scene = new Scene(assetManager, rootNode, shootables);
-        pc.lookAtWorld(cam, scene);
 
         // Create Sky, Sun and Moon and Ambient Light
         
@@ -200,10 +226,15 @@ public class Main extends SimpleApplication {
     @Override
     public void stop() {
         
-        db.clearTables();     
-        db.createTables();
-        Player pp = db.queryPlayer();
-        System.out.println("Risposta: " + pp.getName() + "," + pp.getApple() + "," + pp.getWaterBucket());
+        db.clearTables(); 
+        db.clearTableEntity();
+        //db.createTables();
+        //Player pp = db.queryPlayer();
+        es.clear();
+        System.out.println("Empty : " + es.isEmpty());
+        System.out.println("Entity table empty: " + db.queryEntity().isEmpty());
+        
+        //System.out.println("Player table empty: " + db.queryPlayer().waterBucket);
         db.insertPlayer(p.getName(), p.getApple(), p.getWaterBucket());
         for(Entity e: entities) {
             EntitySerialization s = new EntitySerialization();
@@ -222,6 +253,12 @@ public class Main extends SimpleApplication {
             }
             if (e instanceof Well) {
                 s.setTypeOfEntity("Well");
+            }
+            if (e instanceof SmallTree) {
+                s.setTypeOfEntity("SmallTree");
+            }
+            if (e instanceof Tree) {
+                s.setTypeOfEntity("Tree");
             }
             es.add(s);
         }

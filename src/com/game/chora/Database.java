@@ -98,9 +98,9 @@ public class Database {
         
         try {
             
-            String sql = "DELETE FROM Player";
+            String sql = "DELETE FROM Player;";
             ps = conn.prepareStatement(sql);
-            ps.execute();
+            ps.executeUpdate();
             
         } catch (Exception e) {
             System.out.append(e.toString());
@@ -112,7 +112,28 @@ public class Database {
                 Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    public void clearTableEntity() {
+        Connection conn = this.connect();
+        PreparedStatement ps = null;
         
+        try {
+            
+            String sql = "DELETE FROM Entity;";
+            ps = conn.prepareStatement(sql);
+            ps.executeUpdate();
+            
+        } catch (Exception e) {
+            System.out.append(e.toString());
+        } finally {
+            try {
+                ps.close();
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
     
     public void dropTables() {
@@ -160,7 +181,7 @@ public class Database {
     
     public void insertPlayer(String name, int apple, int waterBucket) {
         
-        String sql = "INSERT INTO Player(name, apple, waterBucket) VALUES(?,?,?)";
+        String sql = "INSERT INTO Player(name, apple, waterBucket) VALUES(?,?,?);";
         System.out.println(sql);
         
         try (Connection conn = this.connect();
@@ -169,7 +190,8 @@ public class Database {
             pstmt.setString(1, name);
             pstmt.setInt(2, apple);
             pstmt.setInt(3, waterBucket);
-            pstmt.close();
+            
+            pstmt.executeUpdate();
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -192,7 +214,8 @@ public class Database {
             pstmt.setFloat(6, pickboxSize.y);
             pstmt.setFloat(7, pickboxSize.z);
             pstmt.setString(8, typeOfEntity);
-            pstmt.close();
+            
+            pstmt.executeUpdate();
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -235,13 +258,14 @@ public class Database {
                 p.setApple(rs.getInt("apple"));
                 p.setWaterBucket(rs.getInt("waterBucket"));
                 System.out.println(p.toString());
+                return p;
             }
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         
-        return p;
+        return null;
     }
     
     public List<EntitySerialization> queryEntity() {
