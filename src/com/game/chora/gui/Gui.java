@@ -1506,7 +1506,8 @@ public class Gui {
     }
     
     public void closeGame() {
-        app.stop(false);
+        app.stop();
+        //System.exit(0);
     }
     
     public void buyFromShop(String selectedEntity) {

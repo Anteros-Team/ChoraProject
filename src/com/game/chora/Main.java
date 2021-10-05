@@ -204,7 +204,9 @@ public class Main extends SimpleApplication {
         
         // Add water pound
         
-        pound = new Pound(assetManager, rootNode, viewPort, shootables, new Vector3f(60, 5, 60));
+        if(p.getTakePound() < 5 ) {
+            pound = new Pound(assetManager, rootNode, viewPort, shootables, new Vector3f(60, 5, 60), p.getTakePound());
+        }
         
         
         // Add ocean
@@ -455,13 +457,16 @@ public class Main extends SimpleApplication {
                             Spatial c = rootNode.getChild(closest);
 
                             // Pound clicked
-                            if (pound.getPickBox().getName().equals(closest)) {
-                                clickAudio.playInstance();
-                                pound.takeWater();
-                                p.setWaterBucket(p.getWaterBucket() + 1);
-                                gui.setWaterBucket(p.getWaterBucket());
-                                if (pound.getWaterLocation().y <= -3.5f) {
-                                    pound.despawn(rootNode, shootables);
+                            if (pound instanceof Pound) {
+                                if (pound.getPickBox().getName().equals(closest)) {
+                                    clickAudio.playInstance();
+                                    pound.takeWater();
+                                    p.setWaterBucket(p.getWaterBucket() + 1);
+                                    gui.setWaterBucket(p.getWaterBucket());
+                                    p.setTakePound(p.getTakePound() + 1);
+                                    if (pound.getWaterLocation().y <= -3.5f) {
+                                        pound.despawn(rootNode, shootables);
+                                    }
                                 }
                             } else {
                                 for (ListIterator<Entity> li = entities.listIterator(); li.hasNext();) {

@@ -30,10 +30,10 @@ public class Pound {
     protected Material matPickBox;
     protected boolean DEBUG = false;
     
-    public Pound(AssetManager assetManager, Node rootNode, ViewPort viewPort, Node shootables, Vector3f hitboxSize) {
+    public Pound(AssetManager assetManager, Node rootNode, ViewPort viewPort, Node shootables, Vector3f hitboxSize, int poundTaken) {
         this.hitboxSize = hitboxSize;
         this.setWaterProcessor(assetManager, rootNode, viewPort);
-        this.setWater(assetManager, rootNode, shootables);
+        this.setWater(assetManager, rootNode, shootables, poundTaken);
     }
     
     public Geometry getPound() {
@@ -69,7 +69,7 @@ public class Pound {
         this.waterProcessor.setDebug(false);
     }
     
-    private void setWater(AssetManager assetManager, Node rootNode, Node shootables) {
+    private void setWater(AssetManager assetManager, Node rootNode, Node shootables, int poundTaken) {
         Quad quad = new Quad(200, 200);
         
         quad.scaleTextureCoordinates(new Vector2f(6f,6f));
@@ -79,7 +79,7 @@ public class Pound {
         this.water.setLocalRotation(new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X));
         this.water.setMaterial(waterProcessor.getMaterial());
         this.water.scale(0.5f);
-        this.setWaterLocation(new Vector3f(150, -1, 350));
+        this.setWaterLocation(new Vector3f(150, (-1 - ((float)0.5 * (float)poundTaken)), 350));
         
         this.cube = new Box(this.hitboxSize.x, this.hitboxSize.y, this.hitboxSize.z);
         this.pickbox = new Geometry("PickBox" + this.hashCode(), cube);
