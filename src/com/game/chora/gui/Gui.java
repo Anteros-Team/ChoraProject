@@ -309,7 +309,7 @@ public class Gui {
                     visibleToMouse(true);
                     
                     image(new ImageBuilder() {{
-                       id("MenuImage");
+                       id("shopPanelImage");
                        filename("Interface/gui/ShopModal.png");
                        width("100%");
                        height("100%");
@@ -335,7 +335,7 @@ public class Gui {
                         }});
                         
                         image(new ImageBuilder() {{
-                            id("MenuImage");
+                            id("itemImageCloose");
                             filename("Interface/gui/CloseModalButton.png");
                             width("6.5%");
                             height("11%");
@@ -346,7 +346,7 @@ public class Gui {
                         }});
                         
                         image(new ImageBuilder() {{
-                            id("MenuImage");
+                            id("itemImage_1");
                             filename("Interface/gui/ShopItemModal.png");
                             width("25%");
                             height("40%");
@@ -358,7 +358,7 @@ public class Gui {
                         }});
                         
                         image(new ImageBuilder() {{
-                            id("MenuImage");
+                            id("itemImage_2");
                             filename("Interface/gui/ShopItemModal.png");
                             width("25%");
                             height("40%");
@@ -369,7 +369,7 @@ public class Gui {
                         }});
                         
                         image(new ImageBuilder() {{
-                            id("MenuImage");
+                            id("itemImage_3");
                             filename("Interface/gui/ShopItemModal.png");
                             width("25%");
                             height("40%");
@@ -389,7 +389,7 @@ public class Gui {
                 
                 // Modal panel
                 panel(new PanelBuilder() {{
-                    id("MenuModalPanel");
+                    id("ShopModalPanelInteractive");
                     childLayoutCenter();
                     height("70%");
                     width("70%");
@@ -399,14 +399,14 @@ public class Gui {
                     
                     // Content Modal panel
                     panel(new PanelBuilder() {{
-                        id("ShopContentPanel");
+                        id("ShopContentPanelInteractive");
                         childLayoutCenter();
                         width("100%");
                         height("100%");
                         visibleToMouse(true);
                         
                         // close Button
-                        control(new ControlBuilder("closeButton", "") {{
+                        control(new ControlBuilder("closeButton_1", "") {{
                             width("6.5%");
                             height("11%");
                             alignRight();
@@ -420,7 +420,7 @@ public class Gui {
                         
                         // Content Item 1 panel
                         panel(new PanelBuilder() {{
-                            id("ItemShopContentPanel");
+                            id("ItemShopContentPanel_1");
                             childLayoutCenter();                            
                             width("25%");
                             height("40%");
@@ -461,7 +461,7 @@ public class Gui {
                         
                         // Content Item 2 panel
                         panel(new PanelBuilder() {{
-                            id("ItemShopContentPanel");
+                            id("ItemShopContentPanel_2");
                             childLayoutCenter();
                             width("25%");
                             height("40%");
@@ -502,7 +502,7 @@ public class Gui {
                         
                         // Content Item 3 panel
                         panel(new PanelBuilder() {{
-                            id("ItemShopContentPanel");
+                            id("ItemShopContentPanel_3");
                             childLayoutCenter();
                             width("25%");
                             height("40%");
@@ -560,7 +560,7 @@ public class Gui {
                     visibleToMouse(true);
                     
                     image(new ImageBuilder() {{
-                       id("MenuImage");
+                       id("MenuImagePanel");
                        filename("Interface/gui/MenuModal.png");
                        width("100%");
                        height("100%");
@@ -575,7 +575,7 @@ public class Gui {
                         visibleToMouse(true);
                         
                         image(new ImageBuilder() {{
-                            id("MenuImage");
+                            id("imageClosebotton");
                             filename("Interface/gui/CloseModalButton.png");
                             width("13%");
                             height("12.5%");
@@ -586,7 +586,7 @@ public class Gui {
                         }});
                         
                         image(new ImageBuilder() {{
-                            id("MenuImage");
+                            id("buttonMenu_1");
                             filename("Interface/gui/MenuButton.png");
                             width("50%");
                             height("15%");
@@ -596,7 +596,7 @@ public class Gui {
                         }});
                         
                         image(new ImageBuilder() {{
-                            id("MenuImage");
+                            id("buttonMenu_2");
                             filename("Interface/gui/MenuButton.png");
                             width("50%");
                             height("15%");
@@ -606,7 +606,7 @@ public class Gui {
                         }});
                         
                         image(new ImageBuilder() {{
-                            id("MenuImage");
+                            id("buttonMenu_3");
                             filename("Interface/gui/MenuButton.png");
                             width("50%");
                             height("15%");
@@ -625,7 +625,7 @@ public class Gui {
                 
                 // Modal panel
                 panel(new PanelBuilder() {{
-                    id("MenuModalPanel");
+                    id("MenuModalPanelInteractive");
                     childLayoutCenter();
                     height("65%");
                     width("35%");
@@ -635,14 +635,14 @@ public class Gui {
                     
                     // Content Modal panel
                     panel(new PanelBuilder() {{
-                        id("MenuContentPanel");
+                        id("MenuContentPanelInteractive");
                         childLayoutCenter();
                         width("100%");
                         height("100%");
                         visibleToMouse(true);
                         
                         // close Button
-                        control(new ControlBuilder("closeButton", "") {{
+                        control(new ControlBuilder("closeButton_2", "") {{
                             width("13%");
                             height("12.5%");
                             alignRight();
@@ -744,7 +744,7 @@ public class Gui {
                         visibleToMouse(true);                        
                         
                         image(new ImageBuilder() {{
-                            id("MenuImage");
+                            id("creditImage");
                             filename("Interface/gui/CloseModalButton.png");
                             width("9%");
                             height("12%");
@@ -763,7 +763,7 @@ public class Gui {
                 
                 // Modal panel
                 panel(new PanelBuilder() {{
-                    id("CreditsPanel");
+                    id("CreditsPanelInteractive");
                     childLayoutCenter();
                     height("100%");
                     width("100%");
@@ -772,7 +772,7 @@ public class Gui {
                     visibleToMouse(true);
                     
                     // close Button
-                    control(new ControlBuilder("closeButton", "") {{
+                    control(new ControlBuilder("closeButton_3", "") {{
                         width("9%");
                         height("10%");
                         alignRight();
@@ -1002,7 +1002,7 @@ public class Gui {
                 
                 // Modal panel
                 panel(new PanelBuilder() {{
-                    id("CloseGamePanel");
+                    id("CloseGamePanelInteractive");
                     childLayoutCenter();
                     height("45%");
                     width("45%");
@@ -1012,7 +1012,7 @@ public class Gui {
                     
                     // Text panel
                     panel(new PanelBuilder() {{
-                        id("MenuModalPanel");
+                        id("CloseTextPanel");
                         childLayoutCenter();
                         height("50%");
                         width("100%");
@@ -1031,7 +1031,7 @@ public class Gui {
 
                     // Buttons panel
                     panel(new PanelBuilder() {{
-                        id("MenuModalPanel");
+                        id("CloseButtonPanel");
                         childLayoutCenter();
                         height("50%");
                         width("100%");
@@ -1128,7 +1128,7 @@ public class Gui {
         Screen startScreen = new ScreenBuilder("start") {{
             controller(new GuiScreenController());
             
-            layer(new LayerBuilder("baseLayer") {{
+            layer(new LayerBuilder("startBaseLayer") {{
             backgroundColor("#003f");
             childLayoutCenter();
             
@@ -1149,7 +1149,7 @@ public class Gui {
         Screen startMenuScreen = new ScreenBuilder("startMenu") {{
             controller(new GuiScreenController());
             
-            layer(new LayerBuilder("baseLayer") {{
+            layer(new LayerBuilder("startMenuBaseLayer") {{
                 backgroundColor("#003f");
                 childLayoutCenter();
             
@@ -1506,8 +1506,7 @@ public class Gui {
     }
     
     public void closeGame() {
-        app.stop();
-        //System.exit(0);
+        app.stop(); 
     }
     
     public void buyFromShop(String selectedEntity) {

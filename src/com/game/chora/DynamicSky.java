@@ -23,7 +23,7 @@ public class DynamicSky extends Node {
     private boolean dayTime;
     private float dayChanging;
     
-    private float scaling = 900;
+    private float scaling = 20000;
     
     public DynamicSky(AssetManager assetManager, ViewPort viewPort, Node rootNode) {
         super("Sky");

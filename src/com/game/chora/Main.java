@@ -182,7 +182,7 @@ public class Main extends SimpleApplication {
         sky = new DynamicSky(assetManager, viewPort, rootNode);
         rootNode.attachChild(sky);
         
-        view = new View(assetManager, rootNode);
+        view = new View(assetManager, rootNode, viewPort, sky);
         
         // Add audio
         

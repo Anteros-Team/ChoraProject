@@ -18,7 +18,7 @@ public class DynamicStars extends Node{
     
     private SkyBillboardItem[] stars;
     
-    private int stars_count = 500;
+    private int stars_count = 1000;
     private Material mat;
     
     public DynamicStars(AssetManager assetManager, ViewPort viewPort, Float scaling){
@@ -33,7 +33,7 @@ public class DynamicStars extends Node{
         mat.getAdditionalRenderState().setBlendMode(BlendMode.AlphaAdditive);
         stars = new SkyBillboardItem[stars_count];                
         for(int i = 0; i < stars_count; i++){
-            SkyBillboardItem item = new SkyBillboardItem("star_" + i, 80f + ((float) Math.random() * 140f));
+            SkyBillboardItem item = new SkyBillboardItem("star_" + i, (float) Math.random() * scaling/5);
             stars[i] = item;
             item.setShadowMode(shadowMode.Off);
             

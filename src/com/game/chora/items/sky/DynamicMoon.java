@@ -37,7 +37,10 @@ public class DynamicMoon extends Node {
         this.viewPort = viewPort;
         this.scaling = scaling;
         
-        moonLight = getSunLight();
+        moonLight = new DirectionalLight();
+        moonLight.setName("Moon");
+        moonLight.setDirection(lightDir);
+        moonLight.setColor(ColorRGBA.White.mult(0.5f));
         rootNode.addLight(moonLight);
                 
         moonSystem.setSiteLatitude(46.32f);
@@ -65,15 +68,13 @@ public class DynamicMoon extends Node {
     }
     
     public DirectionalLight getSunLight(){
-        DirectionalLight dl = new DirectionalLight();
-        dl.setDirection(lightDir);
-        dl.setColor(ColorRGBA.White.mult(0.5f));
-        return dl;
+        return this.moonLight;
     }
         
     protected void updateLightPosition(){
         lightDir = moonSystem.getDirection();
         lightPosition = moonSystem.getPosition();
+        this.moonLight.setDirection(lightDir);
     }
     
     public Vector3f getSunDirection(){

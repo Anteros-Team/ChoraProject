@@ -4,22 +4,26 @@ import com.jme3.asset.AssetManager;
 import com.jme3.light.AmbientLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.post.FilterPostProcessor;
+import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
 import com.jme3.shadow.DirectionalLightShadowFilter;
+import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.shadow.EdgeFilteringMode;
 
 public class View {
     
     protected FilterPostProcessor fpp;
+    protected DirectionalLightShadowRenderer dlsrSun;
     protected DirectionalLightShadowFilter dlsfSun;
+    protected DirectionalLightShadowRenderer dlsrMoon;
     protected DirectionalLightShadowFilter dlsfMoon;
     protected final int SHADOWMAP_SIZE = 512;
     protected AmbientLight al;
     
-    public View(AssetManager assetManager, Node rootNode) {
+    public View(AssetManager assetManager, Node rootNode, ViewPort viewPort, DynamicSky sky) {
         this.fpp = new FilterPostProcessor(assetManager);
-        this.setSunLightShadowFilter(assetManager);
-        this.setMoonLightShadowFilter(assetManager);
+        this.setSunLightShadow(assetManager, viewPort, sky);
+        this.setMoonLightShadow(assetManager, viewPort, sky);
         this.setAmbientLight(rootNode);
         
     }
@@ -32,7 +36,12 @@ public class View {
         return this.dlsfSun;
     }
     
-    private void setSunLightShadowFilter(AssetManager assetManager) {
+    private void setSunLightShadow(AssetManager assetManager, ViewPort viewPort, DynamicSky sky) {
+        /*this.dlsrSun = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 3);
+        this.dlsrSun.setLight(sky.getSunLight());
+        System.out.println("Sun light : " + sky.getSunLight());
+        viewPort.addProcessor(dlsrSun);*/
+        
         this.dlsfSun = new DirectionalLightShadowFilter(assetManager, this.SHADOWMAP_SIZE, 3);
         this.dlsfSun.setLambda(0.2f);
         this.dlsfSun.setShadowIntensity(0.5f);
@@ -40,8 +49,8 @@ public class View {
         this.dlsfSun.setEnabledStabilization(true);
         this.dlsfSun.setEdgeFilteringMode(EdgeFilteringMode.Bilinear);
         
-        this.dlsfSun.setShadowZExtend(5000);
-        this.dlsfSun.setShadowZFadeLength(150);
+        this.dlsfSun.setShadowZExtend(3000);
+        this.dlsfSun.setShadowZFadeLength(50);
         this.fpp.addFilter(this.dlsfSun);
     }
     
@@ -49,7 +58,11 @@ public class View {
         return this.dlsfMoon;
     }
     
-    private void setMoonLightShadowFilter(AssetManager assetManager) {
+    private void setMoonLightShadow(AssetManager assetManager, ViewPort viewPort, DynamicSky sky) {
+        /*this.dlsrMoon = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 3);
+        this.dlsrMoon.setLight(sky.getSunLight());
+        viewPort.addProcessor(dlsrMoon);*/
+        
         this.dlsfMoon = new DirectionalLightShadowFilter(assetManager, SHADOWMAP_SIZE, 3);
         this.dlsfMoon.setLambda(0.2f);
         this.dlsfMoon.setShadowIntensity(0.3f);
@@ -57,8 +70,8 @@ public class View {
         this.dlsfMoon.setEnabledStabilization(true);
         this.dlsfMoon.setEdgeFilteringMode(EdgeFilteringMode.Bilinear);
 
-        this.dlsfMoon.setShadowZExtend(650);
-        this.dlsfMoon.setShadowZFadeLength(150);
+        this.dlsfMoon.setShadowZExtend(3000);
+        this.dlsfMoon.setShadowZFadeLength(50);
         this.fpp.addFilter(this.dlsfMoon);
     }
     
