@@ -4,6 +4,7 @@ import com.game.chora.gui.Gui;
 import com.game.chora.items.entities.*;
 import com.game.chora.utils.Entity;
 import com.game.chora.utils.EntitySerialization;
+import com.game.chora.utils.ItemBillboard;
 import com.game.chora.water.Ocean;
 import com.game.chora.water.Pound;
 import com.jme3.app.SimpleApplication;
@@ -47,6 +48,7 @@ public class Main extends SimpleApplication {
     private AudioNode dayAudio;
     private AudioNode nightAudio;
     private AudioNode clickAudio;
+    private ItemBillboard arrow;
     
     private int speed = 10;
     
@@ -88,14 +90,29 @@ public class Main extends SimpleApplication {
         
         if (db.isPlayerEmpty() == true) {
             System.out.println("No player found. Creating player...");
-            db.insertPlayer(p.getName(), p.getApple(), p.getWaterBucket(), p.getWell(), p.getMill(), p.getTakePound(), p.getMusicVolume(), p.getAmbientVolume());
+            db.insertPlayer(p.getName(), p.getApple(), p.getWaterBucket(), p.getWell(), p.getMill(), p.getTakePound(), p.getMusicVolume(), p.getAmbientVolume(), p.getTutorial());
             
             Entity e = new Trash(new Vector3f(0, 0, 0), 8, new Vector3f(25, 10, 25));
             e.setModel(assetManager, rootNode, "Models/trash/trash.j3o", shootables);
             e.spawn(rootNode, shootables);
             entities.add(e);
+            
+            e = new Trash(new Vector3f(-50, 0, -50), 8, new Vector3f(25, 10, 25));
+            e.setModel(assetManager, rootNode, "Models/trash/trash.j3o", shootables);
+            e.spawn(rootNode, shootables);
+            entities.add(e);
+            
+            e = new Trash(new Vector3f(-80, 0, 50), 8, new Vector3f(25, 10, 25));
+            e.setModel(assetManager, rootNode, "Models/trash/trash.j3o", shootables);
+            e.spawn(rootNode, shootables);
+            entities.add(e);
+            
+            e = new Trash(new Vector3f(-50, 0, 100), 8, new Vector3f(25, 10, 25));
+            e.setModel(assetManager, rootNode, "Models/trash/trash.j3o", shootables);
+            e.spawn(rootNode, shootables);
+            entities.add(e);
 
-            e = new Trash(new Vector3f(50, 0, 50), 8, new Vector3f(25, 10, 25));
+            e = new Trash(new Vector3f(90, 0, 90), 8, new Vector3f(25, 10, 25));
             e.setModel(assetManager, rootNode, "Models/trash/trash.j3o", shootables);
             e.spawn(rootNode, shootables);
             entities.add(e);
@@ -104,29 +121,32 @@ public class Main extends SimpleApplication {
             e.setModel(assetManager, rootNode, "Models/sprout/sprout.j3o", shootables);
             e.spawn(rootNode, shootables);
             entities.add(e);
-
-            e = new Sprout(new Vector3f(200, 0, 0), 0.6f, new Vector3f(10, 8, 5));
-            e.setModel(assetManager, rootNode, "Models/sprout/sprout.j3o", shootables);
-            e.spawn(rootNode, shootables);
-            entities.add(e);
-
-            e = new Mill(new Vector3f(-100, 0, -100), 200, new Vector3f(40, 77, 40));
-            e.setModel(assetManager, rootNode, "Models/mill/mill.j3o", shootables);
-            e.spawn(rootNode, shootables);
-            entities.add(e);
-            p.setMill(p.getMill() + 1);
-            ((Mill) e).createPopup(assetManager);
-            ((Mill) e).showPopup(rootNode);
             
-            e = new Well(new Vector3f(-100, 0 , 100), 15, new Vector3f(20, 20, 20));
-            e.setModel(assetManager, rootNode, "Models/well/well.j3o", shootables);
-            e.spawn(rootNode, shootables);
-            entities.add(e);
-            p.setWell(p.getWell() + 1);
-            ((Well) e).createPopup(assetManager);
+            arrow = new ItemBillboard("arrow", 50f, new Vector3f(0, 0, 0), 15f, assetManager, "Interface/gui/ArrowGui.png");
+            rootNode.attachChild(arrow.getNode());
+            
         } else {
             p = db.queryPlayer();
             es = db.queryEntity();
+            
+            if (p.getTutorial() != 0) {
+                if (p.getTutorial() == 1) {
+                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(0, 0, 0), 15f, assetManager, "Interface/gui/ArrowGui.png");
+                }
+                if (p.getTutorial() == 2) {
+                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(210, -1, 300), 15f, assetManager, "Interface/gui/ArrowGui.png");
+                }
+                if (p.getTutorial() == 3) {
+                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(90, 0, 90), 15f, assetManager, "Interface/gui/ArrowGui.png");
+                }
+                if (p.getTutorial() == 4) {
+                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(90, 0, 90), 65f, assetManager, "Interface/gui/ArrowGui.png");
+                }
+                if (p.getTutorial() == 5) {
+                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(90, 0, 90), 85f, assetManager, "Interface/gui/ArrowGui.png");
+                }
+                rootNode.attachChild(arrow.getNode());
+            }
             
             for (EntitySerialization s: es) {
                 Entity e = new Entity();
@@ -229,7 +249,7 @@ public class Main extends SimpleApplication {
         System.out.println("Entity table empty: " + db.queryEntity().isEmpty());
         
         //System.out.println("Player table empty: " + db.queryPlayer().waterBucket);
-        db.insertPlayer(p.getName(), p.getApple(), p.getWaterBucket(), p.getWell(), p.getMill(), p.getTakePound(), p.getAmbientVolume(), p.getMusicVolume());
+        db.insertPlayer(p.getName(), p.getApple(), p.getWaterBucket(), p.getWell(), p.getMill(), p.getTakePound(), p.getAmbientVolume(), p.getMusicVolume(), p.getTutorial());
         for(Entity e: entities) {
             EntitySerialization s = new EntitySerialization();
             s.setPosition(e.getPosition());
@@ -371,6 +391,8 @@ public class Main extends SimpleApplication {
                 // show placing mode
                 System.out.println("Placing mode active."); 
             }
+            
+            gui.updateTutorial();
         } else {
             menuAudio.play();
             if (p.getMusicVolume()) {
@@ -379,8 +401,6 @@ public class Main extends SimpleApplication {
                 menuAudio.setVolume(0);
             }
         }
-        
-        
     }
     
     private Geometry getGeometry(Spatial spatial, String name) {
@@ -457,17 +477,23 @@ public class Main extends SimpleApplication {
                             Spatial c = rootNode.getChild(closest);
 
                             // Pound clicked
-                            if (pound instanceof Pound) {
-                                if (pound.getPickBox().getName().equals(closest)) {
-                                    clickAudio.playInstance();
-                                    pound.takeWater();
-                                    p.setWaterBucket(p.getWaterBucket() + 1);
-                                    gui.setWaterBucket(p.getWaterBucket());
-                                    p.setTakePound(p.getTakePound() + 1);
-                                    if (pound.getWaterLocation().y <= -3.5f) {
-                                        pound.despawn(rootNode, shootables);
-                                    }
+
+                            if (pound.getPickBox().getName().equals(closest)) {
+                                clickAudio.playInstance();
+                                pound.takeWater();
+                                p.setWaterBucket(p.getWaterBucket() + 1);
+                                gui.setWaterBucket(p.getWaterBucket());
+                                p.setTakePound(p.getTakePound() + 1);
+                                if (pound.getWaterLocation().y <= -3.5f) {
+                                    pound.despawn(rootNode, shootables);
                                 }
+                                if (p.getTutorial() == 2) {
+                                    p.setTutorial(3);
+                                    rootNode.detachChild(arrow.getNode());
+                                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(90, 0, 90), 15f, assetManager, "Interface/gui/ArrowGui.png");
+                                    rootNode.attachChild(arrow.getNode());
+                                }
+
                             } else {
                                 for (ListIterator<Entity> li = entities.listIterator(); li.hasNext();) {
                                     Entity e = li.next();
@@ -482,6 +508,11 @@ public class Main extends SimpleApplication {
                                                     a.onAction(rootNode, shootables);
                                                     p.setApple(p.getApple() + 1);
                                                     gui.setApple(p.getApple());
+                                                    
+                                                    if (p.getTutorial() == 5) {
+                                                        p.setTutorial(6);
+                                                        rootNode.detachChild(arrow.getNode());
+                                                    }
                                                     break;
                                                 }
                                             }
@@ -495,6 +526,16 @@ public class Main extends SimpleApplication {
                                             if (e instanceof Trash) {
                                                 e.onAction(rootNode, shootables);
                                                 entities.remove(e);
+                                                if (p.getTutorial() == 1) {
+                                                    if (e.getPosition().x == 0 && e.getPosition().z == 0) {
+                                                        rootNode.detachChild(arrow.getNode());
+                                                    }
+                                                    if (e.getPosition().x == 90 && e.getPosition().z == 90) {
+                                                        p.setTutorial(2);
+                                                        arrow = new ItemBillboard("arrow", 50f, new Vector3f(210, -1, 300), 15f, assetManager, "Interface/gui/ArrowGui.png");
+                                                        rootNode.attachChild(arrow.getNode());
+                                                    }
+                                                }
                                                 break;
                                             }
 
@@ -523,6 +564,13 @@ public class Main extends SimpleApplication {
                                                     }
                                                 }
                                                 scene.getTerrain().updateModelBound();
+                                                
+                                                if (p.getTutorial() == 4) {
+                                                    p.setTutorial(5);
+                                                    rootNode.detachChild(arrow.getNode());
+                                                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(90, 0, 90), 85f, assetManager, "Interface/gui/ArrowGui.png");
+                                                    rootNode.attachChild(arrow.getNode());
+                                                }
                                                 break;
                                             }
 
@@ -536,6 +584,13 @@ public class Main extends SimpleApplication {
                                                 entities.remove(e);
                                                 p.setWaterBucket(p.getWaterBucket() - 1);
                                                 gui.setWaterBucket(p.getWaterBucket());
+                                                
+                                                if (p.getTutorial() == 3) {
+                                                    p.setTutorial(4);
+                                                    rootNode.detachChild(arrow.getNode());
+                                                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(90, 0, 90), 65f, assetManager, "Interface/gui/ArrowGui.png");
+                                                    rootNode.attachChild(arrow.getNode());
+                                                }
                                                 break;
                                             }
                                             

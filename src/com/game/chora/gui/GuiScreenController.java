@@ -37,11 +37,6 @@ public class GuiScreenController implements ScreenController {
         nifty.getScreen("game").findElementById("interactiveMenuLayer").setVisible(true);
     }
     
-    public void openShop() {
-        nifty.getScreen("game").findElementById("shopLayer").setVisible(true);
-        nifty.getScreen("game").findElementById("interactiveShopLayer").setVisible(true);
-    }
-    
     public void openCredits() {
         nifty.getScreen("game").findElementById("menuLayer").setVisible(false);
         nifty.getScreen("game").findElementById("interactiveMenuLayer").setVisible(false);

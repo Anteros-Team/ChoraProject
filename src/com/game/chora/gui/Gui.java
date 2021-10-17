@@ -288,11 +288,49 @@ public class Gui {
                         height("98%");
                         visibleToMouse(true);
                         
-                        interactOnClick("openShop()");
+                        //interactOnClick("openShop()");
+                    }});
+                }});
+                
+                // tutorial label
+                panel(new PanelBuilder() {{                    
+                    id("TutorialPanel");
+                    width("100%");
+                    height("20%");
+                    alignCenter();
+                    childLayoutCenter();
+                    valignBottom();
+                    
+                    control(new LabelBuilder("tutorialLabel", "")  {{
+                        text("");
+                        font("Interface/Fonts/SegoeUIBlack.fnt");
+                        color("#000");
+                        height("100%");
+                        width("100%");
+                    }});
+                }});
+                
+                // shop arrow (for tutorial)
+                panel(new PanelBuilder() {{
+                    childLayoutHorizontal();
+                    alignRight();
+                    valignBottom();
+                    width("9%");
+                    height("13%");
+                    marginRight("5%");
+                    marginBottom("18%");    
+                    
+                    // shop arrow image
+                    image(new ImageBuilder() {{
+                        id("arrowImage");
+                        filename("Interface/gui/ArrowGui.png");
+                        width("100%");
+                        height("100%");
                     }});
                 }});
                 
             }});
+            
             
             // Shop Layer
             layer(new LayerBuilder("shopLayer") {{
@@ -1433,6 +1471,9 @@ public class Gui {
         nifty.getScreen("game").findElementById("shopLayer").setVisible(false);
         nifty.getScreen("game").findElementById("interactiveShopLayer").setVisible(false);
 
+        nifty.getScreen("game").findElementById("shopButton").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "openShop()", this));
+        nifty.getScreen("game").findElementById("arrowImage").setVisible(false);
+        
         nifty.getScreen("game").findElementById("creditsLayer").setVisible(false);
         nifty.getScreen("game").findElementById("interactiveCreditsLayer").setVisible(false);
 
@@ -1503,10 +1544,40 @@ public class Gui {
     public void playGame() {
         nifty.gotoScreen("game");
         this.gameStarted = true;
+        this.updateTutorial();
+        
+    }
+    
+    public void updateTutorial() {
+        if (p.getTutorial() != 0) {
+            if (p.getTutorial() == 1) {
+                nifty.getScreen("game").findElementById("tutorialLabel").getRenderer(TextRenderer.class).setText("Welcome to Chora!\nStart by removing the trash from this world.");
+            }
+            if (p.getTutorial() == 2 || p.getTutorial() == 3 || p.getTutorial() == 4) {
+                nifty.getScreen("game").findElementById("tutorialLabel").getRenderer(TextRenderer.class).setText("Wow! You found a sprout! Pick up some water from the pound to use it on the sprout.");
+            }
+            if (p.getTutorial() == 5) {
+                nifty.getScreen("game").findElementById("tutorialLabel").getRenderer(TextRenderer.class).setText("Now the sprout is fully grown into a tree! Every tree drops apples that you can spend in the market.");
+            }
+            if (p.getTutorial() == 6) {
+                nifty.getScreen("game").findElementById("tutorialLabel").getRenderer(TextRenderer.class).setText("Check out the market to see all the offerings.");
+                nifty.getScreen("game").findElementById("arrowImage").setVisible(true);
+            }
+            nifty.getScreen("game").findElementById("tutorialLabel").setVisible(true);
+        } else {
+            nifty.getScreen("game").findElementById("tutorialLabel").setVisible(false);
+            nifty.getScreen("game").findElementById("arrowImage").setVisible(false);
+        }
     }
     
     public void closeGame() {
         app.stop(); 
+    }
+    
+    public void openShop() {
+        nifty.getScreen("game").findElementById("shopLayer").setVisible(true);
+        nifty.getScreen("game").findElementById("interactiveShopLayer").setVisible(true);
+        p.setTutorial(0);
     }
     
     public void buyFromShop(String selectedEntity) {
@@ -1526,14 +1597,12 @@ public class Gui {
                 nifty.getCurrentScreen().findElementById("placingModePanel").setVisible(true);
             } 
             else {
-                //TODO errore hai raggiunto il limite di mill/well
                 nifty.getCurrentScreen().findElementById("errorLabel").getRenderer(TextRenderer.class).setText("Maximum number of " + selectedEntity + " reached.");
                 nifty.getCurrentScreen().findElementById("errorLabel").setVisible(true);
                 time = 5;
             }
         }
         else {
-            //TODO errore non hai abbastanza mele
             nifty.getCurrentScreen().findElementById("errorLabel").getRenderer(TextRenderer.class).setText("Not enough apples.");  
             nifty.getCurrentScreen().findElementById("errorLabel").setVisible(true);
             time = 5;

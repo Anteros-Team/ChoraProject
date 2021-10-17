@@ -18,6 +18,7 @@ public class Player {
     protected int takePound;
     protected boolean ambientVolume;
     protected boolean musicVolume;
+    protected int tutorial;
     
     public Player(){
         this.name = "ciao";
@@ -28,6 +29,7 @@ public class Player {
         this.takePound = 0;
         this.ambientVolume = true;
         this.musicVolume = true;
+        this.tutorial = 1; // 0 = no tutorial / 1 = first step / 2 = second step / ...
     }
     
     public String getName() {
@@ -62,6 +64,10 @@ public class Player {
         return this.musicVolume;
     }
     
+    public int getTutorial() {
+        return this.tutorial;
+    }
+    
     public void setName(String name) {
         this.name = name;
     }
@@ -92,5 +98,8 @@ public class Player {
     
     public void setMusicVolume(boolean mv) {
         this.musicVolume = mv;
+    }
+    public void setTutorial(int tutorial) {
+        this.tutorial = tutorial;
     }
 }
