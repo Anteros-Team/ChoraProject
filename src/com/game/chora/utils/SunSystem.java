@@ -5,38 +5,34 @@ import java.util.logging.Logger;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Vector3f;
 
-
+/**
+ * SunSystem is a class that manage sun rotation.
+ * 
+ * @author Giorgia Bertacchini
+ * @author Alessandro Pilleri
+ */
 public class SunSystem {
-    private static final Logger logger = Logger.getLogger(SunSystem.class.getName());
+    
+    private static final Logger logger = Logger.getLogger(LunarSystem.class.getName());
     private static float distScaleFactor = 900;
-    double lambda;
-    double beta;
-    double r;
-    double lambdaOffset;
-    double betaOffset;
-    double rOffset;
 
-    Date currentDate;
-
-    Vector3f sunPosition = new Vector3f();
+    private Vector3f sunPosition = new Vector3f();
     private boolean debug = false;
-    private double xs;
-    private double ys;
-    private double JD;
     private float siteLat;
     private float siteLon;
-    private float HR;
     private float i=0; 
     
-    public SunSystem(Date currentDate, double lambdaOffset, double betaOffset, double rOffset) {
-        this.currentDate = currentDate;
-        this.lambdaOffset = lambdaOffset;
-        this.betaOffset = betaOffset;
-        this.rOffset = rOffset;
-
+    /**
+     * class constructor.
+     */
+    public SunSystem() {
         calculateCartesianCoords();
     }
 
+    /**
+     * setup sun position
+     * @return sun position
+     */
     private Vector3f calculateCartesianCoords() {
         sunPosition = new Vector3f(0f, 1f, 0.5f);
 
@@ -51,10 +47,6 @@ public class SunSystem {
         matRz.fromAngleNormalAxis(i, new Vector3f(0, 0, 1));
         sunPosition = matRz.mult(matRx.mult(matRy.mult(sunPosition)));
         i-=0.0005;
-        
-        // Get long, lat
-        xs = Math.atan2(sunPosition.z, -sunPosition.x);
-        ys = Math.atan2(sunPosition.y, -sunPosition.x);
 
         // Scale distance
         sunPosition.multLocal(distScaleFactor);
@@ -65,50 +57,77 @@ public class SunSystem {
         return sunPosition;
     }
 
+    /**
+     * enable/disable code debug.
+     * @param enable
+     */
     public void enableDebug(boolean enable) {
-        debug = true;
+        debug = enable;
     }
 
-    public Date getCurrentDate() {
-        return currentDate;
-    }
-
-    public double getLatitude() {
-        return ys;
-    }
-
-    public double getLongitude() {
-        return xs;
-    }
-
+    /**
+     * 
+     * @return sun position
+     */
     public Vector3f getPosition() {
         return sunPosition;
     }
     
+    /**
+     *
+     * @return sun direction
+     */
     public Vector3f getDirection() {
         return sunPosition.normalize().mult(-1);
     }
 
+    /**
+     *
+     * @return sun scale factor
+     */
     public float getScaleFactor() {
         return distScaleFactor;
     }
 
+    /**
+     *
+     * @return sun site latitude
+     */
     public float getSiteLatitude() {
         return siteLat;
     }
 
+    /**
+     *
+     * @return sun site longitude
+     */
     public float getSiteLongitude() {
         return siteLon;
     }
 
+    /**
+     *
+     * set sun site latitude.
+     * @param siteLat
+     */
     public void setSiteLatitude(float siteLat) {
         this.siteLon = siteLat;
     }
 
+    /**
+     *
+     * set sun site longitude.
+     * @param siteLon
+     */
     public void setSiteLongitude(float siteLon) {
         this.siteLon = siteLon;
     }
 
+    /**
+     * 
+     * update sun position.
+     * @return sun position
+     */
     public Vector3f updateSunPosition() {
         return calculateCartesianCoords();
     }

@@ -10,16 +10,30 @@ import com.jme3.shadow.DirectionalLightShadowFilter;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.shadow.EdgeFilteringMode;
 
+/**
+ * View is a class that manages light and shadow renderers and
+ * all post processors filters.
+ * 
+ * @author Giorgia Bertacchini
+ * @author Alessandro Pilleri
+ */
 public class View {
     
-    protected FilterPostProcessor fpp;
-    protected DirectionalLightShadowRenderer dlsrSun;
-    protected DirectionalLightShadowFilter dlsfSun;
-    protected DirectionalLightShadowRenderer dlsrMoon;
-    protected DirectionalLightShadowFilter dlsfMoon;
-    protected final int SHADOWMAP_SIZE = 512;
-    protected AmbientLight al;
+    private FilterPostProcessor fpp;
+    private DirectionalLightShadowRenderer dlsrSun;
+    private DirectionalLightShadowFilter dlsfSun;
+    private DirectionalLightShadowRenderer dlsrMoon;
+    private DirectionalLightShadowFilter dlsfMoon;
+    private final int SHADOWMAP_SIZE = 512;
+    private AmbientLight al;
     
+    /**
+     * class constructor with parameters.
+     * @param assetManager
+     * @param rootNode
+     * @param viewPort
+     * @param sky
+     */
     public View(AssetManager assetManager, Node rootNode, ViewPort viewPort, DynamicSky sky) {
         this.fpp = new FilterPostProcessor(assetManager);
         this.setSunLightShadow(assetManager, viewPort, sky);
@@ -27,14 +41,28 @@ public class View {
         this.setAmbientLight(rootNode);
     }
     
+    /**
+     *
+     * @return filter post processor
+     */
     public FilterPostProcessor getFilterPostProcessor() {
         return this.fpp;
     }
     
+    /**
+     *
+     * @return sun light shadow filter
+     */
     public DirectionalLightShadowFilter getSunLightShadowFilter() {
         return this.dlsfSun;
     }
     
+    /**
+     * setup sun light shadows.
+     * @param assetManager
+     * @param viewPort
+     * @param sky 
+     */
     private void setSunLightShadow(AssetManager assetManager, ViewPort viewPort, DynamicSky sky) {
         this.dlsfSun = new DirectionalLightShadowFilter(assetManager, this.SHADOWMAP_SIZE, 3);
         this.dlsfSun.setLambda(0.2f);
@@ -48,10 +76,20 @@ public class View {
         this.fpp.addFilter(this.dlsfSun);
     }
     
+    /**
+     *
+     * @return moon light shadow filter
+     */
     public DirectionalLightShadowFilter getMoonLightShadowFilter() {
         return this.dlsfMoon;
     }
     
+    /**
+     * setup moon light shadows.
+     * @param assetManager
+     * @param viewPort
+     * @param sky 
+     */
     private void setMoonLightShadow(AssetManager assetManager, ViewPort viewPort, DynamicSky sky) {
         this.dlsfMoon = new DirectionalLightShadowFilter(assetManager, SHADOWMAP_SIZE, 3);
         this.dlsfMoon.setLambda(0.2f);
@@ -71,6 +109,10 @@ public class View {
         rootNode.addLight(al);
     }
     
+    /**
+     * update light shadow filters for sun and moon.
+     * @param sky
+     */
     public void updateLight(DynamicSky sky) {
         this.dlsfSun.setLight(sky.getSunLight());
         this.dlsfMoon.setLight(sky.getMoonLight());

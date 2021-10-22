@@ -14,14 +14,21 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Sphere;
 import java.util.Date;
 
-
+/**
+ * DynamicSun is a class that manages model, light and position
+ * of the sun.
+ * 
+ * @author Giorgia Bertacchini
+ * @author Alessandro Pilleri
+ */
 public class DynamicSun extends Node {
+    
     private static final Sphere sphereMesh = new Sphere(40, 40, 900, false, true);
     
     private ViewPort viewPort = null;
     private AssetManager assetManager = null;
     
-    private SunSystem sunSystem = new SunSystem(new Date(), 0, 0, 0);
+    private SunSystem sunSystem = new SunSystem();
     private SkyBillboardItem sun;
     
     private DirectionalLight sunLight = null;
@@ -31,6 +38,13 @@ public class DynamicSun extends Node {
     private float scaling = 900;
     private boolean DEBUG = false;
     
+    /**
+     * class constructor with parameters.
+     * @param assetManager
+     * @param viewPort
+     * @param rootNode
+     * @param scaling
+     */
     public DynamicSun(AssetManager assetManager, ViewPort viewPort, Node rootNode, Float scaling) {
         this.assetManager = assetManager;
         this.viewPort = viewPort;
@@ -60,24 +74,44 @@ public class DynamicSun extends Node {
         setCullHint(CullHint.Never);
     }
     
+    /**
+     *
+     * @return sun rotation class
+     */
     public SunSystem getSunSystem(){
         return sunSystem;
     }
     
+    /**
+     *
+     * @return sun light object
+     */
     public DirectionalLight getSunLight(){
         return this.sunLight;
     }
         
+    /**
+     * update sun light position and direction.
+     */
     protected void updateLightPosition(){
         lightDir = sunSystem.getDirection();
         lightPosition = sunSystem.getPosition();
         sunLight.setDirection(lightDir);
     }
     
+    /**
+     *
+     * @return sun position
+     */
     public Vector3f getSunDirection(){
         return sunSystem.getPosition();
     }
 
+    /**
+     * update sun position and speed, also turn off
+     * the light at night.
+     * @param sunDir
+     */
     public void updateTime(Vector3f sunDir) {
         // make everything follow the camera
         setLocalTranslation(viewPort.getCamera().getLocation());

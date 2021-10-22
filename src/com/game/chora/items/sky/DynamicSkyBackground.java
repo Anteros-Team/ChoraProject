@@ -11,6 +11,12 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
 
+/**
+ * DyniamicSkyBackground is a class that set the sky background.
+ * 
+ * @author Giorgia Bertacchini
+ * @author Alessandro Pilleri
+ */
 public class DynamicSkyBackground {
     private static final Sphere sphereMesh = new Sphere(40, 40, 900, false, true);
     
@@ -21,6 +27,12 @@ public class DynamicSkyBackground {
     private Geometry skyGeom = null;
     private Material skyMaterial = null;
     
+    /**
+     * class constructor with parameters.
+     * @param assetManager
+     * @param viewPort
+     * @param rootNode
+     */
     public DynamicSkyBackground(AssetManager assetManager, ViewPort viewPort, Node rootNode){
         this.assetManager = assetManager;
         this.viewPort = viewPort;
@@ -29,6 +41,10 @@ public class DynamicSkyBackground {
         rootNode.attachChild(skyGeom);
     }
     
+    /**
+     *
+     * @return geometry of the sky
+     */
     protected Geometry getSkyGeometry(){
         Geometry geom = new Geometry("Sky", sphereMesh);
         geom.setQueueBucket(Bucket.Sky);
@@ -40,6 +56,10 @@ public class DynamicSkyBackground {
         return geom;
     }
     
+    /**
+     *
+     * @return sky material
+     */
     protected Material getDynamicSkyMaterial(){
         Material skyMat = new Material(assetManager, "MatDefs/dynamic_sky.j3md");
         skyMat.setTexture("glow_texture", assetManager.loadTexture("Textures/sky/glow.png"));
@@ -49,6 +69,10 @@ public class DynamicSkyBackground {
         return skyMat;
     }
     
+    /**
+     * update sky background.
+     * @param position 
+     */
     public void updateLightPosition(Vector3f position){
         lightPosition = position;
         skyMaterial.setVector3("lightPosition", lightPosition);

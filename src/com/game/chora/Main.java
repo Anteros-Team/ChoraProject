@@ -28,7 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-
+/**
+ * 
+ * @author Giorgia Bertacchini
+ * @author Alessandro Pilleri
+ */
 public class Main extends SimpleApplication {
     
     static private Main app;
@@ -49,34 +53,46 @@ public class Main extends SimpleApplication {
     private AudioNode nightAudio;
     private AudioNode clickAudio;
     private ItemBillboard arrow;
-    
     private int speed = 10;
-    
-    protected NiftyJmeDisplay niftyDisplay;
-    protected Nifty nifty;
-    
-    protected Path currentRelativePath = Paths.get("");
-    protected String filePath = currentRelativePath.toAbsolutePath().toString() + "\\assets\\GameData\\Entity.ser";
-    
+    private NiftyJmeDisplay niftyDisplay;
+    private Nifty nifty;
+    private Path currentRelativePath = Paths.get("");
+    private String filePath = currentRelativePath.toAbsolutePath().toString() + "\\assets\\GameData\\Entity.ser";
     private Database db;
     private boolean newGame = false;
     
+    /**
+     * main constructor.
+     * @param args
+     */
     public static void main(String[] args) {
         app = new Main();
         app.start(); // start the game
     }
     
+    /**
+     * app initialization.
+     */
     @Override
     public void simpleInitApp() {
         
-        //inputManager.deleteMapping(SimpleApplication.INPUT_MAPPING_EXIT);
-        
-        pc = new PlayerCamera(cam, flyCam);
-        
+        inputManager.deleteMapping(SimpleApplication.INPUT_MAPPING_EXIT);
         shootables = new Node("Shootables");
         rootNode.attachChild(shootables);
         inputManager.setCursorVisible(true);
         
+        /**
+         * Player camera initialization.
+         * 
+         * @see PlayerCamera
+         */
+        pc = new PlayerCamera(cam, flyCam);
+        
+        /**
+         * Database object initialization.
+         * 
+         * @see Database
+         */
         db = new Database();
         db.createNewDatabase(currentRelativePath.toAbsolutePath().toString() + "\\assets\\GameData\\");
         db.createTables();
@@ -85,9 +101,24 @@ public class Main extends SimpleApplication {
         entities = new ArrayList<>();
         es = new ArrayList<>();
         
-                scene = new Scene(assetManager, rootNode, shootables);
+        /**
+         * Scene object initialization.
+         * 
+         * @see Scene
+         */
+        scene = new Scene(assetManager, rootNode, shootables);
         pc.lookAtWorld(cam, scene);
         
+        /**
+         * Database first interactions.
+         * If no player is found, the game was opened for the
+         * first time, so player starts with default data and initial 
+         * entities.
+         * If player is found, the game load player data and spawn all
+         * saved entities.
+         * 
+         * @see Database
+         */
         if (db.isPlayerEmpty() == true) {
             System.out.println("No player found. Creating player...");
             db.insertPlayer(p.getName(), p.getApple(), p.getWaterBucket(), p.getWell(), p.getMill(), p.getTakePound(), p.getMusicVolume(), p.getAmbientVolume(), p.getTutorial());
@@ -195,17 +226,31 @@ public class Main extends SimpleApplication {
             }
         }
         
+        /**
+         * Gui initialization.
+         * 
+         * @see Gui
+         */
         gui = new Gui(app, assetManager, inputManager, audioRenderer, guiViewPort, rootNode, shootables, entities, p);
 
-        // Create Sky, Sun and Moon and Ambient Light
-        
+        /**
+         * Sky, Sun, Moon and stars initliazation.
+         * 
+         * @see DynamicSky
+         */
         sky = new DynamicSky(assetManager, viewPort, rootNode);
         rootNode.attachChild(sky);
         
+        /**
+         * Light, shadows and post processor filters initialization.
+         * 
+         * @see View
+         */
         view = new View(assetManager, rootNode, viewPort, sky);
         
-        // Add audio
-        
+        /**
+         * Audio initialization.
+         */
         menuAudio = new AudioNode(assetManager, "Sounds/menu.wav");
         menuAudio.setPositional(false);
         menuAudio.setLooping(true);
@@ -222,24 +267,41 @@ public class Main extends SimpleApplication {
         clickAudio.setPositional(false);
         clickAudio.setLooping(false);
         
-        // Add water pound
         
+        /**
+         * Water Pound initialization.
+         * 
+         * @see Pound
+         */
         if(p.getTakePound() < 5 ) {
             pound = new Pound(assetManager, rootNode, viewPort, shootables, new Vector3f(60, 5, 60), p.getTakePound());
         }
         
-        
-        // Add ocean
-        
+        /**
+         * Ocean initialization.
+         * 
+         * @see Ocean
+         */
         ocean = new Ocean(rootNode, viewPort, view.getFilterPostProcessor(), sky);
        
-        
-        initKeys(); // load custom key mappings
+        /**
+         * load custom key mappings.
+         */
+        initKeys();
     }
     
+    /**
+     * operations before game closes.
+     */
     @Override
     public void stop() {
         
+        /**
+         * Saving game state on Database.
+         * Tables are cleared and new data is stored.
+         * 
+         * @see Database
+         */
         db.clearTablePlayer(); 
         db.clearTableEntity();
         es.clear();
@@ -279,15 +341,43 @@ public class Main extends SimpleApplication {
                 System.out.println(s);
             }
         
-        super.stop(); // continue quitting the game
+        /**
+         * continue quitting the game.
+         */
+        super.stop();
     }
     
+    /**
+     * game update.
+     * @param tpf time per frame
+     */
     @Override
     public void simpleUpdate(float tpf) {
-        
+
         if (gui.isGameStarted()) {
+            /**
+             * Keep camera inside limits of distance and inclination.
+             * 
+             * @see PlayerCamera
+             */
             pc.checkCameraLimits(cam);
 
+            /**
+             * Play audio based on current game state and player will.
+             * 
+             * If player doesn't turn off music from 
+             * option menu, it will be divided in:
+             * <ul>
+             * <li> menuAudio in game menu
+             * <li> dayAudio for in-game day time
+             * <li> nightAudio for in-game night time
+             * </ul>
+             * 
+             * If player doesn't turn off ambient audio
+             * from option menu:
+             *  clickAudio is played on mouse click
+             * 
+             */
             menuAudio.stop();
             if (sky.isDayTime()) {
                 nightAudio.stop();
@@ -314,10 +404,23 @@ public class Main extends SimpleApplication {
                 clickAudio.setVolume(1);
             }
 
+            /**
+             * Sky, Sun, Moon, Stars and all lights and shadows are
+             * updated based on in-game time.
+             */
             view.updateLight(sky);
             sky.updateTime();
 
+            /**
+             * Update entities section.
+             */
             for (Entity e: entities) {
+                
+                /**
+                 * Tree apple spawning update.
+                 * 
+                 * @see Tree
+                 */
                 if (e instanceof Tree) {
                     ((Tree) e).increaseTime(tpf);
                     if (((Tree) e).getTime() >= speed) {
@@ -339,6 +442,12 @@ public class Main extends SimpleApplication {
                         }
                     }
                 }
+                
+                /**
+                 * Mill wheel rotation update.
+                 * 
+                 * @see Mill
+                 */
                 if (e instanceof Mill) {
                     if (((Mill) e).getState() == 0) {
                         ((Mill) e).rotateMill(rootNode, tpf * 0.3f);
@@ -362,6 +471,12 @@ public class Main extends SimpleApplication {
                         }
                     }
                 }
+                
+                /**
+                 * Well water production update.
+                 * 
+                 * @see Well
+                 */
                 if (e instanceof Well) {
                     if (((Well) e).getWater() < 5) {
                         ((Well) e).increaseTime(tpf);
@@ -376,6 +491,11 @@ public class Main extends SimpleApplication {
                 }
             }
 
+            /**
+             * Error label timer update.
+             * 
+             * @see Gui
+             */
             if(gui.getTime() > 0) {
                 gui.decreaseTime(tpf);
                 if(gui.getTime() <= 0) {
@@ -383,14 +503,25 @@ public class Main extends SimpleApplication {
                 }
             }
 
-
+            /**
+             * Placing mode active update.
+             * 
+             * @see Gui
+             */
             if (gui.getPlaceEntity() == true) {
-                // show placing mode
                 System.out.println("Placing mode active."); 
             }
             
+            /**
+             * Gui tutorial update.
+             * 
+             * @see Gui
+             */
             gui.updateTutorial();
         } else {
+            /**
+             * Play menuAudio if still in menu.
+             */
             menuAudio.play();
             if (p.getMusicVolume()) {
                 menuAudio.setVolume(1);
@@ -400,41 +531,33 @@ public class Main extends SimpleApplication {
         }
     }
     
-    private Geometry getGeometry(Spatial spatial, String name) {
-
-        if (spatial instanceof Node) {
-            
-            Node node = (Node) spatial;
-            for (int i = 0; i < node.getQuantity(); i++) {
-
-            Spatial child = node.getChild(i);
-            getGeometry(child, name);
-            }
-        } else if (spatial instanceof Geometry) {
-
-            String na = spatial.getParent().getName();
-            if (na.contains(name)) {
-
-                Geometry geo = (Geometry) spatial;
-                return geo;
-            }
-        }
-        return null;
-    }
-    
+    /**
+     * bind keys with specific actions.
+     */
     private void initKeys() {
         inputManager.addMapping("Shoot", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addListener(actionListener, "Shoot");
     }
 
-   
+    /**
+     * action listener implementation.
+     */
     private final ActionListener actionListener = new ActionListener() {
 
         @Override
         public void onAction(String name, boolean keyPressed, float tpf) {
             
+            /**
+             * Before any game interaction, check if menus are closed to prevent
+             * unwanted actions.
+             */
             if (name.equals("Shoot") && !keyPressed && gui.getNifty().getCurrentScreen().getScreenId().equals("game")) {
                 if (gui.getNifty().getCurrentScreen().findElementById("menuLayer").isVisible() == false && gui.getNifty().getCurrentScreen().findElementById("shopLayer").isVisible() == false) {
+                    
+                    /**
+                     * Collect collisions by founding intersection of 
+                     * in-game elements with the ray generated by cursor position. 
+                     */
                     CollisionResults results = new CollisionResults();
 
                     Vector3f origin = cam.getWorldCoordinates(inputManager.getCursorPosition(), 0.0f);
@@ -446,7 +569,10 @@ public class Main extends SimpleApplication {
                     shootables.collideWith(ray, results);
 
                     if (gui.getPlaceEntity() == true) {
-                        // placing mode                        
+                        /**
+                         * If placing mode is active, selected entity is spawned
+                         * in the world collided position.
+                         */                        
                         System.out.println(results.size());
                         if (results.size() > 0) {
                             clickAudio.playInstance();
@@ -456,7 +582,10 @@ public class Main extends SimpleApplication {
                         
 
                     } else {
-                        // picking mode
+                        /**
+                         * If placing mode is not active, check the closest element
+                         * in the CollisionResults array if not empty.
+                         */
                         String closest;
                         for (int i = 0; i < results.size(); i++) {
                             float dist = results.getCollision(i).getDistance();
@@ -467,35 +596,50 @@ public class Main extends SimpleApplication {
                         }
 
                         if (results.size() > 0) {
+                            
+                            /**
+                             * If CollisionResults is not empty, check what kind of
+                             * element was clicked.
+                             */
                             closest = results.getClosestCollision().getGeometry().getName();
 
-                            Spatial c = rootNode.getChild(closest);
+                            Spatial c = rootNode.getChild(closest);                            
+                            boolean isPound = false;
 
-                            // Pound clicked
+                            /**
+                             * If the element is an instance of Pound, water is
+                             * collected from it and water level is lowered.
+                             */
+                            if (pound instanceof Pound) {
+                                if (pound.getPickBox().getName().equals(closest)) {
+                                    isPound = true;
+                                    clickAudio.playInstance();
+                                    pound.takeWater();
+                                    p.setWaterBucket(p.getWaterBucket() + 1);
+                                    gui.setWaterBucket(p.getWaterBucket());
+                                    p.setTakePound(p.getTakePound() + 1);
+                                    if (pound.getWaterLocation().y <= -3.5f) {
+                                        pound.despawn(rootNode, shootables);
+                                    }
+                                    if (p.getTutorial() == 2) {
+                                        p.setTutorial(3);
+                                        rootNode.detachChild(arrow.getNode());
+                                        arrow = new ItemBillboard("arrow", 50f, new Vector3f(90, 0, 90), 15f, assetManager, "Interface/gui/arrowGui.png");
+                                        rootNode.attachChild(arrow.getNode());
+                                    }
 
-                            if (pound.getPickBox().getName().equals(closest)) {
-                                clickAudio.playInstance();
-                                pound.takeWater();
-                                p.setWaterBucket(p.getWaterBucket() + 1);
-                                gui.setWaterBucket(p.getWaterBucket());
-                                p.setTakePound(p.getTakePound() + 1);
-                                if (pound.getWaterLocation().y <= -3.5f) {
-                                    pound.despawn(rootNode, shootables);
                                 }
-                                if (p.getTutorial() == 2) {
-                                    p.setTutorial(3);
-                                    rootNode.detachChild(arrow.getNode());
-                                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(90, 0, 90), 15f, assetManager, "Interface/gui/arrowGui.png");
-                                    rootNode.attachChild(arrow.getNode());
-                                }
-
-                            } else {
+                            } 
+                            if (isPound == false) {
                                 for (ListIterator<Entity> li = entities.listIterator(); li.hasNext();) {
                                     Entity e = li.next();
 
                                     if (e != null) {                                
 
-                                        // Entity clicked is Apple
+                                        /**
+                                         * If the element is an instance of Apple, an apple
+                                         * is collected and the entity despawns.
+                                         */
                                         if (e instanceof Tree) {
                                             for (Apple a: ((Tree) e).getApples()) {
                                                 if (a.getPickBox().get(0).getName().equals(closest)) {
@@ -517,7 +661,10 @@ public class Main extends SimpleApplication {
 
                                             clickAudio.playInstance();
                                             
-                                            // Entity clicked is Trash
+                                            /**
+                                             * If the element is an instance of Trash, the
+                                             * entity despawns.
+                                             */
                                             if (e instanceof Trash) {
                                                 e.onAction(rootNode, shootables);
                                                 entities.remove(e);
@@ -534,7 +681,10 @@ public class Main extends SimpleApplication {
                                                 break;
                                             }
 
-                                            // Entity clicked is SmallTree
+                                            /**
+                                             * If the element is an instance of SmallTree, it grows
+                                             * into a Tree if player water is sufficient.
+                                             */
                                             if (e instanceof SmallTree && p.getWaterBucket() > 0) {
                                                 Entity t = new Tree(e.getPosition(), 4, new Vector3f(65, 50, 75));
                                                 t.setModel(assetManager, rootNode, "Models/tree/tree.j3o", shootables);
@@ -545,6 +695,9 @@ public class Main extends SimpleApplication {
                                                 p.setWaterBucket(p.getWaterBucket() - 1);
                                                 gui.setWaterBucket(p.getWaterBucket());
 
+                                                /**
+                                                 * Terrain around the tree is covered with grass.
+                                                 */
                                                 ImageRaster imageRaster = ImageRaster.create(scene.getAlphaTexture().getImage());
                                                 
                                                 for (float i = 512 + t.getPosition().x - 55; i < 512 + t.getPosition().x + 65; i++) {
@@ -566,7 +719,10 @@ public class Main extends SimpleApplication {
                                                 break;
                                             }
 
-                                            // Entity clicked is Sprout
+                                            /**
+                                             * If the element is an instance of Sprout, it grows
+                                             * into a SmallTree if player water is sufficient.
+                                             */
                                             if (e instanceof Sprout && p.getWaterBucket() > 0) {
                                                 Entity st = new SmallTree(e.getPosition(), 3.5f, new Vector3f(30, 40, 21));
                                                 st.setModel(assetManager, rootNode, "Models/small_tree/small_tree.j3o", shootables);
@@ -586,7 +742,12 @@ public class Main extends SimpleApplication {
                                                 break;
                                             }
                                             
-                                            // Entity clicked is Well
+                                            /**
+                                             * If the element is an instance of Well, water
+                                             * stored is taken.
+                                             * 
+                                             * @see Well
+                                             */
                                             if (e instanceof Well) {
                                                 p.setWaterBucket( p.getWaterBucket() + ((Well) e).getWater());
                                                 ((Well) e).hidePopup(rootNode);
@@ -595,7 +756,12 @@ public class Main extends SimpleApplication {
                                                 break;
                                             }
                                             
-                                            // Entity clicked is Mill
+                                            /**
+                                             * If the element is an instance of Mill and if
+                                             * Mill state is 0, turn to state 1.
+                                             * 
+                                             * @see Mill
+                                             */
                                             if (e instanceof Mill) {
                                                 if (((Mill) e).getState() == 0) {
                                                     ((Mill) e).setState(1);
@@ -611,11 +777,20 @@ public class Main extends SimpleApplication {
                     }
                 }
             } else {
-                // no hit
+                /**
+                 * If CollisionResults array is empty, the player
+                 * clicked nothing.
+                 */
             }
         }
     };
     
+    /**
+     * Place new entity in a selected position.
+     * Also check if the area selected is available.
+     * @param selectedEntity
+     * @param position
+     */
     public void addEntity(String selectedEntity, Vector3f position) {
         System.out.println("Entity = " + selectedEntity);
         System.out.println("Position = " + position);

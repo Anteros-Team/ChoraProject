@@ -12,7 +12,15 @@ import com.jme3.renderer.ViewPort;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Node;
 
-
+/**
+ * DynamicStars is a class that manage stars.
+ * Stars spawn with random position, rotation and scale, then
+ * they rotate on a sphere around the map.
+ * Stars are not visible during daytime.
+ * 
+ * @author Giorgia Bertacchini
+ * @author Alessandro Pilleri
+ */
 public class DynamicStars extends Node{
     private ViewPort viewPort = null;
     private AssetManager assetManager = null;
@@ -22,6 +30,12 @@ public class DynamicStars extends Node{
     private int stars_count = 1000;
     private Material mat;
     
+    /**
+     * class constructor with parameters.
+     * @param assetManager
+     * @param viewPort
+     * @param scaling
+     */
     public DynamicStars(AssetManager assetManager, ViewPort viewPort, Float scaling){
         this.assetManager = assetManager;
         this.viewPort = viewPort;
@@ -49,6 +63,11 @@ public class DynamicStars extends Node{
         setCullHint(CullHint.Never);
     }
     
+    /**
+     * check time based on sun position, then hide stars
+     * if it's daytime.
+     * @param sunDir
+     */
     public void update(Vector3f sunDir){
         mat.setColor("Color", new ColorRGBA(1f,1f,1f, 0));
         if(sunDir.y > 0 && sunDir.y < 1){
@@ -56,6 +75,10 @@ public class DynamicStars extends Node{
         }
     }
     
+    /**
+     *
+     * @return random 3 float vector
+     */
     protected Vector3f getRandomVector(){
         return new Vector3f(
                 (float) Math.random() - 0.5f,
@@ -64,6 +87,10 @@ public class DynamicStars extends Node{
         );
     }
     
+    /**
+     *
+     * @return random point on a sphere
+     */
     protected Vector3f getPointOnSphere(){
         Float x = (float) Math.random() - 0.5f;
         Float y = (float) Math.random() - 0.5f;

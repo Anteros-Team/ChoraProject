@@ -16,43 +16,70 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Tree is an extention of Entity.
+ * As Tree objects spawn, grass appears all
+ * around them.
+ * <p>
+ * Trees only purpose is to produce apples.
+ * Apples are always produced, based on a specific timer.
+ * 
+ * @author Giorgia Bertacchini
+ * @author Alessandro Pilleri
+ */
 public class Tree extends Entity implements Serializable {
     
-    protected List<Apple> apples;
-    protected float time;
+    private List<Apple> apples;
+    private float time;
     
+    /**
+     * class constructor with parameters
+     * @param position location in the 3D space
+     * @param scale model size 
+     * @param hitboxSize size of the clickable area
+     */
     public Tree(Vector3f position, float scale, Vector3f hitboxSize) {
         super(position, scale, hitboxSize);
         this.apples = new ArrayList<>();
         this.time = 0;
     }
     
+    /**
+     * 
+     * @return list of dropped apples
+     */
     public List<Apple> getApples() {
         return this.apples;
     }
     
+    /**
+     * load models into the game
+     * @param assetManager
+     * @param rootNode
+     * @param pathModel
+     * @param shootables
+     */
     @Override
     public void setModel(AssetManager assetManager, Node rootNode, String pathModel, Node shootables) {
         this.entity = assetManager.loadModel(pathModel);
         this.entity.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
-        this.entity.move(this.position);
-        this.entity.scale(this.scale);
+        this.entity.move(this.getPosition());
+        this.entity.scale(this.getScale());
         
         this.cube = new ArrayList<>();
-        this.cube.add(new Box(this.pickboxSize.x / 8, this.pickboxSize.y, this.pickboxSize.z / 8)); // truck
-        this.cube.add(new Box(this.pickboxSize.x, this.pickboxSize.y / 1.5f, this.pickboxSize.z)); // leaves
+        this.cube.add(new Box(this.pickboxSize.x / 15, this.pickboxSize.y / 1.5f, this.pickboxSize.z / 15)); // truck
+        this.cube.add(new Box(this.pickboxSize.x / 3f, this.pickboxSize.y / 4f, this.pickboxSize.z / 3f)); // leaves
         
         this.pickbox = new ArrayList<>();
         this.pickbox.add(new Geometry("PickBox0" + this.hashCode(), cube.get(0)));
         this.pickbox.add(new Geometry("PickBox1" + this.hashCode(), cube.get(1)));
         
         this.pickbox.get(0).setShadowMode(RenderQueue.ShadowMode.Off);
-        this.pickbox.get(0).setLocalTranslation(this.position.add(new Vector3f(-10, this.pickboxSize.y, -10)));
+        this.pickbox.get(0).setLocalTranslation(this.getPosition().add(new Vector3f(0, this.pickboxSize.y, 0)));
         this.pickbox.get(0).setCullHint(Spatial.CullHint.Always); // no visible pickbox
         
         this.pickbox.get(1).setShadowMode(RenderQueue.ShadowMode.Off);
-        this.pickbox.get(1).setLocalTranslation(this.position.add(new Vector3f(0, this.pickboxSize.y * 2f, 0)));
+        this.pickbox.get(1).setLocalTranslation(this.getPosition().add(new Vector3f(0, this.pickboxSize.y * 1.8f, 0)));
         this.pickbox.get(1).setCullHint(Spatial.CullHint.Always); // no visible pickbox
         
         this.matPickBox = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -64,6 +91,11 @@ public class Tree extends Entity implements Serializable {
         this.pickbox.get(1).setMaterial(matPickBox);
     }
     
+    /**
+     * spawn the object on the map
+     * @param rootNode
+     * @param shootables
+     */
     @Override
     public void spawn(Node rootNode, Node shootables) {
         rootNode.attachChild(this.entity);
@@ -71,6 +103,11 @@ public class Tree extends Entity implements Serializable {
         shootables.attachChild(this.pickbox.get(1));
     }
     
+    /**
+     * despawn the object
+     * @param rootNode
+     * @param shootables
+     */
     @Override
     public void despawn(Node rootNode, Node shootables) {
         rootNode.detachChild(this.entity);
@@ -78,18 +115,35 @@ public class Tree extends Entity implements Serializable {
         shootables.detachChild(this.pickbox.get(1));
     }
     
+    /**
+     *
+     * @return time remainig
+     */
     public float getTime() {
         return this.time;
     }
     
+    /**
+     * update the time remaining.
+     * @param tpf time per frame
+     */
     public void increaseTime(float tpf) {
         this.time += tpf;
     }
     
+    /**
+     * reset time to 0.
+     */
     public void resetTime() {
         this.time = 0;
     }
     
+    /**
+     * spawn an apple as the timer ends.
+     * @param assetManager
+     * @param rootNode
+     * @param shootables
+     */
     public void newApple(AssetManager assetManager, Node rootNode, Node shootables) {
         Apple a = new Apple(this.getPosition(), 11, new Vector3f(5, 5, 5));
         a.setModel(assetManager, rootNode, "Models/apple01/apple01.j3o", shootables);
@@ -119,6 +173,10 @@ public class Tree extends Entity implements Serializable {
         this.apples.add(a);
     }
     
+    /**
+     *
+     * @return string version of the object
+     */
     @Override 
     public String toString() {
         return new StringBuffer(" Position: ").append(this.getPosition().toString()).append(" Scale: ").append(this.getScale()).append(" PickBoxSize: ").append(this.getPickboxSize().toString()).append(" Model: Models/tree/tree.j3o").toString();

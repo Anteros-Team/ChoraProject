@@ -10,7 +10,12 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
 
-
+/**
+ * DynamicSky is a class that merge all sky-releted items.
+ *
+ * @author Giorgia Bertacchini
+ * @author Alessandro Pilleri
+ */
 public class DynamicSky extends Node {
     private ViewPort viewPort = null;
     private AssetManager assetManager = null;
@@ -25,6 +30,12 @@ public class DynamicSky extends Node {
     
     private float scaling = 20000;
     
+    /**
+     * class constructor with parameters.
+     * @param assetManager
+     * @param viewPort
+     * @param rootNode
+     */
     public DynamicSky(AssetManager assetManager, ViewPort viewPort, Node rootNode) {
         super("Sky");
         this.assetManager = assetManager;
@@ -46,30 +57,57 @@ public class DynamicSky extends Node {
         dynamicBackground = new DynamicSkyBackground(assetManager, viewPort, rootNode);
     }
     
+    /**
+     *
+     * @return sun direction
+     */
     public Vector3f getSunDirection(){
         return dynamicSun.getSunDirection();
     }
     
+    /**
+     *
+     * @return sun light
+     */
     public DirectionalLight getSunLight(){
         return dynamicSun.getSunLight();
     }
     
+    /**
+     *
+     * @return moon direction
+     */
     public Vector3f getMoonDirection() {
         return dynamicMoon.getSunDirection();
     }
     
+    /**
+     *
+     * @return moon light
+     */
     public DirectionalLight getMoonLight(){
         return dynamicMoon.getSunLight();
     }
         
+    /**
+     * 
+     * @return day state
+     */
     public boolean isDayTime() {
         return this.dayTime;
     }
     
+    /**
+     *
+     * @return day state changing
+     */
     public float getDayChanging() {
         return this.dayChanging;
     }
     
+    /**
+     * update sun and moon position, light position and direction, and stars position.
+     */
     public void updateTime(){
         dynamicSun.updateTime(dynamicSun.getSunSystem().getDirection());
         dynamicMoon.updateTime(dynamicMoon.getSunSystem().getDirection());

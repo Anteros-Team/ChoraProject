@@ -7,19 +7,42 @@ import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
 import com.jme3.water.WaterFilter;
 
-
+/**
+ * Ocean is a class that create and manage world ocean.
+ * 
+ * @author Giorgia Bertacchini
+ * @author Alessandro Pilleri
+ */
 public class Ocean {
     
-    protected WaterFilter water;
+    private WaterFilter water;
     
+    /**
+     * class constructor with parameters.
+     * @param rootNode
+     * @param viewPort
+     * @param fpp
+     * @param sky
+     */
     public Ocean(Node rootNode, ViewPort viewPort, FilterPostProcessor fpp, DynamicSky sky) {
         setOcean(rootNode, viewPort, fpp, sky);
     }
     
+    /**
+     *
+     * @return ocean object
+     */
     public WaterFilter getOcean() {
         return this.water;
     }
     
+    /**
+     * setup ocean.
+     * @param rootNode
+     * @param viewPort
+     * @param fpp
+     * @param sky 
+     */
     private void setOcean(Node rootNode, ViewPort viewPort, FilterPostProcessor fpp, DynamicSky sky) {
         water = new WaterFilter(rootNode, sky.getSunDirection());
         water.setWaterHeight(-10);

@@ -6,11 +6,22 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.control.BillboardControl;
 import com.jme3.scene.shape.Quad;
 
-
+/**
+ * SkyBillboardItem is a class that display sun, moon and stars textures.
+ * This also rotate texture based on camera.
+ * 
+ * @author Giorgia Bertacchini
+ * @author Alessandro Pilleri
+ */
 public class SkyBillboardItem extends Geometry{
     private BillboardControl billBoardControl = new BillboardControl();
     private Quad quad;
     
+    /**
+     * class constructor with parameters.
+     * @param name geometry name
+     * @param scale geometry scale
+     */
     public SkyBillboardItem(String name, Float scale){
         super(name);
         
@@ -24,19 +35,32 @@ public class SkyBillboardItem extends Geometry{
         addControl(billBoardControl);
     }
     
+    /**
+     * set geometry rotation.
+     * @param rotation
+     */
     public void setRotation(Float rotation){
         setRotationEnabled();
         this.rotate(new Quaternion().fromAngles(0, 0, rotation));
     }
     
+    /**
+     * remove billboard controller.
+     */
     public void removeBillboardController(){
         removeControl(billBoardControl);
     }
     
+    /**
+     * enable rotation.
+     */
     protected void setRotationEnabled(){
         billBoardControl.setAlignment(BillboardControl.Alignment.AxialZ);
     }
     
+    /**
+     * disable rotation.
+     */
     protected void setRotationDisabled(){
         billBoardControl.setAlignment(BillboardControl.Alignment.Screen);
     }

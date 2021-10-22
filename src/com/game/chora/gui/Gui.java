@@ -24,7 +24,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * Gui is the class that provides a user interface for the game.
+ * The graphic is implemented on the NiftyGUI library.
+ * This is divided in three different screens:
+ * <ul>
+ * <li> screen "start" for game loading at start
+ * <li> screen "startMenu" with play button, options and exit
+ * <li> screen "game" that include all game related elements like
+ *      numbers of apples, numbers of water, shop button and related
+ *      panel, option button and related panel
+ * </ul>
+ *
+ * @author Giorgia Bertacchini
+ * @author Alessandro Pilleri
+ */
 public class Gui {
     
     private NiftyJmeDisplay niftyDisplay;
@@ -42,6 +56,19 @@ public class Gui {
     private float time;
     private Map<String, Integer> shopProducts;    
     
+    /**
+     * class constructor with all parameters from Main class.
+     * 
+     * @param app
+     * @param assetManager
+     * @param inputManager
+     * @param audioRenderer
+     * @param guiViewPort
+     * @param rootNode
+     * @param shootables
+     * @param entities
+     * @param p
+     */
     public Gui (Main app, AssetManager assetManager, InputManager inputManager, AudioRenderer audioRenderer, ViewPort guiViewPort, Node rootNode, Node shootables, List<Entity> entities, Player p) {
         niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, guiViewPort);
         nifty = niftyDisplay.getNifty();
@@ -60,14 +87,16 @@ public class Gui {
         this.time = 0;
         
         this.shopProducts = new HashMap<>();
-        this.shopProducts.put("Sprout", 10);
-        this.shopProducts.put("Well", 20);
-        this.shopProducts.put("Mill", 50);
+        this.shopProducts.put("Sprout", 5);
+        this.shopProducts.put("Well", 10);
+        this.shopProducts.put("Mill", 20);
         
         nifty.loadStyleFile("nifty-default-styles.xml");
         nifty.loadControlFile("nifty-default-controls.xml");
         
-        // create a screen
+        /**
+         * screen "game".
+         */
         Screen gameScreen = new ScreenBuilder("game") {{
             controller(new GuiScreenController());
 
@@ -1132,6 +1161,9 @@ public class Gui {
             
         }}.build(nifty);
 
+        /**
+         * screen "start".
+         */
         Screen startScreen = new ScreenBuilder("start") {{
             controller(new GuiScreenController());
             
@@ -1153,6 +1185,9 @@ public class Gui {
             }});
         }}.build(nifty);
         
+        /**
+         * screen "startMenu".
+         */
         Screen startMenuScreen = new ScreenBuilder("startMenu") {{
             controller(new GuiScreenController());
             
@@ -1413,12 +1448,25 @@ public class Gui {
             }});
         }}.build(nifty);
         
-        
+        /**
+         * all screens are taken from the nifty object that can
+         * switch between them.
+         */
         nifty.addScreen("start", startScreen);
         nifty.addScreen("startMenu", startMenuScreen);
         nifty.addScreen("game", gameScreen);
         nifty.gotoScreen("startMenu");
         
+        /**
+         * GUI setup
+         * Operations are needed for some gui elements, for example:
+         * <ul>
+         * <li> set text when the argument may change (dynamic texts)
+         * <li> set visible to false for all elements that should not be
+         *      displayed at the start
+         * <li> set invokers to all elements that cause any specific event
+         * </ul>
+         */
         nifty.getScreen("game").findElementById("Apple").getRenderer(TextRenderer.class).setText(""+p.getApple());
         nifty.getScreen("game").findElementById("WaterBucket").getRenderer(TextRenderer.class).setText(""+p.getWaterBucket());
         
@@ -1466,45 +1514,77 @@ public class Gui {
         nifty.getScreen("startMenu").findElementById("StartExitButton").getElementInteraction().getPrimary().setOnReleaseMethod(new NiftyMethodInvoker(nifty, "closeGame()", this));
     }
     
+    /**
+     *
+     * @return nifty object
+     */
     public Nifty getNifty() {
         return this.nifty;
     }
     
+    /**
+     *
+     * @return boolean value if game is started
+     */
     public boolean isGameStarted() {
         return this.gameStarted;
     }
     
+    /**
+     *
+     * @param name player name displayed on screen
+     */
     public void setPlayerName(String name) {
         nifty.getCurrentScreen().findElementById("PlayerInfo").getRenderer(TextRenderer.class).setText(""+name+"");
     }
     
+    /**
+     *
+     * @param apple quantity of player's apples
+     */
     public void setApple(int apple) {
         nifty.getScreen("game").findElementById("Apple").getRenderer(TextRenderer.class).setText(""+apple+"");
     }
     
+    /**
+     *
+     * @param waterBucket quantity of player's water buckets
+     */
     public void setWaterBucket(int waterBucket) {
         nifty.getScreen("game").findElementById("WaterBucket").getRenderer(TextRenderer.class).setText(""+waterBucket+"");
     }
     
+    /**
+     * switch ambient volume
+     */
     public void switchAmbientVolume() {
         p.setAmbientVolume(!p.getAmbientVolume());
         nifty.getScreen("startMenu").findElementById("AmbientTick").setVisible(p.getAmbientVolume());
         nifty.getScreen("game").findElementById("AmbientTick").setVisible(p.getAmbientVolume());
     }
     
+    /**
+     * switch music volume
+     */
     public void switchMusicVolume() {
         p.setMusicVolume(!p.getMusicVolume());
         nifty.getScreen("startMenu").findElementById("MusicTick").setVisible(p.getMusicVolume());
         nifty.getScreen("game").findElementById("MusicTick").setVisible(p.getMusicVolume());
     }
     
+    /**
+     * start the game from the screen "startMenu"
+     */
     public void playGame() {
         nifty.gotoScreen("game");
         this.gameStarted = true;
-        this.updateTutorial();
-        
+        this.updateTutorial();  
     }
     
+    /**
+     * update state of tutorial
+     * @see Player
+     */
     public void updateTutorial() {
         if (p.getTutorial() != 0) {
             if (p.getTutorial() == 1) {
@@ -1527,16 +1607,26 @@ public class Gui {
         }
     }
     
+    /**
+     * close game
+     */
     public void closeGame() {
         app.stop(); 
     }
     
+    /**
+     * open shop panel
+     */
     public void openShop() {
         nifty.getScreen("game").findElementById("shopLayer").setVisible(true);
         nifty.getScreen("game").findElementById("interactiveShopLayer").setVisible(true);
         p.setTutorial(0);
     }
     
+    /**
+     * check the selected item and start the placing mode.
+     * @param selectedEntity item choosen from the shop
+     */
     public void buyFromShop(String selectedEntity) {
         if (p.getApple() >= shopProducts.get(selectedEntity)) {  
             System.out.println(p.getMill());
@@ -1566,34 +1656,66 @@ public class Gui {
         }
     }
     
+    /**
+     *
+     * @return item selected from the shop
+     */
     public String getSelectedEntityFromShop() {
         return this.selectedEntityFromShop;
     }
     
+    /**
+     * 
+     * @param selectedEntity
+     */
     public void setSelectedEntityFromShop(String selectedEntity) {
         this.selectedEntityFromShop = selectedEntity;
     }
     
+    /**
+     *
+     * @return boolean value if entity is placed
+     */
     public boolean getPlaceEntity() {
         return this.placeEntity;
     }
     
+    /**
+     *
+     * @param placeEntity
+     */
     public void setPlaceEntity(boolean placeEntity) {
         this.placeEntity = placeEntity;
     }
     
+    /**
+     *
+     * @return if gui is opened
+     */
     public boolean getGuiOpened() {
         return this.guiOpened;
     }
     
+    /**
+     *
+     * @param guiOpened
+     */
     public void setGuiOpened(boolean guiOpened) {
         this.guiOpened = guiOpened;
     }
     
+    /**
+     *
+     * @return time remaining for labels to disappear
+     */
     public float getTime() {
         return this.time;
     }
     
+    /**
+     * update the time remaining for labels to disappear
+     * @param tpf time per frame
+     */
     public void decreaseTime(float tpf) {
         this.time -= tpf;
     }

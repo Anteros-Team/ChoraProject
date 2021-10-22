@@ -5,7 +5,15 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 
-
+/**
+ * PlayerCamera is a class that manage camera setup,
+ * position and rotation.
+ * The camera has a specific range where it can be moved
+ * and a maximum inclination.
+ * 
+ * @author Giorgia Bertacchini
+ * @author Alessandro Pilleri
+ */
 public class PlayerCamera {
     
     private final float X_MIN = -1000;
@@ -16,6 +24,11 @@ public class PlayerCamera {
     private final float Z_MAX = 1000;
     private final float MAX_ANGLE = (float) Math.PI/2;
     
+    /**
+     * class constructor with parameters.
+     * @param cam
+     * @param flyCam
+     */
     public PlayerCamera(Camera cam, FlyByCamera flyCam) {
         flyCam.setMoveSpeed(500);
         flyCam.setDragToRotate(true);
@@ -23,10 +36,19 @@ public class PlayerCamera {
         cam.setLocation(new Vector3f(-700, 300, 700));
     }
     
+    /**
+     * rotate camera direction to face the map at the start.
+     * @param cam
+     * @param scene
+     */
     public void lookAtWorld(Camera cam, Scene scene) {
         cam.lookAt(scene.getTerrain().getLocalTranslation(), Vector3f.ZERO);
     }
     
+    /**
+     * check camera position and inclination.
+     * @param cam
+     */
     public void checkCameraLimits(Camera cam) {
         if (cam.getLocation().x < X_MIN) {
             cam.setLocation(new Vector3f(X_MIN, cam.getLocation().y, cam.getLocation().z));

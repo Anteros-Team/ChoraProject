@@ -18,45 +18,85 @@ import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Quad;
 import com.jme3.water.SimpleWaterProcessor;
 
-
+/**
+ * Pound is a class that create and manage the starting pound.
+ * This element is the game first source of water.
+ * 
+ * @author Giorgia Bertacchini
+ * @author Alessandro Pilleri
+ */
 public class Pound {
     
-    protected SimpleWaterProcessor waterProcessor;
-    protected Vector3f waterLocation;
-    protected Geometry water;
-    protected Vector3f hitboxSize;
-    protected Box cube;
-    protected Geometry pickbox;
-    protected Material matPickBox;
-    protected boolean DEBUG = false;
+    private SimpleWaterProcessor waterProcessor;
+    private Vector3f waterLocation;
+    private Geometry water;
+    private Vector3f hitboxSize;
+    private Box cube;
+    private Geometry pickbox;
+    private Material matPickBox;
+    private boolean DEBUG = false;
     
+    /**
+     * class constructor with parameters.
+     * @param assetManager
+     * @param rootNode
+     * @param viewPort
+     * @param shootables
+     * @param hitboxSize
+     * @param poundTaken quantity of water already taken from the pound
+     */
     public Pound(AssetManager assetManager, Node rootNode, ViewPort viewPort, Node shootables, Vector3f hitboxSize, int poundTaken) {
         this.hitboxSize = hitboxSize;
         this.setWaterProcessor(assetManager, rootNode, viewPort);
         this.setWater(assetManager, rootNode, shootables, poundTaken);
     }
     
+    /**
+     *
+     * @return pound object
+     */
     public Geometry getPound() {
         return this.water;
     }
     
+    /**
+     *
+     * @return pound pickbox
+     */
     public Geometry getPickBox() {
         return this.pickbox;
     }
     
+    /**
+     *
+     * @return pound location
+     */
     public Vector3f getWaterLocation() {
         return this.waterLocation;
     }
     
+    /**
+     *
+     * set pound location.
+     * @param waterLocation
+     */
     public void setWaterLocation(Vector3f waterLocation) {
         this.waterLocation = waterLocation;
         this.water.setLocalTranslation(waterLocation);
     }
     
+    /**
+     * set code debug.
+     * @param bool
+     */
     public void setDebug(boolean bool) {
         this.DEBUG = bool;
     }
         
+    /**
+     *
+     * setup water processor.
+     */
     private void setWaterProcessor(AssetManager assetManager, Node rootNode, ViewPort viewPort) {
         this.waterProcessor = new SimpleWaterProcessor(assetManager);
         this.waterProcessor.setReflectionScene(rootNode);
@@ -68,6 +108,10 @@ public class Pound {
         this.waterProcessor.setDebug(false);
     }
     
+    /**
+     *
+     * setup water object and pickbox.
+     */
     private void setWater(AssetManager assetManager, Node rootNode, Node shootables, int poundTaken) {
         Quad quad = new Quad(200, 200);
         
@@ -99,16 +143,29 @@ public class Pound {
         this.spawn(rootNode, shootables);
     }
     
+    /**
+     * lower pound level when player takes it.
+     */
     public void takeWater() {
         Vector3f tmp = new Vector3f(this.getWaterLocation().x, this.getWaterLocation().y - 0.5f, this.getWaterLocation().z);
         this.setWaterLocation(tmp);
     }
     
+    /**
+     * spawn pound.
+     * @param rootNode
+     * @param shootables
+     */
     public void spawn(Node rootNode, Node shootables) {
         rootNode.attachChild(this.water);
         shootables.attachChild(this.pickbox);
     }
     
+    /**
+     * despawn pound.
+     * @param rootNode
+     * @param shootables
+     */
     public void despawn(Node rootNode, Node shootables) {
         rootNode.detachChild(this.water);
         shootables.detachChild(this.pickbox);

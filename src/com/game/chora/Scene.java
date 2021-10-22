@@ -12,39 +12,88 @@ import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
 import com.jme3.texture.image.ImageRaster;
 
-
+/**
+ * Scene is a class that create and manage the world map.
+ * The world map is created based on a heightmap, that raise and lower
+ * the terrain based on a greyscale image, and an alphamap, that paint
+ * the map with three different texture (sand, dirt or grass) based on
+ * the image color.
+ * 
+ * <p>
+ * There are also two additional matrix that help on world management:
+ * the matrix of placeable area, that shows surface where object can be placed
+ * or not, and the matrix of covered area, that shows where the surface is
+ * covered by grass, dirt or sand.
+ * 
+ * <p>
+ * Every time a tree grows, the area around it is painted from a dirt texture
+ * to a grass texture. This is modified in the matrix but also on the map
+ * itself by an image raster, that can change the texture of specific 
+ * map sections.
+ * 
+ * @author Giorgia Bertacchini
+ * @author Alessandro Pilleri
+ */
 public class Scene {
     
-    protected Spatial scene;
-    protected Material matTerrain;
-    protected TerrainQuad terrain;
-    protected Texture AlphaTexture;
-    protected ImageRaster imageRaster;
-    protected boolean[][] placeableArea;
-    protected boolean[][] coveredArea;
+    private Spatial scene;
+    private Material matTerrain;
+    private TerrainQuad terrain;
+    private Texture AlphaTexture;
+    private ImageRaster imageRaster;
+    private boolean[][] placeableArea;
+    private boolean[][] coveredArea;
     
+    /**
+     * class constructor with parameters.
+     * @param assetManager
+     * @param rootNode
+     * @param shootables
+     */
     public Scene(AssetManager assetManager, Node rootNode, Node shootables) {
         this.placeableArea = new boolean[1024][1024];
         this.coveredArea = new boolean[1024][1024];
         setFloor(assetManager, rootNode, shootables);
     }
     
+    /**
+     *
+     * @return terrain object
+     */
     public TerrainQuad getTerrain() {
         return this.terrain;
     }
     
+    /**
+     *
+     * @return alpha texture
+     */
     public Texture getAlphaTexture() {
         return this.AlphaTexture;
     }
     
+    /**
+     *
+     * @return placeable area matrix
+     */
     public boolean[][] getPlaceableArea() {
         return this.placeableArea;
     }
     
+    /**
+     *
+     * @return covered area matrix
+     */
     public boolean[][] getCoveredArea() {
         return this.coveredArea;
     }
     
+    /**
+     * set map floor, material and textures
+     * @param assetManager
+     * @param rootNode
+     * @param shootables 
+     */
     private void setFloor(AssetManager assetManager, Node rootNode, Node shootables) {
         this.matTerrain = new Material(assetManager, "Common/MatDefs/Terrain/TerrainLighting.j3md");
         this.matTerrain.setBoolean("useTriPlanarMapping", false);
@@ -99,7 +148,11 @@ public class Scene {
             }
         }        
     }
-    
+     /**
+      * scale textures on the map
+      * @param spatial
+      * @param vector 
+      */
     private void setTextureScale(Spatial spatial, Vector2f vector) {
         if (spatial instanceof Node) {
             Node findingnode = (Node) spatial;

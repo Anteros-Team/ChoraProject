@@ -14,14 +14,21 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Sphere;
 import java.util.Date;
 
-
+/**
+ * DynamicMoon is a class that manages model, light and position
+ * of the moon.
+ * 
+ * @author Giorgia Bertacchini
+ * @author Alessandro Pilleri
+ */
 public class DynamicMoon extends Node {
+    
     private static final Sphere sphereMesh = new Sphere(40, 40, 900, false, true);
     
     private ViewPort viewPort = null;
     private AssetManager assetManager = null;
     
-    private LunarSystem moonSystem = new LunarSystem(new Date(), 0, 0, 0);
+    private LunarSystem moonSystem = new LunarSystem();
     private SkyBillboardItem moon;
     
     private DirectionalLight moonLight = null;
@@ -30,6 +37,13 @@ public class DynamicMoon extends Node {
     
     private float scaling = 1500;
     
+    /**
+     * class constuctor with parameters 
+     * @param assetManager
+     * @param viewPort
+     * @param rootNode
+     * @param scaling
+     */
     public DynamicMoon(AssetManager assetManager, ViewPort viewPort, Node rootNode, Float scaling) {
         this.assetManager = assetManager;
         this.viewPort = viewPort;
@@ -61,24 +75,44 @@ public class DynamicMoon extends Node {
         
     }
     
+    /**
+     *
+     * @return moon rotation class
+     */
     public LunarSystem getSunSystem(){
         return moonSystem;
     }
     
+    /**
+     *
+     * @return moon light object
+     */
     public DirectionalLight getSunLight(){
         return this.moonLight;
     }
         
+    /**
+     * update moon light position and direction.
+     */
     protected void updateLightPosition(){
         lightDir = moonSystem.getDirection();
         lightPosition = moonSystem.getPosition();
         this.moonLight.setDirection(lightDir);
     }
     
+    /**
+     *
+     * @return moon position
+     */
     public Vector3f getSunDirection(){
         return moonSystem.getPosition();
     }
 
+    /**
+     * update moon position and speed, also turn off
+     * the light on daytime.
+     * @param moonDir
+     */
     public void updateTime(Vector3f moonDir) {
         // make everything follow the camera
         setLocalTranslation(viewPort.getCamera().getLocation());
