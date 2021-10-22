@@ -1,8 +1,6 @@
-
 package com.game.chora.utils;
 
 import com.jme3.math.Vector3f;
-import java.io.Serializable;
 
 
 public class EntitySerialization {

@@ -14,6 +14,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Sphere;
 import java.util.Date;
 
+
 public class DynamicSun extends Node {
     private static final Sphere sphereMesh = new Sphere(40, 40, 900, false, true);
     

@@ -3,12 +3,10 @@ package com.game.chora.items.entities;
 import com.game.chora.utils.Entity;
 import com.game.chora.utils.ItemBillboard;
 import com.jme3.asset.AssetManager;
-import com.jme3.material.Material;
-import com.jme3.material.RenderState;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import java.io.Serializable;
+
 
 public class Well extends Entity implements Serializable {
     
@@ -28,7 +26,6 @@ public class Well extends Entity implements Serializable {
     
     public void increaseTime(float tpf) {
         this.time += tpf;
-        //System.out.println(this.time);
     }
     
     public void resetTime() {

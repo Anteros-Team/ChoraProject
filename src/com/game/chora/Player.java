@@ -1,13 +1,5 @@
 package com.game.chora;
 
-import com.jme3.export.InputCapsule;
-import com.jme3.export.JmeExporter;
-import com.jme3.export.JmeImporter;
-import com.jme3.export.OutputCapsule;
-import com.jme3.export.Savable;
-import java.io.IOException;
-import java.io.Serializable;
-
 public class Player {
     
     protected String name;
@@ -21,7 +13,7 @@ public class Player {
     protected int tutorial;
     
     public Player(){
-        this.name = "ciao";
+        this.name = "Player";
         this.waterBucket = 0;
         this.apple = 0;
         this.well = 0;

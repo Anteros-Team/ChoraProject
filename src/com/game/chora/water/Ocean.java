@@ -7,6 +7,7 @@ import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
 import com.jme3.water.WaterFilter;
 
+
 public class Ocean {
     
     protected WaterFilter water;

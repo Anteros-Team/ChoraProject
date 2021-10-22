@@ -122,7 +122,7 @@ public class Main extends SimpleApplication {
             e.spawn(rootNode, shootables);
             entities.add(e);
             
-            arrow = new ItemBillboard("arrow", 50f, new Vector3f(0, 0, 0), 15f, assetManager, "Interface/gui/ArrowGui.png");
+            arrow = new ItemBillboard("arrow", 50f, new Vector3f(0, 0, 0), 15f, assetManager, "Interface/gui/arrowGui.png");
             rootNode.attachChild(arrow.getNode());
             
         } else {
@@ -131,19 +131,19 @@ public class Main extends SimpleApplication {
             
             if (p.getTutorial() != 0) {
                 if (p.getTutorial() == 1) {
-                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(0, 0, 0), 15f, assetManager, "Interface/gui/ArrowGui.png");
+                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(0, 0, 0), 15f, assetManager, "Interface/gui/arrowGui.png");
                 }
                 if (p.getTutorial() == 2) {
-                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(210, -1, 300), 15f, assetManager, "Interface/gui/ArrowGui.png");
+                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(210, -1, 300), 15f, assetManager, "Interface/gui/arrowGui.png");
                 }
                 if (p.getTutorial() == 3) {
-                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(90, 0, 90), 15f, assetManager, "Interface/gui/ArrowGui.png");
+                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(90, 0, 90), 15f, assetManager, "Interface/gui/arrowGui.png");
                 }
                 if (p.getTutorial() == 4) {
-                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(90, 0, 90), 65f, assetManager, "Interface/gui/ArrowGui.png");
+                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(90, 0, 90), 65f, assetManager, "Interface/gui/arrowGui.png");
                 }
                 if (p.getTutorial() == 5) {
-                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(90, 0, 90), 85f, assetManager, "Interface/gui/ArrowGui.png");
+                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(90, 0, 90), 85f, assetManager, "Interface/gui/arrowGui.png");
                 }
                 rootNode.attachChild(arrow.getNode());
             }
@@ -234,7 +234,7 @@ public class Main extends SimpleApplication {
         ocean = new Ocean(rootNode, viewPort, view.getFilterPostProcessor(), sky);
        
         
-        initKeys();       // load custom key mappings
+        initKeys(); // load custom key mappings
     }
     
     @Override
@@ -242,13 +242,10 @@ public class Main extends SimpleApplication {
         
         db.clearTablePlayer(); 
         db.clearTableEntity();
-        //db.createTables();
-        //Player pp = db.queryPlayer();
         es.clear();
         System.out.println("Empty : " + es.isEmpty());
         System.out.println("Entity table empty: " + db.queryEntity().isEmpty());
-        
-        //System.out.println("Player table empty: " + db.queryPlayer().waterBucket);
+
         db.insertPlayer(p.getName(), p.getApple(), p.getWaterBucket(), p.getWell(), p.getMill(), p.getTakePound(), p.getAmbientVolume(), p.getMusicVolume(), p.getTutorial());
         for(Entity e: entities) {
             EntitySerialization s = new EntitySerialization();
@@ -455,13 +452,11 @@ public class Main extends SimpleApplication {
                             clickAudio.playInstance();
                             Vector3f pt = results.getClosestCollision().getContactPoint();
                             addEntity(gui.getSelectedEntityFromShop(), pt);
-                            //gui.getNifty().getCurrentScreen().findElementById("alertLayer").setVisible(false);
                         }
                         
 
                     } else {
                         // picking mode
-                        
                         String closest;
                         for (int i = 0; i < results.size(); i++) {
                             float dist = results.getCollision(i).getDistance();
@@ -490,7 +485,7 @@ public class Main extends SimpleApplication {
                                 if (p.getTutorial() == 2) {
                                     p.setTutorial(3);
                                     rootNode.detachChild(arrow.getNode());
-                                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(90, 0, 90), 15f, assetManager, "Interface/gui/ArrowGui.png");
+                                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(90, 0, 90), 15f, assetManager, "Interface/gui/arrowGui.png");
                                     rootNode.attachChild(arrow.getNode());
                                 }
 
@@ -532,7 +527,7 @@ public class Main extends SimpleApplication {
                                                     }
                                                     if (e.getPosition().x == 90 && e.getPosition().z == 90) {
                                                         p.setTutorial(2);
-                                                        arrow = new ItemBillboard("arrow", 50f, new Vector3f(210, -1, 300), 15f, assetManager, "Interface/gui/ArrowGui.png");
+                                                        arrow = new ItemBillboard("arrow", 50f, new Vector3f(210, -1, 300), 15f, assetManager, "Interface/gui/arrowGui.png");
                                                         rootNode.attachChild(arrow.getNode());
                                                     }
                                                 }
@@ -551,10 +546,7 @@ public class Main extends SimpleApplication {
                                                 gui.setWaterBucket(p.getWaterBucket());
 
                                                 ImageRaster imageRaster = ImageRaster.create(scene.getAlphaTexture().getImage());
-
-                                                //System.out.println(t.getPosition().x - t.getPickboxSize().x);
-                                                //System.out.println(t.getPosition().x + t.getPickboxSize().x);
-
+                                                
                                                 for (float i = 512 + t.getPosition().x - 55; i < 512 + t.getPosition().x + 65; i++) {
                                                     for (float j = 512 - t.getPosition().z - 65 ; j < + 512 - t.getPosition().z + 75; j++) {
                                                         if (imageRaster.getPixel((int) i, (int) j).r > 0.7) {
@@ -568,7 +560,7 @@ public class Main extends SimpleApplication {
                                                 if (p.getTutorial() == 4) {
                                                     p.setTutorial(5);
                                                     rootNode.detachChild(arrow.getNode());
-                                                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(90, 0, 90), 85f, assetManager, "Interface/gui/ArrowGui.png");
+                                                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(90, 0, 90), 85f, assetManager, "Interface/gui/arrowGui.png");
                                                     rootNode.attachChild(arrow.getNode());
                                                 }
                                                 break;
@@ -588,7 +580,7 @@ public class Main extends SimpleApplication {
                                                 if (p.getTutorial() == 3) {
                                                     p.setTutorial(4);
                                                     rootNode.detachChild(arrow.getNode());
-                                                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(90, 0, 90), 65f, assetManager, "Interface/gui/ArrowGui.png");
+                                                    arrow = new ItemBillboard("arrow", 50f, new Vector3f(90, 0, 90), 65f, assetManager, "Interface/gui/arrowGui.png");
                                                     rootNode.attachChild(arrow.getNode());
                                                 }
                                                 break;
@@ -682,7 +674,6 @@ public class Main extends SimpleApplication {
                 entities.add(e);
                 p.setMill(p.getMill() + 1);
                 ((Mill) e).createPopup(assetManager);
-                // serve la riga dopo? 
                 gui.setPlaceEntity(false);
                 
                 gui.getNifty().getCurrentScreen().findElementById("placingModePanel").setVisible(false);

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.game.chora.utils;
 
 import com.jme3.asset.AssetManager;
@@ -18,6 +13,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.BillboardControl;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Quad;
+
 
 public class ItemBillboard {
     private Geometry popupGeom;

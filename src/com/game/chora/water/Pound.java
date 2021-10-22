@@ -61,7 +61,6 @@ public class Pound {
         this.waterProcessor = new SimpleWaterProcessor(assetManager);
         this.waterProcessor.setReflectionScene(rootNode);
         this.waterProcessor.setDebug(false);
-        //this.waterProcessor.setLightPosition(sky.getSunDirection());
         this.waterProcessor.setRefractionClippingOffset(1.0f);
         viewPort.addProcessor(this.waterProcessor);
         this.waterProcessor.setPlane(new Plane(Vector3f.UNIT_Y, new Vector3f(0,-20,0).dot(Vector3f.UNIT_Y)));       

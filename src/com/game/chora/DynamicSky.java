@@ -6,10 +6,10 @@ import com.game.chora.items.sky.DynamicStars;
 import com.game.chora.items.sky.DynamicSun;
 import com.jme3.asset.AssetManager;
 import com.jme3.light.DirectionalLight;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
+
 
 public class DynamicSky extends Node {
     private ViewPort viewPort = null;
@@ -80,8 +80,6 @@ public class DynamicSky extends Node {
         } else {
             this.dayChanging = (float) Math.abs(dynamicSun.getSunSystem().getPosition().y) / 100f;
         }
-        //System.out.println(dynamicSun.getSunSystem().getPosition().y);
-        //System.out.println(this.dayChanging);
         
         dynamicBackground.updateLightPosition(dynamicSun.getSunSystem().getPosition());
         dynamicStars.update(dynamicSun.getSunSystem().getDirection());        

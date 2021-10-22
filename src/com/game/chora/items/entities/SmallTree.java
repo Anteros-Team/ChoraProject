@@ -5,6 +5,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import java.io.Serializable;
 
+
 public class SmallTree extends Entity implements Serializable {
     
     public SmallTree(Vector3f position, float scale, Vector3f hitboxSize) {

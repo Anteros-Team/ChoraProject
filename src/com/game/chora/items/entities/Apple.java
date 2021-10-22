@@ -4,7 +4,6 @@ import com.game.chora.utils.Entity;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import java.io.Serializable;
-import java.util.ArrayList;
 
 
 public class Apple extends Entity implements Serializable {

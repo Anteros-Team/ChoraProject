@@ -2,9 +2,6 @@ package com.game.chora.items.entities;
 
 import com.game.chora.utils.Entity;
 import com.jme3.asset.AssetManager;
-import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.shapes.BoxCollisionShape;
-import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
@@ -18,7 +15,6 @@ import com.jme3.scene.shape.Box;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 
 
 public class Tree extends Entity implements Serializable {
@@ -53,11 +49,11 @@ public class Tree extends Entity implements Serializable {
         
         this.pickbox.get(0).setShadowMode(RenderQueue.ShadowMode.Off);
         this.pickbox.get(0).setLocalTranslation(this.position.add(new Vector3f(-10, this.pickboxSize.y, -10)));
-        this.pickbox.get(0).setCullHint(Spatial.CullHint.Always);
+        this.pickbox.get(0).setCullHint(Spatial.CullHint.Always); // no visible pickbox
         
         this.pickbox.get(1).setShadowMode(RenderQueue.ShadowMode.Off);
         this.pickbox.get(1).setLocalTranslation(this.position.add(new Vector3f(0, this.pickboxSize.y * 2f, 0)));
-        this.pickbox.get(1).setCullHint(Spatial.CullHint.Always);
+        this.pickbox.get(1).setCullHint(Spatial.CullHint.Always); // no visible pickbox
         
         this.matPickBox = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         this.matPickBox.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
@@ -88,7 +84,6 @@ public class Tree extends Entity implements Serializable {
     
     public void increaseTime(float tpf) {
         this.time += tpf;
-        //System.out.println(this.time);
     }
     
     public void resetTime() {

@@ -4,10 +4,9 @@ import com.game.chora.utils.Entity;
 import com.game.chora.utils.ItemBillboard;
 import com.jme3.asset.AssetManager;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import java.io.Serializable;
+
 
 public class Mill extends Entity {
     
@@ -34,7 +33,6 @@ public class Mill extends Entity {
     
     public void increaseTime(float tpf) {
         this.time += tpf;
-        //System.out.println(this.time);
     }
     
     public void resetTime() {
@@ -70,12 +68,9 @@ public class Mill extends Entity {
     }
     
     public void rotateMill(Node rootNode, float tpf) {
-        for(Spatial s : rootNode.getChildren()) {
-            //System.out.println("Nome mill: " + s.getName());
-            if ("Mill".equals(s.getName())) {
-                ((Node) s).getChild("wheel").rotate(0, this.speed * tpf, 0);
-            }
-        }
+        rootNode.getChildren().stream().filter(s -> ("Mill".equals(s.getName()))).forEachOrdered(s -> {
+            ((Node) s).getChild("wheel").rotate(0, this.speed * tpf, 0);
+        });
     }
 
 }

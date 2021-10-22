@@ -1,15 +1,6 @@
 package com.game.chora.utils;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.shapes.BoxCollisionShape;
-import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
-import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.export.InputCapsule;
-import com.jme3.export.JmeExporter;
-import com.jme3.export.JmeImporter;
-import com.jme3.export.OutputCapsule;
-import com.jme3.export.Savable;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
@@ -19,8 +10,6 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +20,6 @@ public class Entity {
     protected float scale;
     protected Vector3f pickboxSize;
     protected Spatial entity;
-    //protected Material mat;
     protected List<Box> cube;
     protected List<Geometry> pickbox;
     protected Material matPickBox;
@@ -99,8 +87,7 @@ public class Entity {
         this.pickbox.add(new Geometry("PickBox" + this.hashCode(), cube.get(0)));
         this.pickbox.get(0).setShadowMode(RenderQueue.ShadowMode.Off);
         this.pickbox.get(0).setLocalTranslation(this.position.add(new Vector3f(0, this.pickboxSize.y, 0)));
-        // no visible pickbox
-        //this.pickbox.get(0).setCullHint(Spatial.CullHint.Always);
+        this.pickbox.get(0).setCullHint(Spatial.CullHint.Always); // no visible pickbox
         
         this.matPickBox = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         this.matPickBox.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
@@ -108,13 +95,6 @@ public class Entity {
         this.matPickBox.setColor("Color", new ColorRGBA(0, 1, 0, 0.2f));  
         pickbox.get(0).setMaterial(matPickBox);
     }
-    
-    /*
-    public void setMaterial(AssetManager assetManager, String pathMaterial) {
-        this.mat = new Material(assetManager, pathMaterial);
-        this.entity.setMaterial(mat);
-    }
-    */
     
     public void onAction(Node rootNode, Node shootables) {
         

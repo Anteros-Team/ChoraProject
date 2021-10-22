@@ -25,7 +25,6 @@ public class View {
         this.setSunLightShadow(assetManager, viewPort, sky);
         this.setMoonLightShadow(assetManager, viewPort, sky);
         this.setAmbientLight(rootNode);
-        
     }
     
     public FilterPostProcessor getFilterPostProcessor() {
@@ -37,11 +36,6 @@ public class View {
     }
     
     private void setSunLightShadow(AssetManager assetManager, ViewPort viewPort, DynamicSky sky) {
-        /*this.dlsrSun = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 3);
-        this.dlsrSun.setLight(sky.getSunLight());
-        System.out.println("Sun light : " + sky.getSunLight());
-        viewPort.addProcessor(dlsrSun);*/
-        
         this.dlsfSun = new DirectionalLightShadowFilter(assetManager, this.SHADOWMAP_SIZE, 3);
         this.dlsfSun.setLambda(0.2f);
         this.dlsfSun.setShadowIntensity(0.5f);
@@ -59,10 +53,6 @@ public class View {
     }
     
     private void setMoonLightShadow(AssetManager assetManager, ViewPort viewPort, DynamicSky sky) {
-        /*this.dlsrMoon = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 3);
-        this.dlsrMoon.setLight(sky.getSunLight());
-        viewPort.addProcessor(dlsrMoon);*/
-        
         this.dlsfMoon = new DirectionalLightShadowFilter(assetManager, SHADOWMAP_SIZE, 3);
         this.dlsfMoon.setLambda(0.2f);
         this.dlsfMoon.setShadowIntensity(0.3f);

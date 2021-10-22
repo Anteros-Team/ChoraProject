@@ -1,6 +1,5 @@
 package com.game.chora;
 
-import com.game.chora.utils.Entity;
 import com.game.chora.utils.EntitySerialization;
 import com.jme3.math.Vector3f;
 import java.sql.Connection;

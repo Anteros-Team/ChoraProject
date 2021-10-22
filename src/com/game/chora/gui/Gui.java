@@ -1,18 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.game.chora.gui;
 
 import com.game.chora.Main;
 import com.game.chora.Player;
-import com.game.chora.items.entities.Sprout;
 import com.game.chora.utils.Entity;
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioRenderer;
 import com.jme3.input.InputManager;
-import com.jme3.math.Vector3f;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
@@ -24,41 +17,30 @@ import de.lessvoid.nifty.builder.LayerBuilder;
 import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.builder.TextBuilder;
-import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
-import de.lessvoid.nifty.controls.imageselect.builder.ImageSelectBuilder;
 import de.lessvoid.nifty.controls.label.builder.LabelBuilder;
-import de.lessvoid.nifty.controls.textfield.builder.TextFieldBuilder;
-import de.lessvoid.nifty.elements.render.ImageRenderer;
 import de.lessvoid.nifty.elements.render.TextRenderer;
-import de.lessvoid.nifty.render.NiftyImage;
 import de.lessvoid.nifty.screen.Screen;
-import de.lessvoid.nifty.tools.SizeValue;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- *
- * @author giorg
- */
+
 public class Gui {
     
-    protected NiftyJmeDisplay niftyDisplay;
-    protected Nifty nifty;
-    protected boolean gameStarted;
-    protected Main app;
-    protected AssetManager assetManager;
-    protected Node rootNode;
-    protected Node shootables;
-    protected List<Entity> entities;
-    protected Player p;
-    protected boolean placeEntity;
-    protected String selectedEntityFromShop;
-    protected boolean guiOpened;
-    protected float time;
-    
-    protected Map<String, Integer> shopProducts;    
+    private NiftyJmeDisplay niftyDisplay;
+    private Nifty nifty;
+    private boolean gameStarted;
+    private Main app;
+    private AssetManager assetManager;
+    private Node rootNode;
+    private Node shootables;
+    private List<Entity> entities;
+    private Player p;
+    private boolean placeEntity;
+    private String selectedEntityFromShop;
+    private boolean guiOpened;
+    private float time;
+    private Map<String, Integer> shopProducts;    
     
     public Gui (Main app, AssetManager assetManager, InputManager inputManager, AudioRenderer audioRenderer, ViewPort guiViewPort, Node rootNode, Node shootables, List<Entity> entities, Player p) {
         niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, guiViewPort);
@@ -77,7 +59,7 @@ public class Gui {
         this.guiOpened = false;
         this.time = 0;
         
-        this.shopProducts = new HashMap<String, Integer>();
+        this.shopProducts = new HashMap<>();
         this.shopProducts.put("Sprout", 10);
         this.shopProducts.put("Well", 20);
         this.shopProducts.put("Mill", 50);
@@ -91,7 +73,6 @@ public class Gui {
 
             // Style layer
             layer(new LayerBuilder("baseLayer") {{
-            //backgroundColor("#003f");
             childLayoutCenter();
 
                 // Top left panel
@@ -103,7 +84,6 @@ public class Gui {
                     alignLeft();
                     valignTop();
                     visibleToMouse();
-                    //interactOnClick("quit()");
                     marginLeft("2%");
                     marginTop("2%");
 
@@ -159,7 +139,7 @@ public class Gui {
                     // Menu image
                     image(new ImageBuilder() {{
                         id("MenuImage");
-                        filename("Interface/gui/menu_icon.png");
+                        filename("Interface/gui/menuIcon.png");
                         width("60%");
                         height("100%");
                     }});
@@ -174,14 +154,13 @@ public class Gui {
                     alignRight();
                     valignBottom();
                     visibleToMouse();
-                    //interactOnClick("quit()");
                     marginRight("2%");
                     marginBottom("2%");
                 
                     // Shop image
                     image(new ImageBuilder() {{
                        id("ShopImage");
-                       filename("Interface/gui/shop_icon.png");
+                       filename("Interface/gui/shopIcon.png");
                        width("60%");
                        height("100%");
                     }});
@@ -201,7 +180,6 @@ public class Gui {
                     alignLeft();
                     valignTop();
                     visibleToMouse();
-                    //interactOnClick("quit()");
                     marginLeft("2%");
                     marginTop("2%");
                     
@@ -256,7 +234,6 @@ public class Gui {
                     alignRight();
                     valignTop();
                     visibleToMouse();
-                    //interactOnClick("quit()");
                     marginRight("2%");
                     marginTop("2%");
                 
@@ -278,7 +255,6 @@ public class Gui {
                     alignRight();
                     valignBottom();
                     visibleToMouse();
-                    //interactOnClick("quit()");
                     marginRight("2%");
                     marginBottom("2%");
                 
@@ -287,8 +263,6 @@ public class Gui {
                         width("53%");
                         height("98%");
                         visibleToMouse(true);
-                        
-                        //interactOnClick("openShop()");
                     }});
                 }});
                 
@@ -323,7 +297,7 @@ public class Gui {
                     // shop arrow image
                     image(new ImageBuilder() {{
                         id("arrowImage");
-                        filename("Interface/gui/ArrowGui.png");
+                        filename("Interface/gui/arrowGui.png");
                         width("100%");
                         height("100%");
                     }});
@@ -348,7 +322,7 @@ public class Gui {
                     
                     image(new ImageBuilder() {{
                        id("shopPanelImage");
-                       filename("Interface/gui/ShopModal.png");
+                       filename("Interface/gui/shopModal.png");
                        width("100%");
                        height("100%");
                     }});
@@ -374,7 +348,7 @@ public class Gui {
                         
                         image(new ImageBuilder() {{
                             id("itemImageCloose");
-                            filename("Interface/gui/CloseModalButton.png");
+                            filename("Interface/gui/closeModalButton.png");
                             width("6.5%");
                             height("11%");
                             alignRight();
@@ -385,7 +359,7 @@ public class Gui {
                         
                         image(new ImageBuilder() {{
                             id("itemImage_1");
-                            filename("Interface/gui/ShopItemModal.png");
+                            filename("Interface/gui/shopItemModal.png");
                             width("25%");
                             height("40%");
                             alignLeft();
@@ -397,7 +371,7 @@ public class Gui {
                         
                         image(new ImageBuilder() {{
                             id("itemImage_2");
-                            filename("Interface/gui/ShopItemModal.png");
+                            filename("Interface/gui/shopItemModal.png");
                             width("25%");
                             height("40%");
                             alignLeft();
@@ -408,7 +382,7 @@ public class Gui {
                         
                         image(new ImageBuilder() {{
                             id("itemImage_3");
-                            filename("Interface/gui/ShopItemModal.png");
+                            filename("Interface/gui/shopItemModal.png");
                             width("25%");
                             height("40%");
                             alignLeft();
@@ -484,8 +458,6 @@ public class Gui {
                                 valignTop();   
                                 marginTop("82%"); 
                                 visibleToMouse(true);
-
-                                //interactOnClick("buyFromShop(\"sprout\", " + assetManager + ", " + rootNode + ", " + shootables + ")");
 
                                 text(new TextBuilder("Price1_Text") {{
                                     text(shopProducts.get("Sprout") + " Apples");
@@ -599,7 +571,7 @@ public class Gui {
                     
                     image(new ImageBuilder() {{
                        id("MenuImagePanel");
-                       filename("Interface/gui/MenuModal.png");
+                       filename("Interface/gui/menuModal.png");
                        width("100%");
                        height("100%");
                     }});
@@ -614,7 +586,7 @@ public class Gui {
                         
                         image(new ImageBuilder() {{
                             id("imageClosebotton");
-                            filename("Interface/gui/CloseModalButton.png");
+                            filename("Interface/gui/closeModalButton.png");
                             width("13%");
                             height("12.5%");
                             alignRight();
@@ -625,7 +597,7 @@ public class Gui {
                         
                         image(new ImageBuilder() {{
                             id("buttonMenu_1");
-                            filename("Interface/gui/MenuButton.png");
+                            filename("Interface/gui/menuButton.png");
                             width("50%");
                             height("15%");
                             alignCenter();
@@ -635,7 +607,7 @@ public class Gui {
                         
                         image(new ImageBuilder() {{
                             id("buttonMenu_2");
-                            filename("Interface/gui/MenuButton.png");
+                            filename("Interface/gui/menuButton.png");
                             width("50%");
                             height("15%");
                             alignCenter();
@@ -645,7 +617,7 @@ public class Gui {
                         
                         image(new ImageBuilder() {{
                             id("buttonMenu_3");
-                            filename("Interface/gui/MenuButton.png");
+                            filename("Interface/gui/menuButton.png");
                             width("50%");
                             height("15%");
                             alignCenter();
@@ -771,7 +743,6 @@ public class Gui {
                     alignCenter();
                     valignCenter();
                     visibleToMouse(true);
-                    //backgroundColor("#00f");
                     
                     // Content Modal panel
                     panel(new PanelBuilder() {{
@@ -783,7 +754,7 @@ public class Gui {
                         
                         image(new ImageBuilder() {{
                             id("creditImage");
-                            filename("Interface/gui/CloseModalButton.png");
+                            filename("Interface/gui/closeModalButton.png");
                             width("9%");
                             height("12%");
                             alignRight();
@@ -853,7 +824,7 @@ public class Gui {
                     visibleToMouse(true);
                     
                     image(new ImageBuilder() {{
-                        filename("Interface/gui/OptionMenu.png");
+                        filename("Interface/gui/optionMenu.png");
                         width("100%");
                         height("100%");
                     }});
@@ -1027,7 +998,7 @@ public class Gui {
                     
                     image(new ImageBuilder() {{
                        id("CloseGameImage");
-                       filename("Interface/gui/CloseGameModal.png");
+                       filename("Interface/gui/closeGameModal.png");
                        width("100%");
                        height("100%");
                     }});
@@ -1086,9 +1057,7 @@ public class Gui {
                             marginLeft("14%");
                             marginTop("20%");
                             visibleToMouse(true);     
-                            font("Interface/Fonts/SegoeUIBlack.fnt");                                                       
-
-                            //interactOnClick("");
+                            font("Interface/Fonts/SegoeUIBlack.fnt");
 
                             text(new TextBuilder() {{
                                 text("Yes");
@@ -1176,7 +1145,7 @@ public class Gui {
                     childLayoutCenter();
                     
                     image(new ImageBuilder() {{
-                        filename("Interface/gui/ChoraLoadingScreen.jpg");
+                        filename("Interface/gui/choraLoadingScreen.jpg");
                         width("100%");
                         height("100%");
                     }});
@@ -1197,7 +1166,7 @@ public class Gui {
                     childLayoutCenter();  
                     
                     image(new ImageBuilder() {{
-                        filename("Interface/gui/StartingMenu.png");
+                        filename("Interface/gui/startingMenu.png");
                         width("100%");
                         height("100%");
                     }});
@@ -1261,8 +1230,6 @@ public class Gui {
                         marginRight("21%");
                         visibleToMouse(true);                            
                         
-                        //interactOnRelease("");
-                        
                         text(new TextBuilder() {{
                             text("Exit");
                             font("Interface/Fonts/SegoeUIBlack.fnt");
@@ -1287,7 +1254,7 @@ public class Gui {
                     visibleToMouse(true);
                     
                     image(new ImageBuilder() {{
-                        filename("Interface/gui/OptionMenu.png");
+                        filename("Interface/gui/optionMenu.png");
                         width("100%");
                         height("100%");
                     }});
@@ -1450,17 +1417,7 @@ public class Gui {
         nifty.addScreen("start", startScreen);
         nifty.addScreen("startMenu", startMenuScreen);
         nifty.addScreen("game", gameScreen);
-        //nifty.gotoScreen("game");
         nifty.gotoScreen("startMenu");
-        
-        /*ImageRenderer imageRenderer = nifty.getCurrentScreen().findElementById("someImageSelect").getRenderer(ImageRenderer.class);
-        List<NiftyImage> images = new ArrayList<>();
-        NiftyImage n = nifty.getRenderEngine().createImage(nifty.getCurrentScreen(), "Interface/gui/apple.png", false);
-        imageRenderer.setImage(n);
-        nifty.getCurrentScreen().findElementById("someImageSelect").setConstraintWidth(SizeValue.px(n.getWidth()));
-        nifty.getCurrentScreen().findElementById("someImageSelect").setConstraintHeight(SizeValue.px(n.getHeight()));
-        nifty.getCurrentScreen().findElementById("someImageSelect").layoutElements();
-        nifty.getCurrentScreen().findElementById("someImageSelect").show();*/
         
         nifty.getScreen("game").findElementById("Apple").getRenderer(TextRenderer.class).setText(""+p.getApple());
         nifty.getScreen("game").findElementById("WaterBucket").getRenderer(TextRenderer.class).setText(""+p.getWaterBucket());
@@ -1583,7 +1540,7 @@ public class Gui {
     public void buyFromShop(String selectedEntity) {
         if (p.getApple() >= shopProducts.get(selectedEntity)) {  
             System.out.println(p.getMill());
-            if(("Mill".equals(selectedEntity) && p.getMill() < 2) || ("Well".equals(selectedEntity) && p.getWell() < 5)) {
+            if(("Mill".equals(selectedEntity) && p.getMill() < 2) || ("Well".equals(selectedEntity) && p.getWell() < 5) || "Sprout".equals(selectedEntity)) {
                 p.setApple(p.getApple() - shopProducts.get(selectedEntity));
                 this.setApple(p.getApple());
             
