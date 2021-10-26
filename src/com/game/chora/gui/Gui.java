@@ -784,7 +784,7 @@ public class Gui {
                         image(new ImageBuilder() {{
                             id("creditImage");
                             filename("Interface/gui/closeModalButton.png");
-                            width("9%");
+                            width("8%");
                             height("12%");
                             alignRight();
                             valignTop();
@@ -811,7 +811,7 @@ public class Gui {
                     
                     // close Button
                     control(new ControlBuilder("closeButton_3", "") {{
-                        width("9%");
+                        width("8%");
                         height("10%");
                         alignRight();
                         valignTop();
@@ -831,7 +831,7 @@ public class Gui {
                                 + "Audio Department\nMusic provided by Genshin Impact by Mihoyo\n\n"
                                 + "Project for\n'Object-oriented programming'\nDepartment of Engineering \"Enzo Ferrari\" Modena\n\n"
                                 + "Teacher\nNicola Bicocchi");
-                        font("Interface/Fonts/SegoeUIBlack.fnt");
+                        font("Interface/Fonts/SegoeUIBlack20.fnt");
                         color("#fff");
                         height("80%");
                         width("100%");
@@ -1646,13 +1646,13 @@ public class Gui {
             else {
                 nifty.getCurrentScreen().findElementById("errorLabel").getRenderer(TextRenderer.class).setText("Maximum number of " + selectedEntity + " reached.");
                 nifty.getCurrentScreen().findElementById("errorLabel").setVisible(true);
-                time = 5;
+                time = 3;
             }
         }
         else {
             nifty.getCurrentScreen().findElementById("errorLabel").getRenderer(TextRenderer.class).setText("Not enough apples.");  
             nifty.getCurrentScreen().findElementById("errorLabel").setVisible(true);
-            time = 5;
+            time = 3;
         }
     }
     

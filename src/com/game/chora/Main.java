@@ -20,6 +20,7 @@ import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.system.AppSettings;
 import com.jme3.texture.image.ImageRaster;
 import de.lessvoid.nifty.Nifty;
 import java.nio.file.Path;
@@ -56,8 +57,9 @@ public class Main extends SimpleApplication {
     private int speed = 10;
     private NiftyJmeDisplay niftyDisplay;
     private Nifty nifty;
-    private Path currentRelativePath = Paths.get("");
-    private String filePath = currentRelativePath.toAbsolutePath().toString() + "\\assets\\GameData\\Entity.ser";
+    private String relativePath = "C:\\Users\\alle2\\Documents\\GitHub\\ChoraProject";
+    
+    private String filePath = relativePath + "\\assets\\GameData\\Entity.ser";
     private Database db;
     private boolean newGame = false;
     
@@ -67,6 +69,16 @@ public class Main extends SimpleApplication {
      */
     public static void main(String[] args) {
         app = new Main();
+        
+        AppSettings a = new AppSettings(true);
+        a.setResolution(1920, 1080);
+        a.setFullscreen(true);
+        a.setVSync(true);
+        a.setTitle("Chora");
+        
+        app.setSettings(a);
+        app.setShowSettings(false);
+        
         app.start(); // start the game
     }
     
@@ -94,7 +106,7 @@ public class Main extends SimpleApplication {
          * @see Database
          */
         db = new Database();
-        db.createNewDatabase(currentRelativePath.toAbsolutePath().toString() + "\\assets\\GameData\\");
+        db.createNewDatabase(relativePath + "\\assets\\GameData\\");
         db.createTables();
         
         p = new Player();
