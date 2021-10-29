@@ -66,7 +66,7 @@ public class Database {
      */
     public void createNewDatabase(String pathname) {
         
-        this.url = "jdbc:sqlite:" + pathname + "Chora.db";
+        this.url = "jdbc:sqlite:" + pathname + "\\Chora.db";
        
         try (Connection conn = DriverManager.getConnection(url)) {
             if (conn != null) {

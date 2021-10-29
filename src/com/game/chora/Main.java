@@ -70,13 +70,16 @@ public class Main extends SimpleApplication {
         app = new Main();
         
         AppSettings a = new AppSettings(true);
-        //a.setResolution(1920, 1080);
-        //a.setFullscreen(true);
+        //a.setResolution(1280, 720);
+        a.setFullscreen(true);
         a.setVSync(true);
         a.setTitle("Chora");
         
         app.setSettings(a);
         app.setShowSettings(false);
+        
+        app.setDisplayFps(false);
+        app.setDisplayStatView(false);
         
         app.start(); // start the game
     }
