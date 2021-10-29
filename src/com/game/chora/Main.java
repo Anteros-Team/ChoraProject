@@ -57,9 +57,8 @@ public class Main extends SimpleApplication {
     private int speed = 10;
     private NiftyJmeDisplay niftyDisplay;
     private Nifty nifty;
-    private String relativePath = "C:\\Users\\alle2\\Documents\\GitHub\\ChoraProject";
+    private Path relativePath = Paths.get("");
     
-    private String filePath = relativePath + "\\assets\\GameData\\Entity.ser";
     private Database db;
     private boolean newGame = false;
     
@@ -71,8 +70,8 @@ public class Main extends SimpleApplication {
         app = new Main();
         
         AppSettings a = new AppSettings(true);
-        a.setResolution(1920, 1080);
-        a.setFullscreen(true);
+        //a.setResolution(1920, 1080);
+        //a.setFullscreen(true);
         a.setVSync(true);
         a.setTitle("Chora");
         
@@ -106,7 +105,7 @@ public class Main extends SimpleApplication {
          * @see Database
          */
         db = new Database();
-        db.createNewDatabase(relativePath + "\\assets\\GameData\\");
+        db.createNewDatabase(relativePath.toAbsolutePath().toString());
         db.createTables();
         
         p = new Player();
