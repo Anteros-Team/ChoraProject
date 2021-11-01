@@ -863,6 +863,7 @@ public class Main extends SimpleApplication {
                 entities.add(e);
                 p.setMill(p.getMill() + 1);
                 ((Mill) e).createPopup(assetManager);
+                ((Mill) e).showPopup(rootNode);
                 gui.setPlaceEntity(false);
                 
                 gui.getNifty().getCurrentScreen().findElementById("placingModePanel").setVisible(false);

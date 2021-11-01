@@ -1591,10 +1591,10 @@ public class Gui {
                 nifty.getScreen("game").findElementById("tutorialLabel").getRenderer(TextRenderer.class).setText("Welcome to Chora!\nStart by removing the trash from this world.");
             }
             if (p.getTutorial() == 2 || p.getTutorial() == 3 || p.getTutorial() == 4) {
-                nifty.getScreen("game").findElementById("tutorialLabel").getRenderer(TextRenderer.class).setText("Wow! You found a sprout! Pick up some water from the pound to use it on the sprout.");
+                nifty.getScreen("game").findElementById("tutorialLabel").getRenderer(TextRenderer.class).setText("Wow! You found a sprout!\nPick up some water from the pound to use it on the sprout.");
             }
             if (p.getTutorial() == 5) {
-                nifty.getScreen("game").findElementById("tutorialLabel").getRenderer(TextRenderer.class).setText("Now the sprout is fully grown into a tree! Every tree drops apples that you can spend in the market.");
+                nifty.getScreen("game").findElementById("tutorialLabel").getRenderer(TextRenderer.class).setText("Now the sprout is fully grown into a tree!\nEvery tree drops apples that you can spend in the market.");
             }
             if (p.getTutorial() == 6) {
                 nifty.getScreen("game").findElementById("tutorialLabel").getRenderer(TextRenderer.class).setText("Check out the market to see all the offerings.");
