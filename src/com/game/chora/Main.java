@@ -71,7 +71,7 @@ public class Main extends SimpleApplication {
         
         AppSettings a = new AppSettings(true);
         a.setResolution(1280, 720);
-        a.setFullscreen(true);
+        //a.setFullscreen(true);
         a.setVSync(true);
         a.setTitle("Chora");
         
