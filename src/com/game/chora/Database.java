@@ -2,6 +2,7 @@ package com.game.chora;
 
 import com.game.chora.utils.EntitySerialization;
 import com.jme3.math.Vector3f;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -66,7 +67,7 @@ public class Database {
      */
     public void createNewDatabase(String pathname) {
         
-        this.url = "jdbc:sqlite:" + pathname + "\\Chora.db";
+        this.url = "jdbc:sqlite:" + pathname + File.separator + "Chora.db";
        
         try (Connection conn = DriverManager.getConnection(url)) {
             if (conn != null) {
